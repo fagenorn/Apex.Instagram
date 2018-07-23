@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apex.Instagram", "Apex.Instagram\Apex.Instagram.csproj", "{F6028B03-854E-40B6-A8C1-CB4CA7018665}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apex.Instagram.Tests", "Apex.Instagram.Tests\Apex.Instagram.Tests.csproj", "{BC5D5A25-1780-4E94-81C4-DC869FCA1554}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{F6028B03-854E-40B6-A8C1-CB4CA7018665}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6028B03-854E-40B6-A8C1-CB4CA7018665}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6028B03-854E-40B6-A8C1-CB4CA7018665}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC5D5A25-1780-4E94-81C4-DC869FCA1554}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC5D5A25-1780-4E94-81C4-DC869FCA1554}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC5D5A25-1780-4E94-81C4-DC869FCA1554}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC5D5A25-1780-4E94-81C4-DC869FCA1554}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
