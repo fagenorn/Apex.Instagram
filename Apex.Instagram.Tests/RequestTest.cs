@@ -1,7 +1,9 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
+using Apex.Instagram.Logger;
 using Apex.Instagram.Request;
 using Apex.Instagram.Tests.Maps;
 
@@ -17,48 +19,13 @@ namespace Apex.Instagram.Tests
     [TestClass]
     public class RequestTest
     {
+        private static readonly IApexLogger Logger = new ApexLogger(ApexLogLevel.Verbose);
+
         /// <summary>
         ///     Gets or sets the test context which provides
         ///     information about and functionality for the current test run.
         /// </summary>
         public TestContext TestContext { get; set; }
-
-        #region Additional test attributes
-
-        //
-        // You can use the following additional attributes as you write your tests:
-        //
-        // Use ClassInitialize to run code before running the first test in the class
-        // [ClassInitialize()]
-        // public static void MyClassInitialize(TestContext testContext) { }
-        //
-        // Use ClassCleanup to run code after all tests in a class have run
-//        [ClassCleanup]
-//        public static void MyClassCleanup()
-//        {
-//
-//        }
-
-        //
-        // Use TestInitialize to run code before running each test 
-        // [TestInitialize()]
-        // public void MyTestInitialize() { }
-        //
-        // Use TestCleanup to run code after each test has run
-        [TestCleanup]
-        public void MyTestCleanup()
-        {
-            if ( Directory.Exists("tests") )
-            {
-                var files = Directory.GetFiles("tests");
-                foreach ( var file in files )
-                {
-                    File.Delete(file);
-                }
-            }
-        }
-
-        #endregion
 
         [TestMethod]
         public async Task Cookies_Are_Created_On_Requests_Consitent()
@@ -177,6 +144,7 @@ namespace Apex.Instagram.Tests
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(fileStorage)
+                                                    .SetLogger(Logger)
                                                     .BuildAsync();
 
             var request = new RequestBuilder(account).SetUrl("https://httpbin.org/post")
@@ -200,15 +168,15 @@ namespace Apex.Instagram.Tests
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(fileStorage)
+                                                    .SetLogger(Logger)
                                                     .BuildAsync();
 
-            var file = @"tests/test_file.txt";
+            var file        = @"tests/test_file.txt";
             var fileContent = Encoding.UTF8.GetBytes(@"hello");
             using (var fileStream = File.Create(file))
             {
                 await fileStream.WriteAsync(fileContent, 0, fileContent.Length);
             }
-
 
             var request = new RequestBuilder(account).SetUrl("https://httpbin.org/post")
                                                      .SetNeedsAuth(false)
@@ -220,8 +188,8 @@ namespace Apex.Instagram.Tests
             var response = await account.ApiRequest(request);
             Assert.IsTrue(response.IsSuccessStatusCode);
             var postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
-            Assert.AreEqual(@"hello", (string)postResponse["files"]["file_name"]);
-            Assert.AreEqual(@"best", (string)postResponse["form"]["test"]);
+            Assert.AreEqual(@"hello", (string) postResponse["files"]["file_name"]);
+            Assert.AreEqual(@"best", (string) postResponse["form"]["test"]);
         }
 
         [TestMethod]
@@ -230,6 +198,7 @@ namespace Apex.Instagram.Tests
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(fileStorage)
+                                                    .SetLogger(Logger)
                                                     .BuildAsync();
 
             var request = new RequestBuilder(account).SetUrl("https://httpbin.org/get")
@@ -243,9 +212,49 @@ namespace Apex.Instagram.Tests
             var response = await account.ApiRequest(request);
             Assert.IsTrue(response.IsSuccessStatusCode);
             var postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
-            Assert.AreEqual(@"4", (string)postResponse["args"]["ig_sig_key_version"]);
-            Assert.AreEqual(@"44605e27fe198f52599f9418b5a5c9d64fe985ffd02060a90c76d988d94dc64e.{""test"":""best"",""test2"":""best2""}", (string)postResponse["args"]["signed_body"]);
-            Assert.AreEqual(@"best3", (string)postResponse["args"]["test3"]);
+            Assert.AreEqual(@"4", (string) postResponse["args"]["ig_sig_key_version"]);
+            Assert.AreEqual(@"44605e27fe198f52599f9418b5a5c9d64fe985ffd02060a90c76d988d94dc64e.{""test"":""best"",""test2"":""best2""}", (string) postResponse["args"]["signed_body"]);
+            Assert.AreEqual(@"best3", (string) postResponse["args"]["test3"]);
         }
+
+        #region Additional test attributes
+
+        //
+        // You can use the following additional attributes as you write your tests:
+        //
+        // Use ClassInitialize to run code before running the first test in the class
+        [ClassInitialize]
+        public static void MyClassInitialize(TestContext testContext) { Logger.LogMessagePublished += LoggerOnLogMessagePublished; }
+
+        private static void LoggerOnLogMessagePublished(object sender, ApexLogMessagePublishedEventArgs e) { Debug.WriteLine(e.TraceMessage); }
+
+        //
+        // Use ClassCleanup to run code after all tests in a class have run
+//        [ClassCleanup]
+//        public static void MyClassCleanup()
+//        {
+//
+//        }
+
+        //
+        // Use TestInitialize to run code before running each test 
+        // [TestInitialize()]
+        // public void MyTestInitialize() { }
+        //
+        // Use TestCleanup to run code after each test has run
+        [TestCleanup]
+        public void MyTestCleanup()
+        {
+            if ( Directory.Exists("tests") )
+            {
+                var files = Directory.GetFiles("tests");
+                foreach ( var file in files )
+                {
+                    File.Delete(file);
+                }
+            }
+        }
+
+        #endregion
     }
 }

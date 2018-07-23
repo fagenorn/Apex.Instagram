@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
+using Apex.Instagram.Logger;
 using Apex.Instagram.Model.Request;
 using Apex.Instagram.Request;
 using Apex.Instagram.Storage;
@@ -33,12 +34,18 @@ namespace Apex.Instagram
         internal async Task<HttpResponseMessage> ApiRequest(HttpRequestMessage request)
         {
             // VERY IMPORTANT TO DISPOSE RESPONSE OR MEMORY LEAK WILL OCCUR
-            return await _httpClient.GetResponseAsync(request);
+            Logger.Debug<Account>(request);
+            var result = await _httpClient.GetResponseAsync(request);
+            Logger.Debug<Account>(result);
+
+            return result;
         }
 
         #region Properties
 
         internal StorageManager Storage { get; }
+
+        internal IApexLogger Logger { get; }
 
         internal bool IsLoggedIn { get; set; }
 
@@ -46,7 +53,11 @@ namespace Apex.Instagram
 
         #region Constructor
 
-        private Account(StorageManager storage) { Storage = storage; }
+        private Account(StorageManager storage, IApexLogger logger = null)
+        {
+            Storage = storage;
+            Logger  = logger ?? new NullLogger();
+        }
 
         private async Task<Account> InitializeAsync()
         {
@@ -58,9 +69,9 @@ namespace Apex.Instagram
             return this;
         }
 
-        internal static Task<Account> CreateAsync(StorageManager storage)
+        internal static Task<Account> CreateAsync(StorageManager storage, IApexLogger logger = null)
         {
-            var ret = new Account(storage);
+            var ret = new Account(storage, logger);
 
             return ret.InitializeAsync();
         }

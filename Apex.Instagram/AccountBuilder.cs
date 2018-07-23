@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 
 using Apex.Instagram.Exception;
+using Apex.Instagram.Logger;
 using Apex.Instagram.Storage;
 
 namespace Apex.Instagram
@@ -8,6 +9,8 @@ namespace Apex.Instagram
     public class AccountBuilder
     {
         private int? _id;
+
+        private IApexLogger _logger;
 
         private IStorage _storage;
 
@@ -25,6 +28,13 @@ namespace Apex.Instagram
             return this;
         }
 
+        public AccountBuilder SetLogger(IApexLogger logger)
+        {
+            _logger = logger;
+
+            return this;
+        }
+
         public async Task<Account> BuildAsync()
         {
             if ( _id == null )
@@ -37,7 +47,7 @@ namespace Apex.Instagram
                 throw new AccountBuilderException("You must set a storage interface.");
             }
 
-            var account = await Account.CreateAsync(new StorageManager(_storage, (int) _id));
+            var account = await Account.CreateAsync(new StorageManager(_storage, (int) _id), _logger);
 
             return account;
         }

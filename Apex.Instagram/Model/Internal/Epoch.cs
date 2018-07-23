@@ -9,7 +9,7 @@ namespace Apex.Instagram.Model.Internal
 
         public Epoch(double initial) { Value = initial; }
 
-        private double Current => (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
+        private static double Current => (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
 
         public double Value { get; private set; }
 
