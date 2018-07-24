@@ -31,14 +31,12 @@ namespace Apex.Instagram
 
         internal string GetCookie(string key) { return _httpClient.GetCookie(key); }
 
-        internal async Task<HttpResponseMessage> ApiRequest(HttpRequestMessage request)
+        internal async Task<T> ApiRequest<T>(HttpRequestMessage request) where T : Response.JsonMap.Response
         {
-            // VERY IMPORTANT TO DISPOSE RESPONSE OR MEMORY LEAK WILL OCCUR
-            Logger.Debug<Account>(request);
-            var result = await _httpClient.GetResponseAsync(request);
-            Logger.Debug<Account>(result);
-
-            return result;
+            using (var result = await _httpClient.GetResponseAsync<T>(request))
+            {
+                return result.Response;
+            }
         }
 
         #region Properties

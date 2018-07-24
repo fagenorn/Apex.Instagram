@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Apex.Instagram.Model.Internal;
 using Apex.Instagram.Model.Request;
+using Apex.Instagram.Response;
 
 namespace Apex.Instagram.Request
 {
@@ -30,6 +32,7 @@ namespace Apex.Instagram.Request
                        };
 
             _lastCookieSave = new LastAction(TimeSpan.FromSeconds(15)); // Save new cookies only every 15 seconds. Reducing this will cause saves to occur more often at the cost of performance.
+            _lock           = new SemaphoreSlim(1);
         }
 
         public void Dispose()
@@ -50,12 +53,15 @@ namespace Apex.Instagram.Request
         /// </summary>
         /// <param name="request">The request object. Will be disposed after request has been made.</param>
         /// <returns>Make sure to dispose <see cref="HttpResponseMessage" /> or a memory leak can occur.</returns>
-        public async Task<HttpResponseMessage> GetResponseAsync(HttpRequestMessage request)
+        public async Task<ResponseInfo<T>> GetResponseAsync<T>(HttpRequestMessage request) where T : Response.JsonMap.Response
         {
+            await _lock.WaitAsync();
             try
             {
-                //ToDo: Have a semaphore here to avoid spamming.
-                return await _request.SendAsync(request);
+                _account.Logger.Debug<Account>(request);
+                var result = await _request.SendAsync(request);
+                _account.Logger.Debug<Account>(result);
+                return await ResponseInfo<T>.CreateAsync<T>(result);
             }
             finally
             {
@@ -66,6 +72,7 @@ namespace Apex.Instagram.Request
                 }
 
                 request.Dispose();
+                _lock.Release();
             }
         }
 
@@ -98,6 +105,8 @@ namespace Apex.Instagram.Request
         private readonly LastAction _lastCookieSave;
 
         private readonly System.Net.Http.HttpClient _request;
+
+        private readonly SemaphoreSlim _lock;
 
         #endregion
     }

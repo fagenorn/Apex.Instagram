@@ -27,7 +27,7 @@ namespace Apex.Instagram.Tests
             var          currentEpochTime = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
             var          epoch            = new Epoch();
             Assert.IsTrue(currentEpochTime - epoch.Value >= 0);
-            Assert.IsTrue(currentEpochTime - epoch.Value <= 5);
+            Assert.IsTrue(currentEpochTime - epoch.Value <= 15);
 
             epoch = new Epoch(epochTime);
             var epoch2 = new Epoch(epochTime2);
