@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Apex.Instagram.Model.Internal;
 using Apex.Instagram.Model.Request;
+using Apex.Instagram.Request.Exception;
 using Apex.Instagram.Response;
 
 namespace Apex.Instagram.Request
@@ -58,10 +59,17 @@ namespace Apex.Instagram.Request
             await _lock.WaitAsync();
             try
             {
-                _account.Logger.Debug<Account>(request);
+                _account.Logger.Debug<HttpClient>(request);
                 var result = await _request.SendAsync(request);
-                _account.Logger.Debug<Account>(result);
+                _account.Logger.Debug<HttpClient>(result);
+
                 return await ResponseInfo<T>.CreateAsync<T>(result);
+            }
+            catch (RequestException e)
+            {
+                _account.Logger.Error<HttpClient>(e, "An error occured while making a request.");
+
+                throw;
             }
             finally
             {

@@ -77,7 +77,7 @@ namespace Apex.Instagram.Logger
 
             var logMessage = new StringBuilder();
             WriteSeprator(logMessage);
-            logMessage.AppendLine($"Response: {message.RequestMessage.Method} {(int)message.StatusCode} {message.RequestMessage.RequestUri}");
+            logMessage.AppendLine($"Response: {message.RequestMessage.Method} {(int) message.StatusCode} {message.RequestMessage.RequestUri}");
             WriteContent(logMessage, message.Content);
             Publish<TSource>(ApexLogLevel.Debug, null, logMessage.ToString(), null);
         }
@@ -195,6 +195,11 @@ namespace Apex.Instagram.Logger
 
         private async void WriteContent(StringBuilder sb, HttpContent content)
         {
+            if ( content == null )
+            {
+                return;
+            }
+
             sb.AppendLine();
             sb.AppendLine("Content:");
             var raw = await content.ReadAsStringAsync();

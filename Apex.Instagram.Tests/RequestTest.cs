@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 using Apex.Instagram.Logger;
 using Apex.Instagram.Request;
+using Apex.Instagram.Request.Exception;
+using Apex.Instagram.Request.Exception.EndpointException;
+using Apex.Instagram.Response.JsonMap;
 using Apex.Instagram.Tests.Maps;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -30,12 +33,13 @@ namespace Apex.Instagram.Tests
         /// </summary>
         public TestContext TestContext { get; set; }
 
-        [TestMethod, Ignore]
+        [TestMethod]
         public async Task Cookies_Are_Created_On_Requests_Consitent()
         {
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(fileStorage)
+                                                    .SetLogger(Logger)
                                                     .BuildAsync();
 
             var request = new RequestBuilder(account).SetUrl("https://httpbin.org/cookies")
@@ -43,12 +47,9 @@ namespace Apex.Instagram.Tests
                                                      .SetNeedsAuth(false)
                                                      .Build();
 
-            var response = await GetClient(account)
-                               .SendAsync(request);
+            var request1 = request;
+            await Assert.ThrowsExceptionAsync<EndpointException>(async () => await account.ApiRequest<GenericResponse>(request1));
 
-            request.Dispose();
-
-            Assert.IsTrue(response.IsSuccessStatusCode);
             Assert.AreEqual(0, (await account.Storage.Cookie.LoadAsync()).Cookies.Count);
             Assert.IsNull(account.GetCookie("freeform"));
 
@@ -58,12 +59,9 @@ namespace Apex.Instagram.Tests
                                                  .AddParam("freeform", "test")
                                                  .Build();
 
-            response = await GetClient(account)
-                           .SendAsync(request);
+            var request2 = request;
+            await Assert.ThrowsExceptionAsync<EndpointException>(async () => await account.ApiRequest<GenericResponse>(request2));
 
-            request.Dispose();
-
-            Assert.IsTrue(response.IsSuccessStatusCode);
             Assert.AreEqual("test", account.GetCookie("freeform"));
 
             request = new RequestBuilder(account).SetUrl("https://httpbin.org/cookies")
@@ -71,21 +69,19 @@ namespace Apex.Instagram.Tests
                                                  .SetNeedsAuth(false)
                                                  .Build();
 
-            response = await GetClient(account)
-                           .SendAsync(request);
+            var request3 = request;
+            await Assert.ThrowsExceptionAsync<EndpointException>(async () => await account.ApiRequest<GenericResponse>(request3));
 
-            request.Dispose();
-
-            Assert.IsTrue(response.IsSuccessStatusCode);
             Assert.AreEqual("test", account.GetCookie("freeform"));
         }
 
-        [TestMethod, Ignore]
+        [TestMethod]
         public async Task Cookies_Are_Stored_To_File_On_Request()
         {
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(fileStorage)
+                                                    .SetLogger(Logger)
                                                     .BuildAsync();
 
             var request = new RequestBuilder(account).SetUrl("https://httpbin.org/cookies/set")
@@ -95,12 +91,10 @@ namespace Apex.Instagram.Tests
                                                      .Build();
 
             Assert.IsNull(await account.Storage.Cookie.LoadAsync());
-            var response = await GetClient(account)
-                               .SendAsync(request);
+            var account1 = account;
+            var request1 = request;
+            await Assert.ThrowsExceptionAsync<EndpointException>(async () => await account1.ApiRequest<GenericResponse>(request1));
 
-            request.Dispose();
-
-            Assert.IsTrue(response.IsSuccessStatusCode);
             Assert.AreEqual("test", account.GetCookie("freeform"));
             Assert.AreEqual(1, (await account.Storage.Cookie.LoadAsync()).Cookies.Count);
 
@@ -290,13 +284,124 @@ namespace Apex.Instagram.Tests
                                                      .SetNeedsAuth(false)
                                                      .Build();
 
-            var response = await GetClient(account)
-                               .SendAsync(request);
+            await Assert.ThrowsExceptionAsync<BadRequestException>(async () => await account.ApiRequest<GenericResponse>(request));
+        }
 
-            request.Dispose();
+        [TestMethod]
+        [ExpectedException(typeof(ThrottledException))]
+        public async Task Throttled_Request()
+        {
+            var fileStorage = new FileStorage();
+            var account = await new AccountBuilder().SetId(0)
+                                                    .SetStorage(fileStorage)
+                                                    .SetLogger(Logger)
+                                                    .BuildAsync();
 
-            Assert.IsFalse(response.IsSuccessStatusCode);
-            Assert.AreEqual(400, (int) response.StatusCode);
+            var request = new RequestBuilder(account).SetUrl("https://httpbin.org/status/429")
+                                                     .SetNeedsAuth(false)
+                                                     .Build();
+
+            await account.ApiRequest<GenericResponse>(request);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(RequestHeadersTooLargeException))]
+        public async Task RequestHeadersTooLarge_Request()
+        {
+            var fileStorage = new FileStorage();
+            var account = await new AccountBuilder().SetId(0)
+                                                    .SetStorage(fileStorage)
+                                                    .SetLogger(Logger)
+                                                    .BuildAsync();
+
+            var request = new RequestBuilder(account).SetUrl("https://httpbin.org/status/431")
+                                                     .SetNeedsAuth(false)
+                                                     .Build();
+
+            await account.ApiRequest<GenericResponse>(request);
+        }
+
+        [TestMethod]
+        public async Task Generic_Api_Request_Status_Ok()
+        {
+            var fileStorage = new FileStorage();
+            var account = await new AccountBuilder().SetId(0)
+                                                    .SetStorage(fileStorage)
+                                                    .SetLogger(Logger)
+                                                    .BuildAsync();
+
+            var request = new RequestBuilder(account).SetUrl("http://ptsv2.com/t/3e37m-1532618200/post")
+                                                     .SetNeedsAuth(false)
+                                                     .Build();
+
+            var result = await account.ApiRequest<GenericResponse>(request);
+            Assert.AreEqual("ok", result.Status);
+        }
+
+        [TestMethod]
+        public async Task Generic_Api_Request_Status_Fail_With_One_Error_Message()
+        {
+            var fileStorage = new FileStorage();
+            var account = await new AccountBuilder().SetId(0)
+                                                    .SetStorage(fileStorage)
+                                                    .SetLogger(Logger)
+                                                    .BuildAsync();
+
+            var request = new RequestBuilder(account).SetUrl("http://ptsv2.com/t/a1boc-1532620880/post")
+                                                     .SetNeedsAuth(false)
+                                                     .Build();
+
+            var exception = await Assert.ThrowsExceptionAsync<EndpointException>(async () => await account.ApiRequest<GenericResponse>(request));
+            Assert.AreEqual("Some random message", exception.Message);
+        }
+
+        [TestMethod]
+        public async Task Generic_Api_Request_Status_Fail_With_Multiple_Error_Messages()
+        {
+            var fileStorage = new FileStorage();
+            var account = await new AccountBuilder().SetId(0)
+                                                    .SetStorage(fileStorage)
+                                                    .SetLogger(Logger)
+                                                    .BuildAsync();
+
+            var request = new RequestBuilder(account).SetUrl("http://ptsv2.com/t/1ikd3-1532626976/post")
+                                                     .SetNeedsAuth(false)
+                                                     .Build();
+
+            var exception = await Assert.ThrowsExceptionAsync<EndpointException>(async () => await account.ApiRequest<GenericResponse>(request));
+            Assert.AreEqual("Select a valid choice. 0 is not one of the available choices.", exception.Message);
+        }
+
+        [TestMethod]
+        public async Task Generic_Api_Request_Status_Fail_Critical_Exception()
+        {
+            var fileStorage = new FileStorage();
+            var account = await new AccountBuilder().SetId(0)
+                                                    .SetStorage(fileStorage)
+                                                    .SetLogger(Logger)
+                                                    .BuildAsync();
+
+            var request = new RequestBuilder(account).SetUrl("http://ptsv2.com/t/j4y3y-1532627784/post")
+                                                     .SetNeedsAuth(false)
+                                                     .Build();
+
+            await Assert.ThrowsExceptionAsync<ForcedPasswordResetException>(async () => await account.ApiRequest<GenericResponse>(request));
+        }
+
+        [TestMethod]
+        public async Task Generic_Api_Request_Status_Ok_Critical_Status_Exception()
+        {
+            var fileStorage = new FileStorage();
+            var account = await new AccountBuilder().SetId(0)
+                                                    .SetStorage(fileStorage)
+                                                    .SetLogger(Logger)
+                                                    .BuildAsync();
+
+            var request = new RequestBuilder(account).SetUrl("http://ptsv2.com/t/2x2zs-1532628038/post")
+                                                     .SetNeedsAuth(false)
+                                                     .Build();
+
+            await Assert.ThrowsExceptionAsync<ThrottledException>(async () => await account.ApiRequest<GenericResponse>(request));
         }
 
         #region Additional test attributes

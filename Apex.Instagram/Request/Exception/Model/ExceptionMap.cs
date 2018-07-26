@@ -3,7 +3,7 @@ using System.Linq;
 
 using Apex.Instagram.Utils;
 
-namespace Apex.Instagram.Request.Exception
+namespace Apex.Instagram.Request.Exception.Model
 {
     internal class ExceptionMap<T> : IExceptionMap where T : RequestException, new()
     {
@@ -13,7 +13,7 @@ namespace Apex.Instagram.Request.Exception
 
         public bool TryGet(string message, out RequestException result)
         {
-            if ( _patterns.Any(x => x.EqualsWildcard(message)) )
+            if (_patterns.Any(x => x.EqualsWildcard(message)))
             {
                 result = new T();
 

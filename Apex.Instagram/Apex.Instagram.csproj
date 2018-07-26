@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,6 +29,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="JetBrains.Annotations, Version=11.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
@@ -91,18 +93,33 @@
     <Compile Include="Request\Exception\ChallengeRequiredException.cs" />
     <Compile Include="Request\Exception\CheckpointRequiredException.cs" />
     <Compile Include="Request\Exception\ConsentRequiredException.cs" />
-    <Compile Include="Request\Exception\EndpointException.cs" />
-    <Compile Include="Request\Exception\ExceptionMap.cs" />
+    <Compile Include="Request\Exception\EndpointException\BadRequestException.cs" />
+    <Compile Include="Request\Exception\EndpointException\ConflictException.cs" />
+    <Compile Include="Request\Exception\EndpointException\EndpointException.cs" />
+    <Compile Include="Request\Exception\EndpointException\ForbiddenException.cs" />
+    <Compile Include="Request\Exception\EndpointException\MethodNotAllowedException.cs" />
+    <Compile Include="Request\Exception\EndpointException\NotAcceptableException.cs" />
+    <Compile Include="Request\Exception\EndpointException\NotFoundException.cs" />
+    <Compile Include="Request\Exception\EndpointException\ProxyAuthenticationRequiredException.cs" />
+    <Compile Include="Request\Exception\EndpointException\RequestTimeoutException.cs" />
+    <Compile Include="Request\Exception\EndpointException\UnauthorizedException.cs" />
+    <Compile Include="Request\Exception\EndpointException\UnknowEndpointException.cs" />
+    <Compile Include="Request\Exception\Model\ExceptionMap.cs" />
     <Compile Include="Request\Exception\FeedbackRequiredException.cs" />
     <Compile Include="Request\Exception\ForcedPasswordResetException.cs" />
-    <Compile Include="Request\Exception\IExceptionMap.cs" />
+    <Compile Include="Request\Exception\Model\IExceptionMap.cs" />
     <Compile Include="Request\Exception\IncorrectPasswordException.cs" />
     <Compile Include="Request\Exception\InvalidSmsCodeException.cs" />
     <Compile Include="Request\Exception\InvalidUserException.cs" />
     <Compile Include="Request\Exception\LoginRequiredException.cs" />
+    <Compile Include="Request\Exception\Model\IMap.cs" />
+    <Compile Include="Request\Exception\Model\IStatusCodeMap.cs" />
+    <Compile Include="Request\Exception\Model\StatusMap.cs" />
     <Compile Include="Request\Exception\RequestBuilderException.cs" />
     <Compile Include="Request\Exception\RequestException.cs" />
+    <Compile Include="Request\Exception\RequestHeadersTooLargeException.cs" />
     <Compile Include="Request\Exception\SentryBlockException.cs" />
+    <Compile Include="Request\Exception\ThrottledException.cs" />
     <Compile Include="Request\HttpClient.cs" />
     <Compile Include="Request\HttpClientBuilder.cs" />
     <Compile Include="Request\Model\IPostValue.cs" />
@@ -110,6 +127,7 @@
     <Compile Include="Request\Model\PostString.cs" />
     <Compile Include="Request\RequestBuilder.cs" />
     <Compile Include="Request\Signature\Signer.cs" />
+    <Compile Include="Response\JsonMap\GenericResponse.cs" />
     <Compile Include="Response\ResponseInfo.cs" />
     <Compile Include="Response\JsonMap\Model\Message.cs" />
     <Compile Include="Response\JsonMap\Response.cs" />

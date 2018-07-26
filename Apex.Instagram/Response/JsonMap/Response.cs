@@ -1,44 +1,45 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
 
 using Apex.Instagram.Request.Exception;
 using Apex.Instagram.Response.JsonMap.Model;
 
 namespace Apex.Instagram.Response.JsonMap
 {
-    public class Response
+    public abstract class Response
     {
-        public Response(string status, dynamic message, Message[] messages)
-        {
-            Status   = status;
-            Message  = message;
-            Messages = messages;
-        }
-
         [DataMember(Name = "status")]
-        public string Status { get; }
+        public string Status { get; set; }
 
         [DataMember(Name = "message")]
-        public dynamic Message { get; }
+        public dynamic Message { get; set; }
 
         [DataMember(Name = "_messages")]
-        public Message[] Messages { get; }
+        public Message[] Messages { get; set; }
 
         public string[] GetErrors()
         {
-            if ( Message is string )
+            if ( Message == null )
             {
-                return new string[]
+                throw new RequestException("No error object found.");
+            }
+
+            if ( Message is string s )
+            {
+                return new[]
                        {
-                           Message
+                           s
                        };
             }
 
-            if ( Message is string[] )
+            if ( Message.ContainsKey("errors") && Message["errors"] is IList<object> )
             {
-                return Message;
+                return ((IList<object>) Message["errors"]).Cast<string>()
+                                                          .ToArray();
             }
 
-            throw new RequestException("Unable to parse error messages.");
+            throw new RequestException("Unable to parse error message.");
         }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
 using Apex.Instagram.Request.Exception;
+using Apex.Instagram.Request.Exception.EndpointException;
 
 using Utf8Json;
 
@@ -37,7 +39,20 @@ namespace Apex.Instagram.Response
         {
             try
             {
+                foreach ( var exceptionMap in Constants.Response.Instance.StatusCodeMap )
+                {
+                    if ( exceptionMap.TryGet((int) _response.StatusCode, out var result) )
+                    {
+                        throw result;
+                    }
+                }
+
                 Response = await JsonSerializer.DeserializeAsync<T>(await _response.Content.ReadAsStreamAsync());
+
+                if ( Response.Status == null )
+                {
+                    throw new JsonParsingException("Response isn't valid.");
+                }
 
                 if ( IsOk )
                 {
@@ -58,9 +73,86 @@ namespace Apex.Instagram.Response
 
                 throw new EndpointException(errors[0]);
             }
-            catch
+            catch (RequestException)
             {
-                throw new RequestException(_response.StatusCode.ToString());
+                throw;
+            }
+            catch (JsonParsingException e)
+            {
+                switch ( _response.StatusCode )
+                {
+                    case HttpStatusCode.BadRequest:
+
+                        throw new BadRequestException();
+                    case HttpStatusCode.Unauthorized:
+
+                        throw new UnauthorizedException();
+                    case HttpStatusCode.Forbidden:
+
+                        throw new ForbiddenException();
+                    case HttpStatusCode.NotFound:
+
+                        throw new NotFoundException();
+                    case HttpStatusCode.MethodNotAllowed:
+
+                        throw new MethodNotAllowedException();
+                    case HttpStatusCode.NotAcceptable:
+
+                        throw new NotAcceptableException();
+                    case HttpStatusCode.ProxyAuthenticationRequired:
+
+                        throw new ProxyAuthenticationRequiredException();
+                    case HttpStatusCode.RequestTimeout:
+
+                        throw new RequestTimeoutException();
+                    case HttpStatusCode.Conflict:
+
+                        throw new ConflictException();
+                    case HttpStatusCode.Gone:
+                    case HttpStatusCode.LengthRequired:
+                    case HttpStatusCode.PreconditionFailed:
+                    case HttpStatusCode.RequestEntityTooLarge:
+                    case HttpStatusCode.RequestUriTooLong:
+                    case HttpStatusCode.UnsupportedMediaType:
+                    case HttpStatusCode.RequestedRangeNotSatisfiable:
+                    case HttpStatusCode.ExpectationFailed:
+                    case HttpStatusCode.UpgradeRequired:
+                    case HttpStatusCode.InternalServerError:
+                    case HttpStatusCode.NotImplemented:
+                    case HttpStatusCode.BadGateway:
+                    case HttpStatusCode.ServiceUnavailable:
+                    case HttpStatusCode.GatewayTimeout:
+                    case HttpStatusCode.HttpVersionNotSupported:
+
+                        throw new EndpointException(_response.StatusCode.ToString());
+                    case HttpStatusCode.Continue:
+                    case HttpStatusCode.SwitchingProtocols:
+                    case HttpStatusCode.OK:
+                    case HttpStatusCode.Created:
+                    case HttpStatusCode.Accepted:
+                    case HttpStatusCode.NonAuthoritativeInformation:
+                    case HttpStatusCode.NoContent:
+                    case HttpStatusCode.ResetContent:
+                    case HttpStatusCode.PartialContent:
+                    case HttpStatusCode.MultipleChoices:
+                    case HttpStatusCode.MovedPermanently:
+                    case HttpStatusCode.Found:
+                    case HttpStatusCode.SeeOther:
+                    case HttpStatusCode.NotModified:
+                    case HttpStatusCode.UseProxy:
+                    case HttpStatusCode.Unused:
+                    case HttpStatusCode.TemporaryRedirect:
+                    case HttpStatusCode.PaymentRequired:
+
+                        throw new EndpointException("Failed to map/parse response.");
+                    default:
+
+                        throw new UnknowEndpointException("Unknow status code: {0}", e, (int) _response.StatusCode);
+                }
+            }
+            catch (System.Exception e)
+            {
+                throw new RequestException("Unknow exception", e);
             }
         }
 

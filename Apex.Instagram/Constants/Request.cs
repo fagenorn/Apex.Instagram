@@ -40,6 +40,7 @@ namespace Apex.Instagram.Constants
             CookieUrl = new[]
                         {
                             new Uri("https://httpbin.org"),
+                            new Uri("http://ptsv2.com"),
                             BaseUrl
                         };
         }

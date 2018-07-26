@@ -2,6 +2,7 @@
 
 using Apex.Instagram.Exception;
 using Apex.Instagram.Logger;
+using Apex.Instagram.Model.Request;
 using Apex.Instagram.Storage;
 
 namespace Apex.Instagram
@@ -11,6 +12,8 @@ namespace Apex.Instagram
         private int? _id;
 
         private IApexLogger _logger;
+
+        private Proxy _proxy;
 
         private IStorage _storage;
 
@@ -35,6 +38,13 @@ namespace Apex.Instagram
             return this;
         }
 
+        public AccountBuilder SetProxy(Proxy proxy)
+        {
+            _proxy = proxy;
+
+            return this;
+        }
+
         public async Task<Account> BuildAsync()
         {
             if ( _id == null )
@@ -48,6 +58,11 @@ namespace Apex.Instagram
             }
 
             var account = await Account.CreateAsync(new StorageManager(_storage, (int) _id), _logger);
+
+            if ( _proxy != null )
+            {
+                await account.UpdateProxy(_proxy);
+            }
 
             return account;
         }

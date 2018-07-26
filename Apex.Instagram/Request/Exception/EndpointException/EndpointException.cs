@@ -1,4 +1,4 @@
-﻿namespace Apex.Instagram.Request.Exception
+﻿namespace Apex.Instagram.Request.Exception.EndpointException
 {
     public class EndpointException : RequestException
     {

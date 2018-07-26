@@ -51,7 +51,7 @@ namespace Apex.Instagram.Tests
             action = new LastAction(wait, new Epoch());
 
             Assert.IsFalse(action.Passed);
-            await Task.Delay(wait);
+            await Task.Delay(wait + TimeSpan.FromMilliseconds(5));
             Assert.IsTrue(action.Passed);
         }
 
