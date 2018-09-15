@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 namespace Apex.Instagram.Utils
 {
@@ -16,6 +17,20 @@ namespace Apex.Instagram.Utils
             }
 
             return result.ToString();
+        }
+
+        public string GenerateUuid(bool keepDashes = true)
+        {
+            var guid = Guid.NewGuid()
+                           .ToString();
+
+            return keepDashes ? guid : guid.Replace('-', '\0');
+        }
+
+        public string GenerateDeviceId()
+        {
+            return "android-" + Hashing.Instance.ByteToString(Hashing.Instance.Md5(GenerateUuid()))
+                                       .Substring(0, 16);
         }
 
         #region Singleton     

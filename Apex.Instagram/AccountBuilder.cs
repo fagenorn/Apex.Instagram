@@ -13,13 +13,31 @@ namespace Apex.Instagram
 
         private IApexLogger _logger;
 
+        private string _password;
+
         private Proxy _proxy;
 
         private IStorage _storage;
 
+        private string _username;
+
         public AccountBuilder SetId(int id)
         {
             _id = id;
+
+            return this;
+        }
+
+        public AccountBuilder SetUsername(string username)
+        {
+            _username = username;
+
+            return this;
+        }
+
+        public AccountBuilder SetPassword(string password)
+        {
+            _password = password;
 
             return this;
         }
@@ -62,6 +80,16 @@ namespace Apex.Instagram
             if ( _proxy != null )
             {
                 await account.UpdateProxy(_proxy);
+            }
+
+            if ( !string.IsNullOrWhiteSpace(_username) )
+            {
+                await account.UpdateUsername(_username);
+            }
+
+            if ( !string.IsNullOrWhiteSpace(_password) )
+            {
+                await account.UpdatePassword(_password);
             }
 
             return account;

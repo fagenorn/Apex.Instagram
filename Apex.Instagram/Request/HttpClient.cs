@@ -7,34 +7,18 @@ using System.Threading.Tasks;
 using Apex.Instagram.Model.Internal;
 using Apex.Instagram.Model.Request;
 using Apex.Instagram.Request.Exception;
+using Apex.Instagram.Request.Middleware;
 using Apex.Instagram.Response;
 
 namespace Apex.Instagram.Request
 {
     internal class HttpClient : IDisposable
     {
-        public HttpClient(Account account, CookieContainer cookies = null, Proxy proxy = null)
-        {
-            _account = account;
+        #region Properties
 
-            _handler = new HttpClientHandler
-                       {
-                           CookieContainer          = cookies ?? new CookieContainer(),
-                           Proxy                    = proxy?.GetWebProxy(),
-                           UseProxy                 = true, // Will use system default proxy if no proxy is set, needed for loopback
-                           AllowAutoRedirect        = true,
-                           MaxAutomaticRedirections = 8,
-                           AutomaticDecompression   = DecompressionMethods.Deflate | DecompressionMethods.GZip
-                       };
+        internal ZeroRatingMiddleware ZeroRatingMiddleware { get; }
 
-            _request = new System.Net.Http.HttpClient(_handler)
-                       {
-                           Timeout = Constants.Request.Instance.Timeout
-                       };
-
-            _lastCookieSave = new LastAction(TimeSpan.FromSeconds(15)); // Save new cookies only every 15 seconds. Reducing this will cause saves to occur more often at the cost of performance.
-            _lock           = new SemaphoreSlim(1);
-        }
+        #endregion
 
         public void Dispose()
         {
@@ -104,15 +88,65 @@ namespace Apex.Instagram.Request
                 ?.Value;
         }
 
+        #region Constructor
+
+        private HttpClient(Account account)
+        {
+            _account             = account;
+            _lastCookieSave      = new LastAction(TimeSpan.FromSeconds(15)); // Save new cookies only every 15 seconds. Reducing this will cause saves to occur more often at the cost of performance.
+            _lock                = new SemaphoreSlim(1);
+            ZeroRatingMiddleware = new ZeroRatingMiddleware();
+        }
+
+        private async Task<HttpClient> InitializeAsync()
+        {
+            var cookies = await _account.Storage.Cookie.LoadAsync();
+            var proxy   = await _account.Storage.Proxy.LoadAsync();
+
+            _handler = new HttpClientHandler
+                       {
+                           CookieContainer          = cookies ?? new CookieContainer(),
+                           Proxy                    = proxy?.GetWebProxy(),
+                           UseProxy                 = true, // Will use system default proxy if no proxy is set, needed for loopback
+                           AllowAutoRedirect        = true,
+                           MaxAutomaticRedirections = 8,
+                           AutomaticDecompression   = DecompressionMethods.Deflate | DecompressionMethods.GZip
+                       };
+
+            _request = new System.Net.Http.HttpClient(InjectMiddleware(_handler))
+                       {
+                           Timeout = Constants.Request.Instance.Timeout
+                       };
+
+            return this;
+        }
+
+        private HttpMessageHandler InjectMiddleware(HttpMessageHandler innerHandler)
+        {
+            var handler = new HttpClientMiddlewareHandler(innerHandler);
+            handler.Push(ZeroRatingMiddleware);
+
+            return handler;
+        }
+
+        internal static Task<HttpClient> CreateAsync(Account account)
+        {
+            var ret = new HttpClient(account);
+
+            return ret.InitializeAsync();
+        }
+
+        #endregion
+
         #region Fields
 
         private readonly Account _account;
 
-        private readonly HttpClientHandler _handler;
+        private HttpClientHandler _handler;
 
         private readonly LastAction _lastCookieSave;
 
-        private readonly System.Net.Http.HttpClient _request;
+        private System.Net.Http.HttpClient _request;
 
         private readonly SemaphoreSlim _lock;
 

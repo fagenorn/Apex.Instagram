@@ -39,6 +39,9 @@
       <HintPath>..\packages\MessagePack.1.7.3.4\lib\net47\MessagePack.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.3.0\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+    </Reference>
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http, Version=4.1.1.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -73,6 +76,7 @@
   <ItemGroup>
     <Compile Include="Account.cs" />
     <Compile Include="AccountBuilder.cs" />
+    <Compile Include="Constants\Device.cs" />
     <Compile Include="Constants\Request.cs" />
     <Compile Include="Constants\Response.cs" />
     <Compile Include="Constants\Version.cs" />
@@ -84,6 +88,12 @@
     <Compile Include="Logger\ApexLogMessagePublishedEventArgs.cs" />
     <Compile Include="Logger\IApexLogger.cs" />
     <Compile Include="Logger\NullLogger.cs" />
+    <Compile Include="Login\Exception\LoginException.cs" />
+    <Compile Include="Login\LoginClient.cs" />
+    <Compile Include="Login\LoginInfo.cs" />
+    <Compile Include="Model\Account\AccountInfo.cs" />
+    <Compile Include="Model\Account\Device\DeviceGenerator.cs" />
+    <Compile Include="Model\Account\Device\DeviceInfo.cs" />
     <Compile Include="Model\Internal\Epoch.cs" />
     <Compile Include="Model\Internal\LastAction.cs" />
     <Compile Include="Model\Request\Proxy.cs" />
@@ -121,13 +131,18 @@
     <Compile Include="Request\Exception\SentryBlockException.cs" />
     <Compile Include="Request\Exception\ThrottledException.cs" />
     <Compile Include="Request\HttpClient.cs" />
-    <Compile Include="Request\HttpClientBuilder.cs" />
+    <Compile Include="Request\Instagram\Internal.cs" />
+    <Compile Include="Request\Instagram\RequestCollection.cs" />
+    <Compile Include="Request\Middleware\HttpClientMiddlewareHandler.cs" />
+    <Compile Include="Request\Middleware\IMiddleware.cs" />
+    <Compile Include="Request\Middleware\ZeroRatingMiddleware.cs" />
     <Compile Include="Request\Model\IPostValue.cs" />
     <Compile Include="Request\Model\Parameter.cs" />
     <Compile Include="Request\Model\PostString.cs" />
     <Compile Include="Request\RequestBuilder.cs" />
     <Compile Include="Request\Signature\Signer.cs" />
     <Compile Include="Response\JsonMap\GenericResponse.cs" />
+    <Compile Include="Response\JsonMap\MsisdnHeaderResponse.cs" />
     <Compile Include="Response\ResponseInfo.cs" />
     <Compile Include="Response\JsonMap\Model\Message.cs" />
     <Compile Include="Response\JsonMap\Response.cs" />
@@ -143,6 +158,7 @@
     <Compile Include="Storage\Serializer\MessagePackObjectSerializerJson.cs" />
     <Compile Include="Storage\StorageKey.cs" />
     <Compile Include="Storage\StorageManager.cs" />
+    <Compile Include="Utils\Hashing.cs" />
     <Compile Include="Utils\Instagram.cs" />
     <Compile Include="Utils\Randomizer.cs" />
     <Compile Include="Utils\WildcardMatch.cs" />

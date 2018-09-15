@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Cryptography;
+﻿using System.Collections.Generic;
 using System.Text;
 
+using Apex.Instagram.Constants;
 using Apex.Instagram.Request.Model;
-
-using Version = Apex.Instagram.Constants.Version;
+using Apex.Instagram.Utils;
 
 namespace Apex.Instagram.Request.Signature
 {
@@ -14,14 +12,8 @@ namespace Apex.Instagram.Request.Signature
         public static string GenerateSignature(string value)
         {
             var key = Encoding.UTF8.GetBytes(Version.Instance.SigningKey);
-            using (var hma = new HMACSHA256(key))
-            {
-                hma.ComputeHash(Encoding.UTF8.GetBytes(value));
 
-                return BitConverter.ToString(hma.Hash)
-                                   .Replace("-", "")
-                                   .ToLower();
-            }
+            return Hashing.Instance.ByteToString(Hashing.Instance.Sha256(value, key));
         }
 
         public Dictionary<string, Parameter> Sign(Dictionary<string, Parameter> postParams)

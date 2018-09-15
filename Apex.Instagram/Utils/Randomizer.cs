@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Apex.Instagram.Utils
 {
@@ -11,6 +12,13 @@ namespace Apex.Instagram.Utils
             max += 1;
 
             return _random.Next(min, max);
+        }
+
+        public T Item<T>(IList<T> list)
+        {
+            var amount = Number(list.Count - 1);
+
+            return list[amount];
         }
 
         #region Singleton     

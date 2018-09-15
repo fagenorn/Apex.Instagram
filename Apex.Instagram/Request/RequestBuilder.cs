@@ -166,7 +166,7 @@ namespace Apex.Instagram.Request
                 throw new RequestBuilderException("You need to have a url specified.");
             }
 
-            if ( _needsAuth && !_account.IsLoggedIn )
+            if ( _needsAuth && !_account.LoginClient.LoginInfo.IsLoggedIn )
             {
                 throw new RequestBuilderException("You aren't logged in currently. Login and try again.");
             }

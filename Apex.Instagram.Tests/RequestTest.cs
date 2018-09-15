@@ -193,12 +193,9 @@ namespace Apex.Instagram.Tests
 
         private HttpClient GetClient(Account account)
         {
-            var type   = typeof(Account);
-            var client = type.GetField("_httpClient", BindingFlags.NonPublic | BindingFlags.Instance);
+            Debug.Assert(account.HttpClient != null, nameof(account.HttpClient) + " != null");
 
-            Debug.Assert(client != null, nameof(client) + " != null");
-
-            var accClient = (Request.HttpClient) client.GetValue(account);
+            var accClient = account.HttpClient;
 
             var type2   = typeof(Request.HttpClient);
             var client2 = type2.GetField("_request", BindingFlags.NonPublic | BindingFlags.Instance);

@@ -11,7 +11,6 @@ namespace Apex.Instagram.Storage
         /// <param name="id">The account id</param>
         /// <param name="subId">The settings id</param>
         /// <param name="data">The data stream that has to be saved</param>
-        /// <returns></returns>
         Task SaveAsync(int id, int subId, Stream data);
 
         /// <summary>

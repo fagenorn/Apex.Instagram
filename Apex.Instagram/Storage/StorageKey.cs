@@ -4,6 +4,10 @@
     {
         Proxy = 1,
 
-        Cookie = 2
+        Cookie = 2,
+
+        AccountInfo = 3,
+
+        LoginInfo = 4
     }
 }
