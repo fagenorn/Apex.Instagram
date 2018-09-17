@@ -18,7 +18,7 @@ namespace Apex.Instagram.Response
         {
             get
             {
-                if ( !_response.IsSuccessStatusCode || Response.Status != Constants.Response.Instance.StatusOk )
+                if ( !_response.IsSuccessStatusCode || !Response.IsOk() )
                 {
                     return false;
                 }
@@ -66,12 +66,17 @@ namespace Apex.Instagram.Response
                     {
                         if ( exceptionMap.TryGet(error, out var result) )
                         {
+                            result.Response = Response;
+
                             throw result;
                         }
                     }
                 }
 
-                throw new EndpointException(errors[0]);
+                throw new EndpointException(errors[0])
+                      {
+                          Response = Response
+                      };
             }
             catch (RequestException)
             {

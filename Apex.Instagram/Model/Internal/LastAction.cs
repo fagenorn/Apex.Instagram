@@ -1,21 +1,31 @@
 ﻿using System;
 
+using MessagePack;
+
 namespace Apex.Instagram.Model.Internal
 {
-    internal class LastAction
+    [MessagePackObject]
+    public class LastAction
     {
-        private readonly Epoch _last;
-
-        private readonly TimeSpan _limit;
-
         public LastAction(TimeSpan limit, Epoch initial = null)
         {
-            _limit = limit;
-            _last  = initial ?? new Epoch(0);
+            Limit = limit;
+            Last  = initial ?? new Epoch(0);
         }
 
-        public bool Passed => new Epoch() - _last > _limit;
+        public void Update() { Last.Update(); }
 
-        public void Update() { _last.Update(); }
+        #region Properties
+
+        [Key(0)]
+        public Epoch Last { get; }
+
+        [Key(1)]
+        public TimeSpan Limit { get; }
+
+        [IgnoreMember]
+        public bool Passed => new Epoch() - Last > Limit;
+
+        #endregion
     }
 }

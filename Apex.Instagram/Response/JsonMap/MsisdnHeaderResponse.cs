@@ -11,9 +11,9 @@ namespace Apex.Instagram.Response.JsonMap
         public string Url { get; set; }
 
         [DataMember(Name = "remaining_ttl_seconds")]
-        public int RemainingTtlSeconds { get; set; }
+        public int? RemainingTtlSeconds { get; set; }
 
         [DataMember(Name = "ttl")]
-        public int Ttl { get; set; }
+        public int? Ttl { get; set; }
     }
 }

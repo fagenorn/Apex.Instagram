@@ -18,10 +18,7 @@ namespace Apex.Instagram.Storage.Object
             _lock       = new SemaphoreSlim(1);
         }
 
-        public void Dispose()
-        {
-            _lock?.Dispose();
-        }
+        public void Dispose() { _lock?.Dispose(); }
 
         public async Task<T> LoadAsync()
         {
@@ -32,7 +29,7 @@ namespace Apex.Instagram.Storage.Object
                 {
                     if ( stream == null )
                     {
-                        return default(T);
+                        return default;
                     }
 
                     return await _serializer.DeserializeAsync<T>(stream);

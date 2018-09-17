@@ -30,5 +30,8 @@ namespace Apex.Instagram.Model.Account
 
         [Key(7)]
         public DeviceInfo DeviceInfo { get; internal set; }
+
+        [Key(8)]
+        public string AccountId { get; internal set; }
     }
 }

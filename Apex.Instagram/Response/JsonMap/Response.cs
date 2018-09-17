@@ -41,5 +41,7 @@ namespace Apex.Instagram.Response.JsonMap
 
             throw new RequestException("Unable to parse error message.");
         }
+
+        public bool IsOk() { return Status == Constants.Response.Instance.StatusOk; }
     }
 }

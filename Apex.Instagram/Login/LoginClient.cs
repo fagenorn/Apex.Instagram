@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Apex.Instagram.Login.Exception;
@@ -18,7 +19,7 @@ namespace Apex.Instagram.Login
 
         public void Dispose() { }
 
-        public async Task Login(string username, string password)
+        public async Task<LoginResponse> Login(string username, string password)
         {
             if ( string.IsNullOrWhiteSpace(username) )
             {
@@ -32,9 +33,12 @@ namespace Apex.Instagram.Login
 
             if ( !LoginInfo.IsLoggedIn )
             {
+                await PreLoginFlow();
+
+                LoginResponse response;
+
                 try
                 {
-                    await PreLoginFlow();
                     var request = new RequestBuilder(_account).SetNeedsAuth(false)
                                                               .SetUrl("accounts/login/")
                                                               .AddPost("phone_id", _account.AccountInfo.PhoneId)
@@ -47,22 +51,79 @@ namespace Apex.Instagram.Login
                                                               .AddPost("login_attempt_count", 0)
                                                               .Build();
 
-                    var response = await _account.ApiRequest<GenericResponse>(request);
+                    response = await _account.ApiRequest<LoginResponse>(request);
                 }
-                catch (RequestException)
+                catch (RequestException e)
                 {
-                    // ToDo Check if two factor, or just rethrow.
+                    if ( e.HasResponse && e.Response is LoginResponse s )
+                    {
+                        if ( s.TwoFactorRequired )
+                        {
+                            return s;
+                        }
+                    }
+
+                    throw;
                 }
+
+                await UpdateLoginState(response);
+
+                return response;
             }
+        }
+
+        private async Task UpdateLoginState(LoginResponse response)
+        {
+            if ( !response.IsOk() )
+            {
+                throw new LoginException("Invalid login response provided.");
+            }
+
+            _account.AccountInfo.AccountId = response.LoggedInUser.Pk;
+            await _account.Storage.AccountInfo.SaveAsync(_account.AccountInfo);
+
+            LoginInfo.IsLoggedIn = true;
+            LoginInfo.LastLogin.Update();
         }
 
         private async Task PreLoginFlow()
         {
             _account.HttpClient.ZeroRatingMiddleware.Reset();
-            await _account.Internal.ReadMsisdnHeader(@"ig_select_app");
+            await _account.Internal.ReadMsisdnHeader("ig_select_app");
+            await _account.Internal.SyncDeviceFeatures(true);
+            await _account.Internal.SendLauncherSync(true);
+            await _account.Internal.LogAttribution();
+            await _account.Internal.FetchZeroRatingToken();
+            await _account.Profile.SetContactPointPrefill("prefill");
         }
 
-        private async Task LoginFlow() { }
+        private async Task LoginFlow(bool justLoggedIn)
+        {
+            if ( justLoggedIn )
+            {
+                _account.HttpClient.ZeroRatingMiddleware.Reset();
+                await _account.Internal.SendLauncherSync(false);
+                await _account.Internal.SyncUserFeatures();
+                await _account.Timeline.GetTimelineFeed(null, new Dictionary<string, object>
+                                                              {
+                                                                  {
+                                                                      "recovered_from_crash", true
+                                                                  }
+                                                              });
+                await _account.Story.GetReelsTrayFeed();
+                await _account.Discover.GetSuggestedSearches("users");
+                await _account.Discover.GetRecentSearches();
+                await _account.Discover.GetSuggestedSearches("blended");
+                await _account.Internal.FetchZeroRatingToken();
+                await _account.Direct.GetRankedRecipients("reshare", true);
+                await _account.Direct.GetRankedRecipients("raven", true);
+                await _account.Direct.GetInbox();
+                await _account.Direct.GetPresences();
+                await _account.People.GetRecentActivityInbox();
+
+                //TODO CONTINUE
+            }
+        }
 
         #region Properties
 

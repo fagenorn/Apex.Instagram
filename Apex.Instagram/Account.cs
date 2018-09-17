@@ -16,12 +16,6 @@ namespace Apex.Instagram
 {
     public class Account : IDisposable
     {
-        #region Request Collections
-
-        internal Internal Internal { get; }
-
-        #endregion
-
         public void Dispose()
         {
             HttpClient?.Dispose();
@@ -57,6 +51,24 @@ namespace Apex.Instagram
 
         public async Task Login(string username, string password) { await LoginClient.Login(AccountInfo.Username, AccountInfo.Password); }
 
+        #region Request Collections
+
+        internal Internal Internal { get; }
+
+        internal Profile Profile { get; }
+
+        internal Timeline Timeline { get; }
+
+        internal Story Story { get; }
+
+        internal Discover Discover { get; }
+
+        internal Direct Direct { get; }
+
+        internal People People { get; }
+
+        #endregion
+
         #region Properties
 
         internal LoginClient LoginClient { get; private set; }
@@ -79,6 +91,12 @@ namespace Apex.Instagram
             Logger  = logger ?? new NullLogger();
 
             Internal = new Internal(this);
+            Profile  = new Profile(this);
+            Timeline = new Timeline(this);
+            Story    = new Story(this);
+            Discover = new Discover(this);
+            Direct   = new Direct(this);
+            People   = new People(this);
         }
 
         private async Task<Account> InitializeAsync()
@@ -89,7 +107,6 @@ namespace Apex.Instagram
 
             if ( AccountInfo == null )
             {
-                // ToDo: New account, generate needed information.
                 AccountInfo = new AccountInfo
                               {
                                   DeviceId      = Utils.Instagram.Instance.GenerateDeviceId(),

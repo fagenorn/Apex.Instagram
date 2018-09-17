@@ -13,5 +13,9 @@ namespace Apex.Instagram.Request.Exception
         public RequestException(string message, System.Exception innerException) : base(message, innerException) { }
 
         public RequestException(string format, System.Exception innerException, params object[] args) : base(string.Format(format, args), innerException) { }
+
+        public Response.JsonMap.Response Response { get; set; }
+
+        public bool HasResponse => Response != null;
     }
 }
