@@ -2,8 +2,11 @@
 using System.Threading.Tasks;
 
 using Apex.Instagram.Constants;
+using Apex.Instagram.Request.Signature;
 using Apex.Instagram.Response.JsonMap;
 using Apex.Instagram.Response.JsonMap.Model;
+
+using Utf8Json;
 
 namespace Apex.Instagram.Request.Instagram
 {
@@ -46,6 +49,20 @@ namespace Apex.Instagram.Request.Instagram
             }
 
             return await Account.ApiRequest<SyncResponse>(request.Build());
+        }
+
+        public async Task<ProfileNoticeResponse> GetProfileNotice()
+        {
+            var request = new RequestBuilder(Account).SetUrl("users/profile_notice/");
+
+            return await Account.ApiRequest<ProfileNoticeResponse>(request.Build());
+        }
+
+        public async Task<LoomFetchConfigResponse> GetLoomFetchConfig()
+        {
+            var request = new RequestBuilder(Account).SetUrl("loom/fetch_config/");
+
+            return await Account.ApiRequest<LoomFetchConfigResponse>(request.Build());
         }
 
         public async Task<SyncResponse> SyncUserFeatures()
@@ -164,6 +181,46 @@ namespace Apex.Instagram.Request.Instagram
             Account.LoginClient.LoginInfo.LastExperiments.Update();
 
             await Account.Storage.LoginInfo.SaveAsync(Account.LoginClient.LoginInfo);
+        }
+
+        public async Task<FetchQpDataResponse> GetQpFetch()
+        {
+            const string query = "viewer() {eligible_promotions.surface_nux_id(<surface>).external_gating_permitted_qps(<external_gating_permitted_qps>).supports_client_filters(true) {edges {priority,time_range {start,end},node {id,promotion_id,max_impressions,triggers,contextual_filters {clause_type,filters {filter_type,unknown_action,value {name,required,bool_value,int_value, string_value},extra_datas {name,required,bool_value,int_value, string_value}},clauses {clause_type,filters {filter_type,unknown_action,value {name,required,bool_value,int_value, string_value},extra_datas {name,required,bool_value,int_value, string_value}},clauses {clause_type,filters {filter_type,unknown_action,value {name,required,bool_value,int_value, string_value},extra_datas {name,required,bool_value,int_value, string_value}},clauses {clause_type,filters {filter_type,unknown_action,value {name,required,bool_value,int_value, string_value},extra_datas {name,required,bool_value,int_value, string_value}}}}}},template {name,parameters {name,required,bool_value,string_value,color_value,}},creatives {title {text},content {text},footer {text},social_context {text},primary_action{title {text},url,limit,dismiss_promotion},secondary_action{title {text},url,limit,dismiss_promotion},dismiss_action{title {text},url,limit,dismiss_promotion},image.scale(<scale>) {uri,width,height}}}}}}";
+            var surfacesToQueries = JsonSerializer.ToJsonString(new Dictionary<int, string>
+                                                                {
+                                                                    {
+                                                                        Constants.Request.Instance.SurfaceParams[0], query
+                                                                    },
+                                                                    {
+                                                                        Constants.Request.Instance.SurfaceParams[1], query
+                                                                    }
+                                                                });
+
+            var request = new RequestBuilder(Account).SetUrl("qp/batch_fetch/")
+                                                     .AddPost("vc_policy", "default")
+                                                     .AddPost("_csrftoken", Account.LoginClient.CsrfToken)
+                                                     .AddPost("_uid", Account.AccountInfo.AccountId)
+                                                     .AddPost("_uuid", Account.AccountInfo.Uuid)
+                                                     .AddPost("surfaces_to_queries", surfacesToQueries)
+                                                     .AddPost("version", 1)
+                                                     .AddPost("scale", 2);
+
+            return await Account.ApiRequest<FetchQpDataResponse>(request.Build());
+        }
+
+        public async Task<FacebookOtaResponse> GetFacebookOta()
+        {
+            var request = new RequestBuilder(Account).SetUrl("facebook_ota/")
+                                                     .AddParam("fields", Facebook.Instance.FacebookOtaFields)
+                                                     .AddParam("custom_user_id", Account.AccountInfo.AccountId)
+                                                     .AddParam("signed_body", $"{Signer.GenerateSignature("")}.")
+                                                     .AddParam("ig_sig_key_version", Version.Instance.SigningKeyVersion)
+                                                     .AddParam("version_code", Version.Instance.VersionCode)
+                                                     .AddParam("version_name", Version.Instance.InstagramVersion)
+                                                     .AddParam("custom_app_id", Facebook.Instance.FacebookOrcaApplicationId)
+                                                     .AddParam("custom_device_id", Account.AccountInfo.Uuid);
+
+            return await Account.ApiRequest<FacebookOtaResponse>(request.Build());
         }
     }
 }

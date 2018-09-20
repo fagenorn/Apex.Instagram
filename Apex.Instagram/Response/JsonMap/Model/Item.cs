@@ -17,16 +17,16 @@ namespace Apex.Instagram.Response.JsonMap.Model
         #region Properties
 
         [DataMember(Name = "taken_at")]
-        public string TakenAt { get; set; }
+        public ulong? TakenAt { get; set; }
 
         [DataMember(Name = "pk")]
-        public string Pk { get; set; }
+        public ulong? Pk { get; set; }
 
         [DataMember(Name = "id")]
         public string Id { get; set; }
 
         [DataMember(Name = "device_timestamp")]
-        public string DeviceTimestamp { get; set; }
+        public ulong? DeviceTimestamp { get; set; }
 
         [DataMember(Name = "media_type")]
         public int? MediaType { get; set; }
@@ -125,7 +125,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public Attribution Attribution { get; set; }
 
         [DataMember(Name = "view_count")]
-        public int? ViewCount { get; set; }
+        public double? ViewCount { get; set; }
 
         [DataMember(Name = "viewer_count")]
         public int? ViewerCount { get; set; }

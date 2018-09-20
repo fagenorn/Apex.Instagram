@@ -22,7 +22,7 @@ namespace Apex.Instagram.Response.JsonMap
         public string FullName { get; set; }
 
         [DataMember(Name = "pk")]
-        public string Pk { get; set; }
+        public ulong? Pk { get; set; }
 
         [DataMember(Name = "is_private")]
         public bool? IsPrivate { get; set; }

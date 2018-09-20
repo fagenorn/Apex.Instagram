@@ -26,13 +26,13 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string ExternalId { get; set; }
 
         [DataMember(Name = "facebook_places_id")]
-        public string FacebookPlacesId { get; set; }
+        public ulong? FacebookPlacesId { get; set; }
 
         [DataMember(Name = "city")]
         public string City { get; set; }
 
         [DataMember(Name = "pk")]
-        public string Pk { get; set; }
+        public ulong? Pk { get; set; }
 
         [DataMember(Name = "short_name")]
         public string ShortName { get; set; }

@@ -5,6 +5,8 @@ using Apex.Instagram.Constants;
 using Apex.Instagram.Request.Model;
 using Apex.Instagram.Utils;
 
+using Utf8Json;
+
 namespace Apex.Instagram.Request.Signature
 {
     internal class Signer
@@ -19,16 +21,13 @@ namespace Apex.Instagram.Request.Signature
         public Dictionary<string, Parameter> Sign(Dictionary<string, Parameter> postParams)
         {
             var result = new Dictionary<string, Parameter>();
-            var data   = new StringBuilder();
-            data.Append("{");
+            var toSign = new Dictionary<string, string>();
 
             foreach ( var param in postParams )
             {
                 if ( param.Value.Sign )
                 {
-                    data.Append($"\"{param.Key}\":");
-                    data.Append(param.Value.Serialize());
-                    data.Append(",");
+                    toSign[param.Key] = param.Value.ToString();
                 }
                 else
                 {
@@ -36,16 +35,10 @@ namespace Apex.Instagram.Request.Signature
                 }
             }
 
-            if ( data[data.Length - 1] == ',' )
-            {
-                data.Length--;
-            }
-
-            data.Append("}");
-
-            var signedString = $"{GenerateSignature(data.ToString())}.{data}";
-            result["ig_sig_key_version"] = new Parameter(new PostString(Version.Instance.SigningKeyVersion), false);
-            result["signed_body"]        = new Parameter(new PostString(signedString), false);
+            var jsonString   = JsonSerializer.ToJsonString(toSign);
+            var signedString = $"{GenerateSignature(jsonString)}.{jsonString}";
+            result["ig_sig_key_version"] = new Parameter(Version.Instance.SigningKeyVersion, false);
+            result["signed_body"]        = new Parameter(signedString, false);
 
             return result;
         }

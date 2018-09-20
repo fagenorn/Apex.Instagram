@@ -32,7 +32,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public User User { get; set; }
 
         [DataMember(Name = "pk")]
-        public string Pk { get; set; }
+        public ulong? Pk { get; set; }
 
         [DataMember(Name = "media_id")]
         public string MediaId { get; set; }

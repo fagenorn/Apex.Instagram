@@ -149,7 +149,7 @@ namespace Apex.Instagram.Response
                     case HttpStatusCode.TemporaryRedirect:
                     case HttpStatusCode.PaymentRequired:
 
-                        throw new EndpointException("Failed to map/parse response.");
+                        throw new EndpointException("Failed to map/parse response: {0}", e, e.GetUnderlyingStringUnsafe());
                     default:
 
                         throw new UnknowEndpointException("Unknow status code: {0}", e, (int) _response.StatusCode);

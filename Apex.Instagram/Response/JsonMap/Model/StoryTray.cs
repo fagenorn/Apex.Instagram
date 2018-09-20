@@ -5,7 +5,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
     public class StoryTray
     {
         [DataMember(Name = "id")]
-        public string Id { get; set; }
+        public ulong? Id { get; set; }
 
         [DataMember(Name = "items")]
         public Item[] Items { get; set; }
@@ -27,13 +27,13 @@ namespace Apex.Instagram.Response.JsonMap.Model
         ///     that user(the current tray's user). Defaults to `0` (not seen).
         /// </summary>
         [DataMember(Name = "seen")]
-        public string Seen { get; set; }
+        public double? Seen { get; set; }
 
         /// <summary>
         ///     Unix "taken_at" timestamp of the newest item in their story reel.
         /// </summary>
         [DataMember(Name = "latest_reel_media")]
-        public string LatestReelMedia { get; set; }
+        public ulong? LatestReelMedia { get; set; }
 
         [DataMember(Name = "ranked_position")]
         public dynamic RankedPosition { get; set; }

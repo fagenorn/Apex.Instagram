@@ -9,7 +9,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public const int Video = 2;
 
         [DataMember(Name = "pk")]
-        public string Pk { get; set; }
+        public ulong? Pk { get; set; }
 
         [DataMember(Name = "id")]
         public string Id { get; set; }

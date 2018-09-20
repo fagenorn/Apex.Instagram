@@ -11,7 +11,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public StoryTray[] Tray { get; set; }
 
         [DataMember(Name = "id")]
-        public string Id { get; set; }
+        public ulong? Id { get; set; }
 
         [DataMember(Name = "top_live")]
         public TopLive TopLive { get; set; }

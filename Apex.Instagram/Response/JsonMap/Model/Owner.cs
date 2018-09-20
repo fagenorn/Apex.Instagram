@@ -8,7 +8,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public dynamic Type { get; set; }
 
         [DataMember(Name = "pk")]
-        public string Pk { get; set; }
+        public ulong? Pk { get; set; }
 
         [DataMember(Name = "name")]
         public string Name { get; set; }

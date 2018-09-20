@@ -45,6 +45,12 @@ namespace Apex.Instagram.Constants
                 }
             };
 
+        public int[] SurfaceParams { get; } =
+            {
+                4715,
+                5734
+            };
+
         public Uri BaseUrl { get; } = new Uri("https://i.instagram.com/");
 
         public Uri[] CookieUrl { get; } // Urls of which cookies should be saved
@@ -57,7 +63,15 @@ namespace Apex.Instagram.Constants
 
         public string HeaderCapabilities { get; } = "3brTPw==";
 
+        public string HeaderAcceptEncoding { get; } = "gzip,deflate";
+
+        public string HeaderAcceptLanguage { get; } = "en-US";
+
         public string HeaderFacebookAnalyticsApplicationId { get; } = "567067343352427";
+
+        public string XFbHttpEngine { get; } = "Liger";
+
+        public string UserAgentLocale { get; } = "en_US";
 
         #region Singleton     
 

@@ -14,12 +14,6 @@ namespace Apex.Instagram.Request
 {
     internal class HttpClient : IDisposable
     {
-        #region Properties
-
-        internal ZeroRatingMiddleware ZeroRatingMiddleware { get; }
-
-        #endregion
-
         public void Dispose()
         {
             _request?.Dispose();
@@ -88,14 +82,23 @@ namespace Apex.Instagram.Request
                 ?.Value;
         }
 
+        #region Properties
+
+        internal ZeroRatingMiddleware ZeroRatingMiddleware { get; }
+
+        internal ModifyHeadersMiddleware ModifyHeadersMiddleware { get; }
+
+        #endregion
+
         #region Constructor
 
         private HttpClient(Account account)
         {
-            _account             = account;
-            _lastCookieSave      = new LastAction(TimeSpan.FromSeconds(15)); // Save new cookies only every 15 seconds. Reducing this will cause saves to occur more often at the cost of performance.
-            _lock                = new SemaphoreSlim(1);
-            ZeroRatingMiddleware = new ZeroRatingMiddleware();
+            _account                = account;
+            _lastCookieSave         = new LastAction(TimeSpan.FromMilliseconds(50)); // Save new cookies only every 50 ms. Reducing this will cause saves to occur more often at the cost of performance.
+            _lock                   = new SemaphoreSlim(1);
+            ZeroRatingMiddleware    = new ZeroRatingMiddleware();
+            ModifyHeadersMiddleware = new ModifyHeadersMiddleware(_account.AccountInfo.DeviceInfo.UserAgent);
         }
 
         private async Task<HttpClient> InitializeAsync()
@@ -113,20 +116,25 @@ namespace Apex.Instagram.Request
                            AutomaticDecompression   = DecompressionMethods.Deflate | DecompressionMethods.GZip
                        };
 
-            _request = new System.Net.Http.HttpClient(InjectMiddleware(_handler))
+            var middlewareHandler = new HttpClientMiddlewareHandler(_handler);
+            _request = new System.Net.Http.HttpClient(middlewareHandler)
                        {
                            Timeout = Constants.Request.Instance.Timeout
                        };
 
+            InjectMiddleware(middlewareHandler);
+
             return this;
         }
 
-        private HttpMessageHandler InjectMiddleware(HttpMessageHandler innerHandler)
+        private void InjectMiddleware(HttpClientMiddlewareHandler handler)
         {
-            var handler = new HttpClientMiddlewareHandler(innerHandler);
-            handler.Push(ZeroRatingMiddleware);
+            if ( _account.LoginClient.LoginInfo.ZrRules != null )
+            {
+                ZeroRatingMiddleware.Update(_account.LoginClient.LoginInfo.ZrRules);
+            }
 
-            return handler;
+            handler.Push(ZeroRatingMiddleware, ModifyHeadersMiddleware);
         }
 
         internal static Task<HttpClient> CreateAsync(Account account)

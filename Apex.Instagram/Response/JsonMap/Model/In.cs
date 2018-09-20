@@ -5,7 +5,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
     public class In
     {
         [DataMember(Name = "position")]
-        public double? Position { get; set; }
+        public double[] Position { get; set; }
 
         [DataMember(Name = "user")]
         public User User { get; set; }

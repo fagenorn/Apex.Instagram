@@ -46,7 +46,7 @@ namespace Apex.Instagram.Request.Instagram
             return await Account.ApiRequest<DirectInboxResponse>(request.Build());
         }
 
-        public async Task<PresencesResponse> GetPresences(string cursorId = null)
+        public async Task<PresencesResponse> GetPresences()
         {
             var request = new RequestBuilder(Account).SetUrl("direct_v2/get_presence/");
 

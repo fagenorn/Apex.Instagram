@@ -9,7 +9,7 @@ namespace Apex.Instagram.Request.Middleware
 {
     internal class HttpClientMiddlewareHandler : DelegatingHandler
     {
-        private readonly AsyncLocal<ImmutableStack<IMiddleware>> _data = new AsyncLocal<ImmutableStack<IMiddleware>>();
+        private ImmutableStack<IMiddleware> _data;
 
         public HttpClientMiddlewareHandler(HttpMessageHandler innerHandler) : base(innerHandler) { }
 
@@ -19,18 +19,18 @@ namespace Apex.Instagram.Request.Middleware
         {
             get
             {
-                var middlewares = _data.Value;
+                var middlewares = _data;
                 if ( middlewares != null )
                 {
                     return middlewares;
                 }
 
                 middlewares = ImmutableStack<IMiddleware>.Empty;
-                _data.Value = middlewares;
+                _data       = middlewares;
 
                 return middlewares;
             }
-            set => _data.Value = value;
+            set => _data = value;
         }
 
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -42,38 +42,19 @@ namespace Apex.Instagram.Request.Middleware
 
         public Func<HttpRequestMessage, Task<HttpResponseMessage>> ComposedMiddleware(Func<HttpRequestMessage, Task<HttpResponseMessage>> baseFunc)
         {
-            return Middlewares.Reverse()
-                              .Aggregate(baseFunc, (fn, middleware) => req => middleware.Invoke(req, fn));
+            return Middlewares.Reverse().Aggregate(baseFunc, (fn, middleware) => req => middleware.Invoke(req, fn));
         }
 
         public HttpMessageHandler Handler() { return this; }
 
-        public IDisposable Push(params IMiddleware[] middlewares)
+        public void Push(params IMiddleware[] middlewares)
         {
             if ( middlewares == null )
             {
                 throw new ArgumentNullException(nameof(middlewares));
             }
 
-            var bookmark = new ContextStackBookmark(Middlewares, this);
             Middlewares = middlewares.Aggregate(Middlewares, (current, handler) => current.Push(handler));
-
-            return bookmark;
-        }
-
-        private sealed class ContextStackBookmark : IDisposable
-        {
-            private readonly ImmutableStack<IMiddleware> _bookmark;
-
-            private readonly HttpClientMiddlewareHandler _httpClientMiddlewareHandler;
-
-            public ContextStackBookmark(ImmutableStack<IMiddleware> bookmark, HttpClientMiddlewareHandler clientMiddlewareHandler)
-            {
-                _httpClientMiddlewareHandler = clientMiddlewareHandler;
-                _bookmark                    = bookmark;
-            }
-
-            public void Dispose() { _httpClientMiddlewareHandler.Middlewares = _bookmark; }
         }
     }
 }

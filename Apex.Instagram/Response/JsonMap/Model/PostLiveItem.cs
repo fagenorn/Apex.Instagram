@@ -5,7 +5,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
     public class PostLiveItem
     {
         [DataMember(Name = "pk")]
-        public string Pk { get; set; }
+        public ulong? Pk { get; set; }
 
         [DataMember(Name = "user")]
         public User User { get; set; }

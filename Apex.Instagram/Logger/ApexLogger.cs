@@ -204,13 +204,34 @@ namespace Apex.Instagram.Logger
             sb.AppendLine("Content:");
             var raw = await content.ReadAsStringAsync();
             raw = raw.Contains("<!DOCTYPE html>") ? "<HTML content>" : raw;
+
             try
             {
-                sb.AppendLine(JsonSerializer.PrettyPrint(raw));
+                var pretty = JsonSerializer.PrettyPrint(raw);
+                if ( string.IsNullOrWhiteSpace(pretty) )
+                {
+                    if ( raw.StartsWith("ig_sig_key_version") )
+                    {
+                        var temp = WebUtility.UrlDecode(raw.Split(new[]
+                                                                  {
+                                                                      '.'
+                                                                  }, 2)[1]);
+
+                        sb.AppendLine(JsonSerializer.PrettyPrint(temp));
+                    }
+                    else
+                    {
+                        sb.AppendLine(WebUtility.UrlDecode(raw));
+                    }
+                }
+                else
+                {
+                    sb.AppendLine(pretty);
+                }
             }
             catch
             {
-                sb.AppendLine(WebUtility.UrlDecode(raw));
+                sb.AppendLine(raw);
             }
         }
 

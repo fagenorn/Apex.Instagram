@@ -8,7 +8,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public dynamic Explanation { get; set; }
 
         [DataMember(Name = "actor_id")]
-        public string ActorId { get; set; }
+        public ulong? ActorId { get; set; }
 
         [DataMember(Name = "source_token")]
         public dynamic SourceToken { get; set; }

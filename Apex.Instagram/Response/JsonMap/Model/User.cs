@@ -41,7 +41,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string UserId { get; set; }
 
         [DataMember(Name = "pk")]
-        public string Pk { get; set; }
+        public ulong? Pk { get; set; }
 
         [DataMember(Name = "id")]
         public string Id { get; set; }
@@ -242,7 +242,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public dynamic Birthday { get; set; }
 
         [DataMember(Name = "national_number")]
-        public string NationalNumber { get; set; }
+        public ulong? NationalNumber { get; set; }
 
         [DataMember(Name = "gender")]
         public int? Gender { get; set; }
@@ -290,7 +290,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public bool? ShowShoppableFeed { get; set; }
 
         [DataMember(Name = "latest_reel_media")]
-        public string LatestReelMedia { get; set; }
+        public ulong? LatestReelMedia { get; set; }
 
         [DataMember(Name = "has_unseen_besties_media")]
         public bool? HasUnseenBestiesMedia { get; set; }

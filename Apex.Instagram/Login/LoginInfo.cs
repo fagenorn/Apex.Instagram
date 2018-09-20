@@ -10,28 +10,28 @@ using MessagePack;
 namespace Apex.Instagram.Login
 {
     [MessagePackObject]
-    public class LoginInfo
+    internal class LoginInfo
     {
         [Key(0)]
-        public bool IsLoggedIn { get; internal set; }
+        public bool IsLoggedIn { get; set; }
 
         [Key(1)]
-        public Dictionary<string, string> ZrRules { get; internal set; }
+        public Dictionary<string, string> ZrRules { get; set; }
 
         [Key(2)]
-        public string ZrToken { get; internal set; }
+        public string ZrToken { get; set; }
 
         [Key(3)]
-        public int ZrExpires { get; internal set; }
+        public int ZrExpires { get; set; }
 
         [Key(4)]
-        public LastAction LastLogin { get; internal set; } = new LastAction(Delays.Instance.AppRefreshInterval);
+        public LastAction LastLogin { get; set; } = new LastAction(Delays.Instance.AppRefreshInterval);
 
         [Key(5)]
-        public Dictionary<string, Dictionary<string, string>> Experiments { get; internal set; }
+        public Dictionary<string, Dictionary<string, string>> Experiments { get; set; }
 
         [Key(6)]
-        public LastAction LastExperiments { get; internal set; } = new LastAction(TimeSpan.FromMinutes(30));
+        public LastAction LastExperiments { get; set; } = new LastAction(TimeSpan.FromMinutes(120));
 
         public bool IsExperimentEnabled(string experiment, string param, bool @default = false)
         {

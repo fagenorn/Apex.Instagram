@@ -34,7 +34,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public dynamic Features { get; set; }
 
         [DataMember(Name = "request_time")]
-        public string RequestTime { get; set; }
+        public ulong? RequestTime { get; set; }
 
         [DataMember(Name = "token_hash")]
         public string TokenHash { get; set; }

@@ -48,7 +48,7 @@ namespace Apex.Instagram.Request.Middleware
             _rules.Clear();
             foreach ( var rule in rules )
             {
-                var regex = $"#{rule.Key}#";
+                var regex = $"{rule.Key}";
                 var test  = Regex.Match(regex, string.Empty);
                 if ( !test.Success )
                 {

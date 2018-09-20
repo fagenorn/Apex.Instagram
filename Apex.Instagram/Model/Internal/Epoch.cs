@@ -19,7 +19,7 @@ namespace Apex.Instagram.Model.Internal
 
         #endregion
 
-        private static double Current => (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
+        public static double Current => (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
 
         public void Update(double value) { Value = value; }
 

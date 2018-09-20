@@ -8,13 +8,13 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public dynamic Status { get; set; }
 
         [DataMember(Name = "user_id")]
-        public string UserId { get; set; }
+        public ulong? UserId { get; set; }
 
         [DataMember(Name = "created_at_utc")]
-        public string CreatedAtUtc { get; set; }
+        public ulong? CreatedAtUtc { get; set; }
 
         [DataMember(Name = "created_at")]
-        public string CreatedAt { get; set; }
+        public ulong? CreatedAt { get; set; }
 
         [DataMember(Name = "bit_flags")]
         public int? BitFlags { get; set; }
@@ -29,10 +29,10 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string Text { get; set; }
 
         [DataMember(Name = "media_id")]
-        public string MediaId { get; set; }
+        public ulong? MediaId { get; set; }
 
         [DataMember(Name = "pk")]
-        public string Pk { get; set; }
+        public ulong? Pk { get; set; }
 
         [DataMember(Name = "type")]
         public dynamic Type { get; set; }

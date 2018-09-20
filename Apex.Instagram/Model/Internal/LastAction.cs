@@ -18,10 +18,10 @@ namespace Apex.Instagram.Model.Internal
         #region Properties
 
         [Key(0)]
-        public Epoch Last { get; }
+        public TimeSpan Limit { get; }
 
         [Key(1)]
-        public TimeSpan Limit { get; }
+        public Epoch Last { get; }
 
         [IgnoreMember]
         public bool Passed => new Epoch() - Last > Limit;

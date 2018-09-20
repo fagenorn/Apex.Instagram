@@ -5,6 +5,18 @@ namespace Apex.Instagram.Model.Account.Device
     [MessagePackObject]
     internal class DeviceInfo
     {
+        public DeviceInfo() { _userAgentBuilder = new UserAgent(this); }
+
+        #region Fields
+
+        private readonly UserAgent _userAgentBuilder;
+
+        private string _userAgent;
+
+        #endregion
+
+        #region Properties
+
         [Key(0)]
         public string AndroidRelease { get; set; }
 
@@ -31,5 +43,10 @@ namespace Apex.Instagram.Model.Account.Device
 
         [Key(8)]
         public string Dpi { get; set; }
+
+        [IgnoreMember]
+        public string UserAgent => _userAgent ?? (_userAgent = _userAgentBuilder.BuildUserAgent());
+
+        #endregion
     }
 }

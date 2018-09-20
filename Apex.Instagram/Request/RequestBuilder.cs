@@ -85,42 +85,42 @@ namespace Apex.Instagram.Request
 
         public RequestBuilder AddParam(string name, string value, bool sign = false)
         {
-            _gets[name] = new Parameter(new PostString(value), sign);
+            _gets[name] = new Parameter(value, sign);
 
             return this;
         }
 
         public RequestBuilder AddParam(string name, bool value, bool sign = false)
         {
-            _gets[name] = new Parameter(new PostString(value), sign);
+            _gets[name] = new Parameter(value ? "true" : "false", sign);
 
             return this;
         }
 
         public RequestBuilder AddParam(string name, int value, bool sign = false)
         {
-            _gets[name] = new Parameter(new PostString(value), sign);
+            _gets[name] = new Parameter(value.ToString(), sign);
 
             return this;
         }
 
         public RequestBuilder AddPost(string name, string value, bool sign = true)
         {
-            _posts[name] = new Parameter(new PostString(value), sign);
+            _posts[name] = new Parameter(value, sign);
 
             return this;
         }
 
         public RequestBuilder AddPost(string name, bool value, bool sign = true)
         {
-            _posts[name] = new Parameter(new PostString(value), sign);
+            _posts[name] = new Parameter(value ? "true" : "false", sign);
 
             return this;
         }
 
         public RequestBuilder AddPost(string name, int value, bool sign = true)
         {
-            _posts[name] = new Parameter(new PostString(value), sign);
+            _posts[name] = new Parameter(value.ToString(), sign);
 
             return this;
         }
@@ -292,7 +292,9 @@ namespace Apex.Instagram.Request
                 postData[post.Key] = post.Value.ToString();
             }
 
-            return new FormUrlEncodedContent(postData);
+            var content = new FormUrlEncodedContent(postData);
+            content.Headers.ContentType.CharSet   = "UTF-8";
+            return content;
         }
 
         private Uri BuildUrl()
@@ -337,7 +339,7 @@ namespace Apex.Instagram.Request
 
         private bool _addDefaultHeaders = true;
 
-        private int _apiVersion;
+        private int _apiVersion = 1;
 
         private HttpContent _content;
 

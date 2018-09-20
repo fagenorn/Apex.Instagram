@@ -91,7 +91,7 @@ namespace Apex.Instagram.Request.Instagram
             {
                 Debug.Assert(options != null, nameof(options) + " != null");
                 var value = options["feed_view_info"];
-                if ( value is string[] array )
+                if ( value is string[] )
                 {
                     request.AddPost("feed_view_info", JsonSerializer.ToJsonString(value));
                 }

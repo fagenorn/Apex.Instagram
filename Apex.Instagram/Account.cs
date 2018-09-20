@@ -49,7 +49,7 @@ namespace Apex.Instagram
             }
         }
 
-        public async Task Login(string username, string password) { await LoginClient.Login(AccountInfo.Username, AccountInfo.Password); }
+        public async Task Login() { await LoginClient.Login(); }
 
         #region Request Collections
 
@@ -66,6 +66,8 @@ namespace Apex.Instagram
         internal Direct Direct { get; }
 
         internal People People { get; }
+
+        internal Media Media { get; }
 
         #endregion
 
@@ -97,14 +99,12 @@ namespace Apex.Instagram
             Discover = new Discover(this);
             Direct   = new Direct(this);
             People   = new People(this);
+            Media    = new Media(this);
         }
 
         private async Task<Account> InitializeAsync()
         {
             AccountInfo = await Storage.AccountInfo.LoadAsync();
-            HttpClient  = await HttpClient.CreateAsync(this);
-            LoginClient = await LoginClient.CreateAsync(this);
-
             if ( AccountInfo == null )
             {
                 AccountInfo = new AccountInfo
@@ -119,6 +119,9 @@ namespace Apex.Instagram
 
                 await Storage.AccountInfo.SaveAsync(AccountInfo);
             }
+
+            LoginClient = await LoginClient.CreateAsync(this); // This needs to be created first so middlewares can be initialized correctly.
+            HttpClient  = await HttpClient.CreateAsync(this);
 
             return this;
         }
