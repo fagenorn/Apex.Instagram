@@ -51,7 +51,7 @@ namespace Apex.Instagram.Response
 
                 if ( Response.Status == null )
                 {
-                    throw new JsonParsingException("Response isn't valid.");
+                    throw new JsonParsingException("Response isn't valid.", null, 0, 0, string.Empty);
                 }
 
                 if ( IsOk )
