@@ -91,6 +91,8 @@ namespace Apex.Instagram.Tests
                                                 .SetLogger(Logger)
                                                 .BuildAsync();
 
+            Assert.IsTrue(account.LoginClient.LoginInfo.IsLoggedIn);
+
             await account.Login();
 
             info = await account.Storage.LoginInfo.LoadAsync();

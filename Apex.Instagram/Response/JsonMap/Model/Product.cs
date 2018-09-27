@@ -17,7 +17,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string FullPrice { get; set; }
 
         [DataMember(Name = "product_id")]
-        public string ProductId { get; set; }
+        public ulong? ProductId { get; set; }
 
         [DataMember(Name = "has_viewer_saved")]
         public bool HasViewerSaved { get; set; }
