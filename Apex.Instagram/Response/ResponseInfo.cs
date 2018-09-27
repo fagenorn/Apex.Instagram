@@ -47,9 +47,12 @@ namespace Apex.Instagram.Response
                     }
                 }
 
-                Response = await JsonSerializer.DeserializeAsync<T>(await _response.Content.ReadAsStreamAsync());
+                if ( _response.Content != null )
+                {
+                    Response = await JsonSerializer.DeserializeAsync<T>(await _response.Content?.ReadAsStreamAsync());
+                }
 
-                if ( Response.Status == null )
+                if ( Response?.Status == null )
                 {
                     throw new JsonParsingException("Response isn't valid.", null, 0, 0, string.Empty);
                 }

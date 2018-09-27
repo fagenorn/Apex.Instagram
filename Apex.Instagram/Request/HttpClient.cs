@@ -22,7 +22,8 @@ namespace Apex.Instagram.Request
 
         public async Task UpdateProxy(Proxy proxy)
         {
-            _handler.Proxy = proxy.GetWebProxy();
+            _proxy.Credentials = proxy == null ? null : proxy.HasCredentials ? proxy.Credentials : null;
+            _proxy.Address     = proxy?.Uri;
             await _account.Storage.Proxy.SaveAsync(proxy);
         }
 
@@ -37,9 +38,24 @@ namespace Apex.Instagram.Request
             await _lock.WaitAsync();
             try
             {
+                HttpResponseMessage result;
                 _account.Logger.Debug<HttpClient>(request);
-                var result = await _request.SendAsync(request);
-                _account.Logger.Debug<HttpClient>(result);
+
+                try
+                {
+                    result = await _request.SendAsync(request, HttpCompletionOption.ResponseContentRead);
+                }
+                catch (HttpRequestException e)
+                {
+                    if ( e.InnerException is WebException webException && webException.Response is HttpWebResponse exceptionResponse )
+                    {
+                        result = new HttpResponseMessage(exceptionResponse.StatusCode);
+                    }
+                    else
+                    {
+                        throw new RequestException("Critical request error occured.", e);
+                    }
+                }
 
                 return await ResponseInfo<T>.CreateAsync<T>(result);
             }
@@ -64,10 +80,7 @@ namespace Apex.Instagram.Request
 
         public string GetProxy()
         {
-            return _handler.Proxy == null
-                       ? string.Empty
-                       : _handler.Proxy.GetProxy(Constants.Request.Instance.BaseUrl)
-                                 .AbsoluteUri;
+            return _proxy.Address == null ? string.Empty : _proxy.Address.AbsoluteUri;
         }
 
         public string GetCookie(string key)
@@ -106,10 +119,16 @@ namespace Apex.Instagram.Request
             var cookies = await _account.Storage.Cookie.LoadAsync();
             var proxy   = await _account.Storage.Proxy.LoadAsync();
 
+            _proxy = new WebProxy
+                     {
+                         Credentials = proxy == null ? null : proxy.HasCredentials ? proxy.Credentials : null,
+                         Address     = proxy?.Uri
+                     };
+
             _handler = new HttpClientHandler
                        {
                            CookieContainer          = cookies ?? new CookieContainer(),
-                           Proxy                    = proxy?.GetWebProxy(),
+                           Proxy                    = _proxy,
                            UseProxy                 = true, // Will use system default proxy if no proxy is set, needed for loopback
                            AllowAutoRedirect        = true,
                            MaxAutomaticRedirections = 8,
@@ -151,6 +170,8 @@ namespace Apex.Instagram.Request
         private readonly Account _account;
 
         private HttpClientHandler _handler;
+
+        private WebProxy _proxy;
 
         private readonly LastAction _lastCookieSave;
 

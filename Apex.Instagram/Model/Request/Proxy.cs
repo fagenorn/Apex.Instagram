@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 
 using MessagePack;
 
@@ -23,14 +24,13 @@ namespace Apex.Instagram.Model.Request
         [Key(2)]
         public string Password { get; }
 
-        internal WebProxy GetWebProxy()
-        {
-            if ( string.IsNullOrWhiteSpace(Username) )
-            {
-                return new WebProxy(Address, false);
-            }
+        [IgnoreMember]
+        public bool HasCredentials => !string.IsNullOrWhiteSpace(Username);
 
-            return new WebProxy(Address, false, null, new NetworkCredential(Username, Password));
-        }
+        [IgnoreMember]
+        public ICredentials Credentials => new NetworkCredential(Username, Password);
+
+        [IgnoreMember]
+        public Uri Uri => new Uri(Address);
     }
 }

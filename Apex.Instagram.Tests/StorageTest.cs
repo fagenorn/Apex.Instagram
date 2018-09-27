@@ -46,6 +46,62 @@ namespace Apex.Instagram.Tests
         }
 
         [TestMethod]
+        public async Task Update_Password()
+        {
+            var fileStorage = new FileStorage();
+            var account = await new AccountBuilder().SetId(0)
+                                                    .SetStorage(fileStorage)
+                                                    .SetPassword("test_password123")
+                                                    .BuildAsync();
+
+            var storageInfo = await account.Storage.AccountInfo.LoadAsync();
+            Assert.AreEqual("test_password123", account.AccountInfo.Password);
+            Assert.AreEqual("test_password123", storageInfo.Password);
+
+            await account.UpdatePassword("new_password321");
+
+            storageInfo = await account.Storage.AccountInfo.LoadAsync();
+            Assert.AreEqual("new_password321", account.AccountInfo.Password);
+            Assert.AreEqual("new_password321", storageInfo.Password);
+
+            account.Dispose();
+
+            account = await new AccountBuilder().SetId(0)
+                                                .SetStorage(fileStorage)
+                                                .BuildAsync();
+
+            Assert.AreEqual("new_password321", account.AccountInfo.Password);
+        }
+
+        [TestMethod]
+        public async Task Update_Username()
+        {
+            var fileStorage = new FileStorage();
+            var account = await new AccountBuilder().SetId(0)
+                                                    .SetStorage(fileStorage)
+                                                    .SetUsername("test_username123")
+                                                    .BuildAsync();
+
+            var storageInfo = await account.Storage.AccountInfo.LoadAsync();
+            Assert.AreEqual("test_username123", account.AccountInfo.Username);
+            Assert.AreEqual("test_username123", storageInfo.Username);
+
+            await account.UpdateUsername("new_username321");
+
+            storageInfo = await account.Storage.AccountInfo.LoadAsync();
+            Assert.AreEqual("new_username321", account.AccountInfo.Username);
+            Assert.AreEqual("new_username321", storageInfo.Username);
+
+            account.Dispose();
+
+            account = await new AccountBuilder().SetId(0)
+                                                .SetStorage(fileStorage)
+                                                .BuildAsync();
+
+            Assert.AreEqual("new_username321", account.AccountInfo.Username);
+        }
+
+        [TestMethod]
         public async Task Create_Save_Load_Cookies()
         {
             var fileStorage = new FileStorage();

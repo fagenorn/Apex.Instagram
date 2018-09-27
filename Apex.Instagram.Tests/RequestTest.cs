@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Apex.Instagram.Logger;
+using Apex.Instagram.Model.Request;
 using Apex.Instagram.Request;
 using Apex.Instagram.Request.Exception;
 using Apex.Instagram.Request.Exception.EndpointException;
@@ -228,6 +229,7 @@ namespace Apex.Instagram.Tests
                                                      .AddPost("test", "best")
                                                      .SetSignedPost(false)
                                                      .Build();
+
             account.Logger.Debug<HttpClient>(request);
             var response = await GetClient(account)
                                .SendAsync(request);
@@ -318,6 +320,145 @@ namespace Apex.Instagram.Tests
 
             await account.ApiRequest<GenericResponse>(request);
         }
+
+        [TestMethod]
+        public async Task Request_DNS_Error()
+        {
+            var fileStorage = new FileStorage();
+            var account = await new AccountBuilder().SetId(0)
+                                                    .SetStorage(fileStorage)
+                                                    .SetLogger(Logger)
+                                                    .BuildAsync();
+
+            var request = new RequestBuilder(account).SetUrl("https://non-existent-website-123-host-dns.org/")
+                                                     .SetNeedsAuth(false)
+                                                     .Build();
+
+            await Assert.ThrowsExceptionAsync<RequestException>(async () => await account.ApiRequest<GenericResponse>(request));
+        }
+
+        [TestMethod]
+        public async Task Generic_Api_Request_With_Proxy_Needs_Authentication_Error()
+        {
+            var fileStorage = new FileStorage();
+            var account = await new AccountBuilder().SetId(0)
+                                                    .SetStorage(fileStorage)
+                                                    .SetLogger(Logger)
+                                                    .SetProxy(new Proxy("http://104.236.122.201:3128"))
+                                                    .BuildAsync();
+
+            var request = new RequestBuilder(account).SetUrl("https://httpbin.org/ip")
+                                                     .SetNeedsAuth(false)
+                                                     .Build();
+
+            await Assert.ThrowsExceptionAsync<ProxyAuthenticationRequiredException>(async () => await account.ApiRequest<GenericResponse>(request));
+        }
+
+        [TestMethod]
+        public async Task Generic_Api_Request_With_IPv4_Proxy_Using_Authentication_Status_Ok()
+        {
+            var fileStorage = new FileStorage();
+            var account = await new AccountBuilder().SetId(0)
+                                                    .SetStorage(fileStorage)
+                                                    .SetLogger(Logger)
+                                                    .SetProxy(new Proxy("http://104.236.122.201:3128", "kash", "gevel22jj3"))
+                                                    .BuildAsync();
+
+            var request = new RequestBuilder(account).SetUrl("https://httpbin.org/ip")
+                                                     .SetNeedsAuth(false)
+                                                     .Build();
+
+            var response = await GetClient(account)
+                               .SendAsync(request);
+
+            request.Dispose();
+
+            Assert.IsTrue(response.IsSuccessStatusCode);
+            var postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
+            Assert.AreEqual(@"104.236.122.201", (string) postResponse["origin"]);
+
+            await account.UpdateProxy(null);
+
+            request = new RequestBuilder(account).SetUrl("https://httpbin.org/ip")
+                                                 .SetNeedsAuth(false)
+                                                 .Build();
+
+            response = await GetClient(account)
+                           .SendAsync(request);
+
+            request.Dispose();
+            Assert.IsTrue(response.IsSuccessStatusCode);
+            postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
+            Assert.AreNotEqual(@"104.236.122.201", (string) postResponse["origin"]);
+
+            await account.UpdateProxy(new Proxy("http://104.236.122.201:3128", "kash", "gevel22jj3"));
+
+            request = new RequestBuilder(account).SetUrl("https://httpbin.org/ip")
+                                                 .SetNeedsAuth(false)
+                                                 .Build();
+
+            response = await GetClient(account)
+                           .SendAsync(request);
+
+            request.Dispose();
+            Assert.IsTrue(response.IsSuccessStatusCode);
+            postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
+            Assert.AreEqual(@"104.236.122.201", (string)postResponse["origin"]);
+        }
+
+
+        [TestMethod]
+        public async Task Generic_Api_Request_With_IPv6_Proxy_Using_Authentication_Status_Ok()
+        {
+            var fileStorage = new FileStorage();
+            var account = await new AccountBuilder().SetId(0)
+                                                    .SetStorage(fileStorage)
+                                                    .SetLogger(Logger)
+                                                    .SetProxy(new Proxy("http://[2604:a880:800:10::a:9001]:3128/", "kash", "gevel22jj3"))
+                                                    .BuildAsync();
+
+            var request = new RequestBuilder(account).SetUrl("https://httpbin.org/ip")
+                                                     .SetNeedsAuth(false)
+                                                     .Build();
+
+            var response = await GetClient(account)
+                               .SendAsync(request);
+
+            request.Dispose();
+
+            Assert.IsTrue(response.IsSuccessStatusCode);
+            var postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
+            Assert.AreEqual(@"104.236.122.201", (string)postResponse["origin"]);
+
+            await account.UpdateProxy(null);
+
+            request = new RequestBuilder(account).SetUrl("https://httpbin.org/ip")
+                                                 .SetNeedsAuth(false)
+                                                 .Build();
+
+            response = await GetClient(account)
+                           .SendAsync(request);
+
+            request.Dispose();
+            Assert.IsTrue(response.IsSuccessStatusCode);
+            postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
+            Assert.AreNotEqual(@"104.236.122.201", (string)postResponse["origin"]);
+
+            await account.UpdateProxy(new Proxy("http://[2604:a880:800:10::a:9001]:3128", "kash", "gevel22jj3"));
+
+            request = new RequestBuilder(account).SetUrl("https://httpbin.org/ip")
+                                                 .SetNeedsAuth(false)
+                                                 .Build();
+
+            response = await GetClient(account)
+                           .SendAsync(request);
+
+            request.Dispose();
+            Assert.IsTrue(response.IsSuccessStatusCode);
+            postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
+            Assert.AreEqual(@"104.236.122.201", (string)postResponse["origin"]);
+        }
+
 
         [TestMethod]
         public async Task Generic_Api_Request_Status_Ok()
