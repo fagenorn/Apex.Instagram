@@ -1,6 +1,6 @@
 ﻿namespace Apex.Instagram.Request.Instagram
 {
-    internal class RequestCollection
+    public class RequestCollection
     {
         protected readonly Account Account;
 

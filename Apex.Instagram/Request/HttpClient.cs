@@ -50,6 +50,7 @@ namespace Apex.Instagram.Request
                 try
                 {
                     result = await _request.SendAsync(request, HttpCompletionOption.ResponseContentRead, ct);
+                    _account.Logger.Debug<HttpClient>(result);
                 }
                 catch (HttpRequestException e)
                 {

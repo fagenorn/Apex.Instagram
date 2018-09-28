@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Apex.Instagram.Response.JsonMap.Model
 {
@@ -80,7 +81,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public bool? HasNewer { get; set; }
 
         [DataMember(Name = "last_seen_at")]
-        public dynamic LastSeenAt { get; set; }
+        public Dictionary<string, DirectThreadLastSeenAt> LastSeenAt { get; set; }
 
         [DataMember(Name = "newest_cursor")]
         public string NewestCursor { get; set; }

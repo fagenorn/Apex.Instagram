@@ -7,18 +7,18 @@ using Utf8Json;
 
 namespace Apex.Instagram.Request.Instagram
 {
-    internal class People : RequestCollection
+    public class People : RequestCollection
     {
-        public People(Account account) : base(account) { }
+        internal People(Account account) : base(account) { }
 
-        public async Task<ActivityNewsResponse> GetRecentActivityInbox()
+        internal async Task<ActivityNewsResponse> GetRecentActivityInbox()
         {
             var request = new RequestBuilder(Account).SetUrl("news/inbox/");
 
             return await Account.ApiRequest<ActivityNewsResponse>(request.Build());
         }
 
-        public async Task<BootstrapUsersResponse> GetBootstrapUsers()
+        internal async Task<BootstrapUsersResponse> GetBootstrapUsers()
         {
             var surfaces = new[]
                            {
@@ -41,6 +41,70 @@ namespace Apex.Instagram.Request.Instagram
                 // Throttling is so common that we'll simply return NULL in that case.
                 return null;
             }
+        }
+
+        public async Task<FriendshipResponse> Follow(ulong userId)
+        {
+            var request = new RequestBuilder(Account).SetUrl($"friendships/create/{userId}/")
+                                                     .AddPost("_uuid", Account.AccountInfo.Uuid)
+                                                     .AddPost("_uid", Account.AccountInfo.AccountId)
+                                                     .AddPost("_csrftoken", Account.LoginClient.CsrfToken)
+                                                     .AddPost("user_id", userId)
+                                                     .AddPost("radio_type", "wifi-none");
+
+            return await Account.ApiRequest<FriendshipResponse>(request.Build());
+        }
+
+        public async Task<FriendshipResponse> Unfollow(ulong userId)
+        {
+            var request = new RequestBuilder(Account).SetUrl($"friendships/destroy/{userId}/")
+                                                     .AddPost("_uuid", Account.AccountInfo.Uuid)
+                                                     .AddPost("_uid", Account.AccountInfo.AccountId)
+                                                     .AddPost("_csrftoken", Account.LoginClient.CsrfToken)
+                                                     .AddPost("user_id", userId)
+                                                     .AddPost("radio_type", "wifi-none");
+
+            return await Account.ApiRequest<FriendshipResponse>(request.Build());
+        }
+
+        public async Task<UserInfoResponse> GetInfoByName(string username, string module = null)
+        {
+            var request = new RequestBuilder(Account).SetUrl($"users/{username}/usernameinfo/");
+            if ( module != null )
+            {
+                request.AddParam("from_module", module);
+            }
+
+            return await Account.ApiRequest<UserInfoResponse>(request.Build());
+        }
+
+        public async Task<UserInfoResponse> GetInfoById(ulong userId, string module = null)
+        {
+            var request = new RequestBuilder(Account).SetUrl($"users/{userId}/info/");
+            if ( module != null )
+            {
+                request.AddParam("from_module", module);
+            }
+
+            return await Account.ApiRequest<UserInfoResponse>(request.Build());
+        }
+
+        public async Task<FriendshipsShowResponse> GetFriendship(ulong userId)
+        {
+            var request = new RequestBuilder(Account).SetUrl($"friendships/show/{userId}/");
+
+            return await Account.ApiRequest<FriendshipsShowResponse>(request.Build());
+        }
+
+        public async Task<FriendshipsShowManyResponse> GetFriendships(params ulong[] userIds)
+        {
+            var request = new RequestBuilder(Account).SetUrl($"friendships/show_many/")
+                                                     .SetSignedPost(false)
+                                                     .AddPost("_uuid", Account.AccountInfo.Uuid)
+                                                     .AddPost("user_ids", string.Join(",", userIds))
+                                                     .AddPost("_csrftoken", Account.LoginClient.CsrfToken);
+
+            return await Account.ApiRequest<FriendshipsShowManyResponse>(request.Build());
         }
     }
 }

@@ -23,7 +23,8 @@ namespace Apex.Instagram.Request.Instagram
                     request.AddParam("query", query);
                 }
 
-                return await Account.ApiRequest<DirectRankedRecipientsResponse>(request.Build());
+                var a = await Account.ApiRequest<DirectRankedRecipientsResponse>(request.Build());
+                return a;
             }
             catch (ThrottledException)
             {

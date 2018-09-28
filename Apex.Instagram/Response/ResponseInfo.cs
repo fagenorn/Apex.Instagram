@@ -47,9 +47,9 @@ namespace Apex.Instagram.Response
                     }
                 }
 
-                if ( _response.Content != null )
+                if ( _response.Content?.Headers.ContentLength != null && _response.Content.Headers.ContentLength.Value != 0 )
                 {
-                    Response = await JsonSerializer.DeserializeAsync<T>(await _response.Content?.ReadAsStreamAsync());
+                    Response = await JsonSerializer.DeserializeAsync<T>(await _response.Content.ReadAsStreamAsync());
                 }
 
                 if ( Response?.Status == null )

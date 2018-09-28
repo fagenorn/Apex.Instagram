@@ -83,7 +83,7 @@ namespace Apex.Instagram
 
         internal Direct Direct { get; }
 
-        internal People People { get; }
+        public People People { get; }
 
         internal Media Media { get; }
 

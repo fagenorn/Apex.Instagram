@@ -72,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileStorage.cs" />
+    <Compile Include="InteractionTests.cs" />
     <Compile Include="LoginTest.cs" />
     <Compile Include="Maps\HeadersJsonMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

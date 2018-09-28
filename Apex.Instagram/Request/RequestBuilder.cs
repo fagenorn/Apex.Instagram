@@ -125,6 +125,13 @@ namespace Apex.Instagram.Request
             return this;
         }
 
+        public RequestBuilder AddPost(string name, ulong value, bool sign = true)
+        {
+            _posts[name] = new Parameter(value.ToString(), sign);
+
+            return this;
+        }
+
         public RequestBuilder AddFile(string name, string path, string fileName = null, Dictionary<string, string> headers = null)
         {
             var fileContent = new StreamContent(File.OpenRead(path))
