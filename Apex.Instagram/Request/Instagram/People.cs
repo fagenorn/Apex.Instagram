@@ -44,6 +44,13 @@ namespace Apex.Instagram.Request.Instagram
             }
         }
 
+        /// <summary>
+        ///     Follow a user.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <returns>
+        ///     <see cref="FriendshipResponse" />
+        /// </returns>
         public async Task<FriendshipResponse> Follow(ulong userId)
         {
             var request = new RequestBuilder(Account).SetUrl($"friendships/create/{userId}/")
@@ -56,6 +63,13 @@ namespace Apex.Instagram.Request.Instagram
             return await Account.ApiRequest<FriendshipResponse>(request.Build());
         }
 
+        /// <summary>
+        ///     Unfollow a user.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <returns>
+        ///     <see cref="FriendshipResponse" />
+        /// </returns>
         public async Task<FriendshipResponse> Unfollow(ulong userId)
         {
             var request = new RequestBuilder(Account).SetUrl($"friendships/destroy/{userId}/")
@@ -68,6 +82,29 @@ namespace Apex.Instagram.Request.Instagram
             return await Account.ApiRequest<FriendshipResponse>(request.Build());
         }
 
+        /// <summary>
+        ///     Get more information of a user based on their username.
+        /// </summary>
+        /// <param name="username">The username.</param>
+        /// <param name="module">
+        ///     From which app module (page) you have opened the profile. One of (incomplete):
+        ///     "comment_likers",
+        ///     "comment_owner",
+        ///     "followers",
+        ///     "following",
+        ///     "likers_likers_media_view_profile",
+        ///     "likers_likers_photo_view_profile",
+        ///     "likers_likers_video_view_profile",
+        ///     "newsfeed",
+        ///     "self_followers",
+        ///     "self_following",
+        ///     "self_likers_self_likers_media_view_profile",
+        ///     "self_likers_self_likers_photo_view_profile",
+        ///     "self_likers_self_likers_video_view_profile".
+        /// </param>
+        /// <returns>
+        ///     <see cref="UserInfoResponse" />
+        /// </returns>
         public async Task<UserInfoResponse> GetInfoByName(string username, string module = null)
         {
             var request = new RequestBuilder(Account).SetUrl($"users/{username}/usernameinfo/");
@@ -79,6 +116,29 @@ namespace Apex.Instagram.Request.Instagram
             return await Account.ApiRequest<UserInfoResponse>(request.Build());
         }
 
+        /// <summary>
+        ///     Get more information of a user based on their id.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="module">
+        ///     From which app module (page) you have opened the profile. One of (incomplete):
+        ///     "comment_likers",
+        ///     "comment_owner",
+        ///     "followers",
+        ///     "following",
+        ///     "likers_likers_media_view_profile",
+        ///     "likers_likers_photo_view_profile",
+        ///     "likers_likers_video_view_profile",
+        ///     "newsfeed",
+        ///     "self_followers",
+        ///     "self_following",
+        ///     "self_likers_self_likers_media_view_profile",
+        ///     "self_likers_self_likers_photo_view_profile",
+        ///     "self_likers_self_likers_video_view_profile".
+        /// </param>
+        /// <returns>
+        ///     <see cref="UserInfoResponse" />
+        /// </returns>
         public async Task<UserInfoResponse> GetInfoById(ulong userId, string module = null)
         {
             var request = new RequestBuilder(Account).SetUrl($"users/{userId}/info/");
@@ -90,6 +150,13 @@ namespace Apex.Instagram.Request.Instagram
             return await Account.ApiRequest<UserInfoResponse>(request.Build());
         }
 
+        /// <summary>
+        ///     Get the status of your friendship with a user.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <returns>
+        ///     <see cref="FriendshipsShowResponse" />
+        /// </returns>
         public async Task<FriendshipsShowResponse> GetFriendship(ulong userId)
         {
             var request = new RequestBuilder(Account).SetUrl($"friendships/show/{userId}/");
@@ -97,6 +164,13 @@ namespace Apex.Instagram.Request.Instagram
             return await Account.ApiRequest<FriendshipsShowResponse>(request.Build());
         }
 
+        /// <summary>
+        ///     Get the status of your friendship with a list of users.
+        /// </summary>
+        /// <param name="userIds">A list of user ids.</param>
+        /// <returns>
+        ///     <see cref="FriendshipsShowManyResponse" />
+        /// </returns>
         public async Task<FriendshipsShowManyResponse> GetFriendships(params ulong[] userIds)
         {
             var request = new RequestBuilder(Account).SetUrl($"friendships/show_many/")
@@ -126,6 +200,14 @@ namespace Apex.Instagram.Request.Instagram
             return await Account.ApiRequest<FollowerAndFollowingResponse>(request.Build());
         }
 
+        /// <summary>
+        ///     Get a list of a users followers.
+        /// </summary>
+        /// <param name="userId">The id of the user.</param>
+        /// <param name="searchQuery">Limit the userlist to ones matching the query.</param>
+        /// <returns>
+        ///     <see cref="IAutoPaginate&lt;FollowerAndFollowingResponse&gt;" />
+        /// </returns>
         public IAutoPaginate<FollowerAndFollowingResponse> GetFollowers(ulong userId, string searchQuery = null) { return new AutoPaginateWithRankToken<FollowerAndFollowingResponse>((maxId, rankToken) => GetFollowers(userId, rankToken, searchQuery, maxId)); }
     }
 }
