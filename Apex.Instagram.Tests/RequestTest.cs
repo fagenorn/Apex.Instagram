@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -288,6 +289,68 @@ namespace Apex.Instagram.Tests
         }
 
         [TestMethod]
+        public async Task Proxy_Authentication_Required()
+        {
+            var fileStorage = new FileStorage();
+            var account = await new AccountBuilder().SetId(0)
+                                                    .SetStorage(fileStorage)
+                                                    .SetLogger(Logger)
+                                                    .BuildAsync();
+
+            var request = new RequestBuilder(account).SetUrl("https://httpbin.org/status/407")
+                                                     .SetNeedsAuth(false)
+                                                     .Build();
+
+            await Assert.ThrowsExceptionAsync<ProxyAuthenticationRequiredException>(async () => await account.ApiRequest<GenericResponse>(request));
+        }
+
+        [TestMethod]
+        public async Task Dispose_While_Request_Ongoing()
+        {
+            var fileStorage = new FileStorage();
+            var account = await new AccountBuilder().SetId(0)
+                                                    .SetStorage(fileStorage)
+                                                    .SetLogger(Logger)
+                                                    .BuildAsync();
+
+            var request = new RequestBuilder(account).SetUrl("http://httpbin.org/delay/1")
+                                                     .SetNeedsAuth(false)
+                                                     .Build();
+
+            var taskResult = account.ApiRequest<GenericResponse>(request);
+
+            request.Dispose();
+            var ex = await Assert.ThrowsExceptionAsync<RequestException>(async () => await taskResult);
+            Assert.IsInstanceOfType(ex.InnerException, typeof(ObjectDisposedException));
+        }
+
+        [TestMethod]
+        public async Task Cancel_Request_Ongoing()
+        {
+            var fileStorage = new FileStorage();
+            var account = await new AccountBuilder().SetId(0)
+                                                    .SetStorage(fileStorage)
+                                                    .SetLogger(Logger)
+                                                    .BuildAsync();
+
+            var request = new RequestBuilder(account).SetUrl("http://httpbin.org/delay/1")
+                                                     .SetNeedsAuth(false)
+                                                     .Build();
+
+            var taskResult = account.ApiRequest<GenericResponse>(request);
+
+            account.Dispose();
+            var ex = await Assert.ThrowsExceptionAsync<RequestException>(async () => await taskResult);
+            Assert.IsInstanceOfType(ex.InnerException, typeof(OperationCanceledException));
+
+            request = new RequestBuilder(account).SetUrl("http://httpbin.org/delay/1")
+                                                     .SetNeedsAuth(false)
+                                                     .Build();
+
+            await Assert.ThrowsExceptionAsync<ObjectDisposedException>(async () => await account.ApiRequest<GenericResponse>(request));
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(ThrottledException))]
         public async Task Throttled_Request()
         {
@@ -320,6 +383,38 @@ namespace Apex.Instagram.Tests
 
             await account.ApiRequest<GenericResponse>(request);
         }
+
+
+        [TestMethod]
+        public async Task Only_One_Request_At_A_Time()
+        {
+            var fileStorage = new FileStorage();
+            var account = await new AccountBuilder().SetId(0)
+                                                    .SetStorage(fileStorage)
+                                                    .SetLogger(Logger)
+                                                    .BuildAsync();
+
+            int? lastFinished = null;
+
+            var request = new RequestBuilder(account).SetUrl("http://httpbin.org/delay/2")
+                                                     .SetNeedsAuth(false)
+                                                     .Build();
+
+            var taskResult = account.ApiRequest<GenericResponse>(request).ContinueWith(x => lastFinished = 1);
+
+            var request2 = new RequestBuilder(account).SetUrl("http://httpbin.org/get")
+                                                     .SetNeedsAuth(false)
+                                                     .Build();
+
+            var taskResult2 = account.ApiRequest<GenericResponse>(request2).ContinueWith(x => lastFinished = 2);
+
+            await taskResult2;
+            await taskResult;
+
+            Assert.IsNotNull(lastFinished);
+            Assert.AreEqual(2, lastFinished.Value);
+        }
+
 
         [TestMethod]
         public async Task Request_DNS_Error()

@@ -9,6 +9,8 @@ namespace Apex.Instagram
 {
     public class AccountBuilder
     {
+        private bool _disposed;
+
         private int? _id;
 
         private IApexLogger _logger;
@@ -65,6 +67,11 @@ namespace Apex.Instagram
 
         public async Task<Account> BuildAsync()
         {
+            if ( _disposed )
+            {
+                throw new AccountBuilderException("Account has already been buildt.");
+            }
+
             if ( _id == null )
             {
                 throw new AccountBuilderException("You must set an id for the account.");
@@ -75,7 +82,7 @@ namespace Apex.Instagram
                 throw new AccountBuilderException("You must set a storage interface.");
             }
 
-            var account = await Account.CreateAsync(new StorageManager(_storage, (int) _id), _logger);
+            var account = await Account.CreateAsync(_storage, _id.Value, _logger);
 
             if ( _proxy != null )
             {
@@ -91,6 +98,8 @@ namespace Apex.Instagram
             {
                 await account.UpdatePassword(_password);
             }
+
+            _disposed = true;
 
             return account;
         }

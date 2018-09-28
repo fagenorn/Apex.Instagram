@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 using Apex.Instagram.Login;
 using Apex.Instagram.Model.Account;
@@ -9,12 +10,12 @@ namespace Apex.Instagram.Storage
 {
     internal class StorageManager : IDisposable
     {
-        public StorageManager(IStorage storage, int id)
+        public StorageManager(IStorage storage, int id, CancellationToken ct)
         {
-            Proxy       = new StorageObject<Proxy>(StorageKey.Proxy, storage, id);
-            Cookie      = new StorageObject<CookieCollectionConverter>(StorageKey.Cookie, storage, id);
-            AccountInfo = new StorageObject<AccountInfo>(StorageKey.AccountInfo, storage, id);
-            LoginInfo   = new StorageObject<LoginInfo>(StorageKey.LoginInfo, storage, id);
+            Proxy       = new StorageObject<Proxy>(StorageKey.Proxy, storage, id, ct);
+            Cookie      = new StorageObject<CookieCollectionConverter>(StorageKey.Cookie, storage, id, ct);
+            AccountInfo = new StorageObject<AccountInfo>(StorageKey.AccountInfo, storage, id, ct);
+            LoginInfo   = new StorageObject<LoginInfo>(StorageKey.LoginInfo, storage, id, ct);
         }
 
         public StorageObject<Proxy> Proxy { get; }

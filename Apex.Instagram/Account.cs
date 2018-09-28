@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Apex.Instagram.Logger;
@@ -16,8 +17,33 @@ namespace Apex.Instagram
 {
     public class Account : IDisposable
     {
+        #region Fields
+
+        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+
+        #endregion
+
+        internal string GetCookie(string key) { return HttpClient.GetCookie(key); }
+
+        internal async Task<T> ApiRequest<T>(HttpRequestMessage request) where T : Response.JsonMap.Response
+        {
+            if ( _cancellationTokenSource.IsCancellationRequested )
+            {
+                throw new ObjectDisposedException(nameof(Account));
+            }
+
+            using (var result = await HttpClient.GetResponseAsync<T>(request, _cancellationTokenSource.Token))
+            {
+                return result.Response;
+            }
+        }
+
+        #region Public Methods
+
         public void Dispose()
         {
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource?.Dispose();
             HttpClient?.Dispose();
             LoginClient?.Dispose();
             Storage?.Dispose();
@@ -39,17 +65,9 @@ namespace Apex.Instagram
 
         public string GetProxy() { return HttpClient.GetProxy(); }
 
-        internal string GetCookie(string key) { return HttpClient.GetCookie(key); }
-
-        internal async Task<T> ApiRequest<T>(HttpRequestMessage request) where T : Response.JsonMap.Response
-        {
-            using (var result = await HttpClient.GetResponseAsync<T>(request))
-            {
-                return result.Response;
-            }
-        }
-
         public async Task Login() { await LoginClient.Login(); }
+
+        #endregion
 
         #region Request Collections
 
@@ -83,13 +101,16 @@ namespace Apex.Instagram
 
         internal IApexLogger Logger { get; }
 
+        internal int Id { get; }
+
         #endregion
 
         #region Constructor
 
-        private Account(StorageManager storage, IApexLogger logger = null)
+        private Account(IStorage storage, int id, IApexLogger logger = null)
         {
-            Storage = storage;
+            Id      = id;
+            Storage = new StorageManager(storage, id, _cancellationTokenSource.Token);
             Logger  = logger ?? new NullLogger();
 
             Internal = new Internal(this);
@@ -126,9 +147,9 @@ namespace Apex.Instagram
             return this;
         }
 
-        internal static Task<Account> CreateAsync(StorageManager storage, IApexLogger logger = null)
+        internal static Task<Account> CreateAsync(IStorage storage, int id, IApexLogger logger = null)
         {
-            var ret = new Account(storage, logger);
+            var ret = new Account(storage, id, logger);
 
             return ret.InitializeAsync();
         }

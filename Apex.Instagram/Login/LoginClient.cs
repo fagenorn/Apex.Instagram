@@ -25,48 +25,49 @@ namespace Apex.Instagram.Login
 
         private async Task<LoginResponse> InternalLogin(bool forceLogin = false)
         {
-            if ( !LoginInfo.IsLoggedIn || forceLogin )
+            if ( LoginInfo.IsLoggedIn && !forceLogin )
             {
-                await PreLoginFlow();
-
-                LoginResponse response;
-
-                try
-                {
-                    var request = new RequestBuilder(_account).SetNeedsAuth(false)
-                                                              .SetUrl("accounts/login/")
-                                                              .AddPost("phone_id", _account.AccountInfo.PhoneId)
-                                                              .AddPost("_csrftoken", CsrfToken)
-                                                              .AddPost("username", _account.AccountInfo.Username)
-                                                              .AddPost("adid", _account.AccountInfo.AdvertisingId)
-                                                              .AddPost("guid", _account.AccountInfo.Uuid)
-                                                              .AddPost("device_id", _account.AccountInfo.DeviceId)
-                                                              .AddPost("password", _account.AccountInfo.Password)
-                                                              .AddPost("login_attempt_count", 0)
-                                                              .Build();
-
-                    response = await _account.ApiRequest<LoginResponse>(request);
-                }
-                catch (RequestException e)
-                {
-                    if ( e.HasResponse && e.Response is LoginResponse s )
-                    {
-                        if (s.TwoFactorRequired is bool tf && tf)
-                        {
-                            return s;
-                        }
-                    }
-
-                    throw;
-                }
-
-                await UpdateLoginState(response);
-                await LoginFlow(true);
-
-                return response;
+                return await LoginFlow(false);
             }
 
-            return await LoginFlow(false);
+            await PreLoginFlow();
+
+            LoginResponse response;
+
+            try
+            {
+                var request = new RequestBuilder(_account).SetNeedsAuth(false)
+                                                          .SetUrl("accounts/login/")
+                                                          .AddPost("phone_id", _account.AccountInfo.PhoneId)
+                                                          .AddPost("_csrftoken", CsrfToken)
+                                                          .AddPost("username", _account.AccountInfo.Username)
+                                                          .AddPost("adid", _account.AccountInfo.AdvertisingId)
+                                                          .AddPost("guid", _account.AccountInfo.Uuid)
+                                                          .AddPost("device_id", _account.AccountInfo.DeviceId)
+                                                          .AddPost("password", _account.AccountInfo.Password)
+                                                          .AddPost("login_attempt_count", 0)
+                                                          .Build();
+
+                response = await _account.ApiRequest<LoginResponse>(request);
+            }
+            catch (RequestException e)
+            {
+                if ( e.HasResponse && e.Response is LoginResponse s )
+                {
+                    if (s.TwoFactorRequired is bool tf && tf)
+                    {
+                        return s;
+                    }
+                }
+
+                throw;
+            }
+
+            await UpdateLoginState(response);
+            await LoginFlow(true);
+
+            return response;
+
         }
 
         private async Task UpdateLoginState(LoginResponse response)

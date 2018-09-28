@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Apex.Instagram.Storage
@@ -11,7 +12,8 @@ namespace Apex.Instagram.Storage
         /// <param name="id">The account id</param>
         /// <param name="subId">The settings id</param>
         /// <param name="data">The data stream that has to be saved</param>
-        Task SaveAsync(int id, int subId, Stream data);
+        /// <param name="ct">The cancellation token</param>
+        Task SaveAsync(int id, int subId, Stream data, CancellationToken ct = default);
 
         /// <summary>
         ///     Load an object stream based on the gived id's. If no object stream is found, simply return

@@ -22,8 +22,13 @@ namespace Apex.Instagram.Request
 
         public async Task UpdateProxy(Proxy proxy)
         {
-            _proxy.Credentials = proxy == null ? null : proxy.HasCredentials ? proxy.Credentials : null;
-            _proxy.Address     = proxy?.Uri;
+            _proxy.Credentials = proxy == null
+                                     ? null
+                                     : proxy.HasCredentials
+                                         ? proxy.Credentials
+                                         : null;
+
+            _proxy.Address = proxy?.Uri;
             await _account.Storage.Proxy.SaveAsync(proxy);
         }
 
@@ -32,10 +37,11 @@ namespace Apex.Instagram.Request
         ///     IMPORTANT: Dispose reponse.
         /// </summary>
         /// <param name="request">The request object. Will be disposed after request has been made.</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>Make sure to dispose <see cref="HttpResponseMessage" /> or a memory leak can occur.</returns>
-        public async Task<ResponseInfo<T>> GetResponseAsync<T>(HttpRequestMessage request) where T : Response.JsonMap.Response
+        public async Task<ResponseInfo<T>> GetResponseAsync<T>(HttpRequestMessage request, CancellationToken ct = default) where T : Response.JsonMap.Response
         {
-            await _lock.WaitAsync();
+            await _lock.WaitAsync(ct);
             try
             {
                 HttpResponseMessage result;
@@ -43,7 +49,7 @@ namespace Apex.Instagram.Request
 
                 try
                 {
-                    result = await _request.SendAsync(request, HttpCompletionOption.ResponseContentRead);
+                    result = await _request.SendAsync(request, HttpCompletionOption.ResponseContentRead, ct);
                 }
                 catch (HttpRequestException e)
                 {
@@ -56,6 +62,14 @@ namespace Apex.Instagram.Request
                         throw new RequestException("Critical request error occured.", e);
                     }
                 }
+                catch (ObjectDisposedException e)
+                {
+                    throw new RequestException("Request has been cancelled.", e);
+                }
+                catch (OperationCanceledException e)
+                {
+                    throw new RequestException("Request has been cancelled.", e);
+                }
 
                 return await ResponseInfo<T>.CreateAsync<T>(result);
             }
@@ -67,7 +81,7 @@ namespace Apex.Instagram.Request
             }
             finally
             {
-                if ( _lastCookieSave.Passed )
+                if ( !ct.IsCancellationRequested && _lastCookieSave.Passed )
                 {
                     await _account.Storage.Cookie.SaveAsync(_handler.CookieContainer);
                     _lastCookieSave.Update();
@@ -78,10 +92,7 @@ namespace Apex.Instagram.Request
             }
         }
 
-        public string GetProxy()
-        {
-            return _proxy.Address == null ? string.Empty : _proxy.Address.AbsoluteUri;
-        }
+        public string GetProxy() { return _proxy.Address == null ? string.Empty : _proxy.Address.AbsoluteUri; }
 
         public string GetCookie(string key)
         {
@@ -121,8 +132,12 @@ namespace Apex.Instagram.Request
 
             _proxy = new WebProxy
                      {
-                         Credentials = proxy == null ? null : proxy.HasCredentials ? proxy.Credentials : null,
-                         Address     = proxy?.Uri
+                         Credentials = proxy == null
+                                           ? null
+                                           : proxy.HasCredentials
+                                               ? proxy.Credentials
+                                               : null,
+                         Address = proxy?.Uri
                      };
 
             _handler = new HttpClientHandler
