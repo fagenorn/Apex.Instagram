@@ -18,6 +18,7 @@ namespace Apex.Instagram.Constants
                                                                new ExceptionMap<InvalidSmsCodeException>(@"Please check the security code we sent you and try again.", @"sms_code_validation_code_invalid"),
                                                                new ExceptionMap<AccountDisabledException>(@"Your account has been disabled for violating our terms. Learn how you may be able to restore your account."),
                                                                new ExceptionMap<SentryBlockException>(@"sentry_block"),
+                                                               new ExceptionMap<ThrottledException>(@"Please wait a few minutes before you try again."),
                                                                new ExceptionMap<InvalidUserException>(@"The username you entered doesn't appear to belong to an account. Please check your username and try again.", @"invalid_user"),
                                                                new ExceptionMap<ForcedPasswordResetException>(@"To secure your account, we've reset your password. Tap ""Get help signing in"" on the login screen and follow the instructions to access your account.")
                                                            };

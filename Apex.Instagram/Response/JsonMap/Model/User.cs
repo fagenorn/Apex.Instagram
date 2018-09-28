@@ -158,7 +158,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public dynamic UsertagReviewEnabled { get; set; }
 
         [DataMember(Name = "profile_context_mutual_follow_ids")]
-        public string[] ProfileContextMutualFollowIds { get; set; }
+        public ulong[] ProfileContextMutualFollowIds { get; set; }
 
         [DataMember(Name = "profile_context_links_with_user_ids")]
         public Link[] ProfileContextLinksWithUserIds { get; set; }
