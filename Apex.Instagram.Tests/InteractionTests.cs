@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 
+using Apex.Instagram.Exception;
 using Apex.Instagram.Logger;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -81,7 +82,7 @@ namespace Apex.Instagram.Tests
         {
             var celebInfo = await _account.People.GetInfoByName("celeb_syles");
             Assert.IsNotNull(celebInfo.User.Pk);
-            Assert.AreEqual(3549147650, celebInfo.User.Pk);
+            Assert.AreEqual(3549147650u, celebInfo.User.Pk);
             Assert.AreEqual("celeb_syles", celebInfo.User.Username);
 
             var unfollow = await _account.People.Unfollow(celebInfo.User.Pk.Value);
@@ -108,6 +109,56 @@ namespace Apex.Instagram.Tests
             unfollow = await _account.People.Unfollow(celebInfo.User.Pk.Value);
             Assert.IsNotNull(unfollow.FriendshipStatus.Following);
             Assert.IsFalse(unfollow.FriendshipStatus.Following.Value);
+        }
+
+        [TestMethod]
+        public async Task Paginate_Throug_Users_Followers()
+        {
+            var selenaInfo = await _account.People.GetInfoByName("selenagomez");
+            Assert.IsNotNull(selenaInfo.User.Pk);
+            Assert.AreEqual(460563723u, selenaInfo.User.Pk);
+            Assert.AreEqual("selenagomez", selenaInfo.User.Username);
+
+            var followers = _account.People.GetFollowers(selenaInfo.User.Pk.Value);
+
+            const int numOfPages = 3;
+            var page = 0;
+
+            while ( page != numOfPages )
+            {
+                Assert.IsTrue(followers.HasMore);
+                var reponse = await followers.Next();
+                Assert.IsNotNull(reponse.Users);
+                Assert.AreNotEqual(0, reponse.Users.Length);
+                page++;
+            }
+
+            var zzInfo = await _account.People.GetInfoByName("zzzzzzzzz");
+            Assert.IsNotNull(zzInfo.User.Pk);
+            Assert.AreEqual(617778u, zzInfo.User.Pk);
+            Assert.AreEqual("zzzzzzzzz", zzInfo.User.Username);
+
+            followers = _account.People.GetFollowers(zzInfo.User.Pk.Value);
+            Assert.IsTrue(followers.HasMore);
+            var resp = await followers.Next();
+            Assert.IsNotNull(resp.Users);
+            Assert.AreNotEqual(0, resp.Users.Length);
+            Assert.IsFalse(followers.HasMore);
+            var followers1 = followers;
+            await Assert.ThrowsExceptionAsync<EndOfPageException>(async () => await followers1.Next());
+
+
+            var fefeInfo = await _account.People.GetInfoByName("fefefefefefefefe");
+            Assert.IsNotNull(fefeInfo.User.Pk);
+            Assert.AreEqual(252852361u, fefeInfo.User.Pk);
+            Assert.AreEqual("fefefefefefefefe", fefeInfo.User.Username);
+
+            followers = _account.People.GetFollowers(fefeInfo.User.Pk.Value);
+            Assert.IsTrue(followers.HasMore);
+            var resp2 = await followers.Next();
+            Assert.IsNotNull(resp2.Users);
+            Assert.AreEqual(0, resp2.Users.Length);
+            await Assert.ThrowsExceptionAsync<EndOfPageException>(async () => await followers.Next());
         }
     }
 }

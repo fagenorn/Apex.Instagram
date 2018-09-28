@@ -384,7 +384,6 @@ namespace Apex.Instagram.Tests
             await account.ApiRequest<GenericResponse>(request);
         }
 
-
         [TestMethod]
         public async Task Only_One_Request_At_A_Time()
         {
@@ -414,7 +413,6 @@ namespace Apex.Instagram.Tests
             Assert.IsNotNull(lastFinished);
             Assert.AreEqual(2, lastFinished.Value);
         }
-
 
         [TestMethod]
         public async Task Request_DNS_Error()

@@ -84,6 +84,7 @@
     <Compile Include="Constants\Version.cs" />
     <Compile Include="Exception\ApexException.cs" />
     <Compile Include="Exception\AccountBuilderException.cs" />
+    <Compile Include="Exception\EndOfPageException.cs" />
     <Compile Include="Logger\ApexLogger.cs" />
     <Compile Include="Logger\ApexLogLevel.cs" />
     <Compile Include="Logger\ApexLogMessage.cs" />
@@ -137,6 +138,10 @@
     <Compile Include="Request\Instagram\Discover.cs" />
     <Compile Include="Request\Instagram\Internal.cs" />
     <Compile Include="Request\Instagram\Media.cs" />
+    <Compile Include="Request\Instagram\Paginate\AutoPaginate.cs" />
+    <Compile Include="Request\Instagram\Paginate\AutoPaginateWithRankToken.cs" />
+    <Compile Include="Request\Instagram\Paginate\IAutoPaginate.cs" />
+    <Compile Include="Request\Instagram\Paginate\IPaginate.cs" />
     <Compile Include="Request\Instagram\People.cs" />
     <Compile Include="Request\Instagram\Profile.cs" />
     <Compile Include="Request\Instagram\RequestCollection.cs" />
@@ -157,6 +162,7 @@
     <Compile Include="Response\JsonMap\ExploreResponse.cs" />
     <Compile Include="Response\JsonMap\FacebookOtaResponse.cs" />
     <Compile Include="Response\JsonMap\FetchQpDataResponse.cs" />
+    <Compile Include="Response\JsonMap\FollowerAndFollowingResponse.cs" />
     <Compile Include="Response\JsonMap\FriendshipResponse.cs" />
     <Compile Include="Response\JsonMap\FriendshipsShowManyResponse.cs" />
     <Compile Include="Response\JsonMap\FriendshipsShowResponse.cs" />

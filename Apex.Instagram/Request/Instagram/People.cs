@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 
 using Apex.Instagram.Request.Exception;
+using Apex.Instagram.Request.Instagram.Paginate;
 using Apex.Instagram.Response.JsonMap;
 
 using Utf8Json;
@@ -106,5 +107,25 @@ namespace Apex.Instagram.Request.Instagram
 
             return await Account.ApiRequest<FriendshipsShowManyResponse>(request.Build());
         }
+
+        private async Task<FollowerAndFollowingResponse> GetFollowers(ulong userId, string rankToken, string searchQuery, string maxId)
+        {
+            var request = new RequestBuilder(Account).SetUrl($"friendships/{userId}/followers/")
+                                                     .AddParam("rank_token", rankToken);
+
+            if ( searchQuery != null )
+            {
+                request.AddParam("query", searchQuery);
+            }
+
+            if ( maxId != null )
+            {
+                request.AddParam("max_id ", maxId);
+            }
+
+            return await Account.ApiRequest<FollowerAndFollowingResponse>(request.Build());
+        }
+
+        public IAutoPaginate<FollowerAndFollowingResponse> GetFollowers(ulong userId, string searchQuery = null) { return new AutoPaginateWithRankToken<FollowerAndFollowingResponse>((maxId, rankToken) => GetFollowers(userId, rankToken, searchQuery, maxId)); }
     }
 }
