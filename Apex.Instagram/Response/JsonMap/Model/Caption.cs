@@ -32,7 +32,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public ulong? MediaId { get; set; }
 
         [DataMember(Name = "pk")]
-        public ulong? Pk { get; set; }
+        public dynamic Pk { get; set; }
 
         [DataMember(Name = "type")]
         public dynamic Type { get; set; }

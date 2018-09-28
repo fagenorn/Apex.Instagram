@@ -13,17 +13,17 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string Status { get; set; }
 
         [DataMember(Name = "user_id")]
-        public string UserId { get; set; }
+        public ulong? UserId { get; set; }
 
         /// <summary>
         ///     Unix timestamp (UTC) of when the comment was posted.
         /// </summary>
         [DataMember(Name = "created_at")]
-        public string CreatedAt { get; set; }
+        public ulong? CreatedAt { get; set; }
 
         [Obsolete("Do not use. Use 'CreatedAt' instead.")]
         [DataMember(Name = "created_at_utc")]
-        public string CreatedAtUtc { get; set; }
+        public ulong? CreatedAtUtc { get; set; }
 
         [DataMember(Name = "bit_flags")]
         public int? BitFlags { get; set; }
@@ -35,7 +35,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public ulong? Pk { get; set; }
 
         [DataMember(Name = "media_id")]
-        public string MediaId { get; set; }
+        public ulong? MediaId { get; set; }
 
         [DataMember(Name = "text")]
         public string Text { get; set; }
@@ -64,7 +64,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public bool? DidReportAsSpam { get; set; }
 
         [DataMember(Name = "parent_comment_id")]
-        public string ParentCommentId { get; set; }
+        public ulong? ParentCommentId { get; set; }
 
         [DataMember(Name = "child_comment_count")]
         public int? ChildCommentCount { get; set; }

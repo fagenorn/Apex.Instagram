@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 
 using Apex.Instagram.Logger;
+using Apex.Instagram.Login.Exception;
 using Apex.Instagram.Request.Exception;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -35,6 +36,22 @@ namespace Apex.Instagram.Tests
                                                     .BuildAsync();
 
             await Assert.ThrowsExceptionAsync<IncorrectPasswordException>(async () => await account.Login());
+
+            await account.UpdatePassword("new_password");
+
+            await Assert.ThrowsExceptionAsync<IncorrectPasswordException>(async () => await account.Login());
+
+            account.Dispose();
+
+
+            account = await new AccountBuilder().SetId(0)
+                                                .SetStorage(fileStorage)
+                                                .SetLogger(Logger)
+                                                .SetUsername("bob")
+                                                .SetPassword("wrong")
+                                                .BuildAsync();
+
+            await Assert.ThrowsExceptionAsync<IncorrectPasswordException>(async () => await account.Login());
         }
 
         [TestMethod]
@@ -49,6 +66,32 @@ namespace Apex.Instagram.Tests
                                                     .BuildAsync();
 
             await Assert.ThrowsExceptionAsync<InvalidUserException>(async () => await account.Login());
+        }
+
+        [TestMethod]
+        public async Task Login_No_Password()
+        {
+            var fileStorage = new FileStorage();
+            var account = await new AccountBuilder().SetId(0)
+                                                    .SetStorage(fileStorage)
+                                                    .SetLogger(Logger)
+                                                    .SetUsername("bob")
+                                                    .BuildAsync();
+
+            await Assert.ThrowsExceptionAsync<LoginException>(async () => await account.Login());
+        }
+
+        [TestMethod]
+        public async Task Login_No_Username()
+        {
+            var fileStorage = new FileStorage();
+            var account = await new AccountBuilder().SetId(0)
+                                                    .SetStorage(fileStorage)
+                                                    .SetLogger(Logger)
+                                                    .SetPassword("bob")
+                                                    .BuildAsync();
+
+            await Assert.ThrowsExceptionAsync<LoginException>(async () => await account.Login());
         }
 
         [TestMethod]

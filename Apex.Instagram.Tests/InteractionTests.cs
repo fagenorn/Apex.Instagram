@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 using Apex.Instagram.Exception;
 using Apex.Instagram.Logger;
+using Apex.Instagram.Response.JsonMap.Model;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -123,6 +124,7 @@ namespace Apex.Instagram.Tests
 
             const int numOfPages = 3;
             var page = 0;
+            User firstUser = null;
 
             while ( page != numOfPages )
             {
@@ -130,6 +132,8 @@ namespace Apex.Instagram.Tests
                 var reponse = await followers.Next();
                 Assert.IsNotNull(reponse.Users);
                 Assert.AreNotEqual(0, reponse.Users.Length);
+                Assert.AreNotEqual(firstUser?.Pk, reponse.Users[0].Pk);
+                firstUser = reponse.Users[0];
                 page++;
             }
 

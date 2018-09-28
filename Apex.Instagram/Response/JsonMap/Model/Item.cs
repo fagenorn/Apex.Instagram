@@ -98,7 +98,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string OrganicTrackingToken { get; set; }
 
         [DataMember(Name = "expiring_at")]
-        public string ExpiringAt { get; set; }
+        public ulong? ExpiringAt { get; set; }
 
         [DataMember(Name = "is_dash_eligible")]
         public int? IsDashEligible { get; set; }
@@ -158,7 +158,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public StoryCta[] StoryCta { get; set; }
 
         [DataMember(Name = "next_max_id")]
-        public string NextMaxId { get; set; }
+        public ulong? NextMaxId { get; set; }
 
         [DataMember(Name = "carousel_media")]
         public CarouselMedia[] CarouselMedia { get; set; }
@@ -374,7 +374,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string LeadGenFormId { get; set; }
 
         [DataMember(Name = "ad_id")]
-        public string AdId { get; set; }
+        public ulong? AdId { get; set; }
 
         [DataMember(Name = "actor_fbid")]
         public string ActorFbid { get; set; }

@@ -65,6 +65,9 @@ namespace Apex.Instagram
 
         public string GetProxy() { return HttpClient.GetProxy(); }
 
+        /// <summary>
+        ///     Log into the account. A full login flow will only be done if needed.
+        /// </summary>
         public async Task Login() { await LoginClient.Login(); }
 
         #endregion

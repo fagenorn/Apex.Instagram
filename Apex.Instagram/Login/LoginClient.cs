@@ -21,7 +21,20 @@ namespace Apex.Instagram.Login
 
         public void Dispose() { }
 
-        public async Task<LoginResponse> Login() { return await InternalLogin(); }
+        public async Task<LoginResponse> Login()
+        {
+            if ( string.IsNullOrWhiteSpace(_account.AccountInfo.Username) )
+            {
+                throw new LoginException("Username can't be empty.");
+            }
+
+            if ( string.IsNullOrWhiteSpace(_account.AccountInfo.Password) )
+            {
+                throw new LoginException("Password can't be empty.");
+            }
+
+            return await InternalLogin();
+        }
 
         private async Task<LoginResponse> InternalLogin(bool forceLogin = false)
         {
@@ -54,7 +67,7 @@ namespace Apex.Instagram.Login
             {
                 if ( e.HasResponse && e.Response is LoginResponse s )
                 {
-                    if (s.TwoFactorRequired is bool tf && tf)
+                    if ( s.TwoFactorRequired is bool tf && tf )
                     {
                         return s;
                     }
@@ -67,7 +80,6 @@ namespace Apex.Instagram.Login
             await LoginFlow(true);
 
             return response;
-
         }
 
         private async Task UpdateLoginState(LoginResponse response)

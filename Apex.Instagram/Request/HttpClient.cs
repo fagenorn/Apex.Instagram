@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -44,35 +45,7 @@ namespace Apex.Instagram.Request
             await _lock.WaitAsync(ct);
             try
             {
-                HttpResponseMessage result;
-                _account.Logger.Debug<HttpClient>(request);
-
-                try
-                {
-                    result = await _request.SendAsync(request, HttpCompletionOption.ResponseContentRead, ct);
-                    _account.Logger.Debug<HttpClient>(result);
-                }
-                catch (HttpRequestException e)
-                {
-                    if ( e.InnerException is WebException webException && webException.Response is HttpWebResponse exceptionResponse )
-                    {
-                        result = new HttpResponseMessage(exceptionResponse.StatusCode);
-                    }
-                    else
-                    {
-                        throw new RequestException("Critical request error occured.", e);
-                    }
-                }
-                catch (ObjectDisposedException e)
-                {
-                    throw new RequestException("Request has been cancelled.", e);
-                }
-                catch (OperationCanceledException e)
-                {
-                    throw new RequestException("Request has been cancelled.", e);
-                }
-
-                return await ResponseInfo<T>.CreateAsync<T>(result);
+                return await GetResponseAsyncInternal<T>(request, ct);
             }
             catch (RequestException e)
             {
@@ -91,6 +64,44 @@ namespace Apex.Instagram.Request
                 request.Dispose();
                 _lock.Release();
             }
+        }
+
+        private async Task<ResponseInfo<T>> GetResponseAsyncInternal<T>(HttpRequestMessage request, CancellationToken ct, int depth = 1) where T : Response.JsonMap.Response
+        {
+            HttpResponseMessage result;
+            _account.Logger.Debug<HttpClient>(request);
+
+            try
+            {
+                result = await _request.SendAsync(request, HttpCompletionOption.ResponseContentRead, ct);
+                _account.Logger.Debug<HttpClient>(result);
+            }
+            catch (HttpRequestException e)
+            {
+                switch ( e.InnerException )
+                {
+                    case WebException webException when webException.Response is HttpWebResponse exceptionResponse:
+                        result = new HttpResponseMessage(exceptionResponse.StatusCode);
+
+                        break;
+                    case IOException _ when depth < Constants.Request.Instance.MaxRequestRetries:
+
+                        return await GetResponseAsyncInternal<T>(request, ct, depth + 1);
+                    default:
+
+                        throw new RequestException("Critical request error occured.", e);
+                }
+            }
+            catch (ObjectDisposedException e)
+            {
+                throw new RequestException("Request has been cancelled.", e);
+            }
+            catch (OperationCanceledException e)
+            {
+                throw new RequestException("Request has been cancelled.", e);
+            }
+
+            return await ResponseInfo<T>.CreateAsync<T>(result);
         }
 
         public string GetProxy() { return _proxy.Address == null ? string.Empty : _proxy.Address.AbsoluteUri; }

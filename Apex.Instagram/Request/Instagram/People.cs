@@ -194,7 +194,7 @@ namespace Apex.Instagram.Request.Instagram
 
             if ( maxId != null )
             {
-                request.AddParam("max_id ", maxId);
+                request.AddParam("max_id", maxId);
             }
 
             return await Account.ApiRequest<FollowerAndFollowingResponse>(request.Build());

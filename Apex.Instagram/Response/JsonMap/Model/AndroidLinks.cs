@@ -5,7 +5,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
     public class AndroidLinks
     {
         [DataMember(Name = "linkType")]
-        public In LinkType { get; set; }
+        public int? LinkType { get; set; }
 
         [DataMember(Name = "webUri")]
         public string WebUri { get; set; }
@@ -29,7 +29,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string IgUserId { get; set; }
 
         [DataMember(Name = "leadGenFormId")]
-        public string LeadGenFormId { get; set; }
+        public ulong? LeadGenFormId { get; set; }
 
         [DataMember(Name = "canvasDocId")]
         public string CanvasDocId { get; set; }

@@ -41,7 +41,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public bool? DirectShare { get; set; }
 
         [DataMember(Name = "ad_id")]
-        public string AdId { get; set; }
+        public ulong? AdId { get; set; }
 
         [DataMember(Name = "display_viewability_eligible")]
         public bool? DisplayViewabilityEligible { get; set; }
@@ -59,6 +59,6 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string[] Cookies { get; set; }
 
         [DataMember(Name = "lead_gen_form_id")]
-        public string LeadGenFormId { get; set; }
+        public ulong? LeadGenFormId { get; set; }
     }
 }

@@ -11,6 +11,6 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string HideUnitIfSeen { get; set; }
 
         [DataMember(Name = "id")]
-        public string Id { get; set; }
+        public ulong? Id { get; set; }
     }
 }

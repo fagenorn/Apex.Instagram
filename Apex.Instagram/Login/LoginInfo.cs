@@ -35,6 +35,13 @@ namespace Apex.Instagram.Login
             get => _experiments;
             set
             {
+                if ( value == null )
+                {
+                    _experiments = value;
+
+                    return;
+                }
+
                 var filtered = new Dictionary<string, Dictionary<string, string>>();
                 foreach ( var key in ExperimentKeys )
                 {

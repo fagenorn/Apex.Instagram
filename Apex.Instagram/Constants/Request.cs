@@ -59,6 +59,8 @@ namespace Apex.Instagram.Constants
 
         public TimeSpan Timeout { get; } = TimeSpan.FromSeconds(30);
 
+        public int MaxRequestRetries { get; } = 5;
+
         public string HeaderConnectionType { get; } = "WIFI";
 
         public string HeaderCapabilities { get; } = "3brTPw==";
