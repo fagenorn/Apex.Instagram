@@ -431,7 +431,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public bool? ShowOneTapFbShareTooltip { get; set; }
 
         [DataMember(Name = "has_shared_to_fb")]
-        public bool? HasSharedToFb { get; set; }
+        public int? HasSharedToFb { get; set; }
 
         [DataMember(Name = "inventory_source")]
         public string InventorySource { get; set; }

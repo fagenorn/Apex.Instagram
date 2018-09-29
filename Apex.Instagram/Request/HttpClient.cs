@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Apex.Instagram.Constants;
 using Apex.Instagram.Model.Internal;
 using Apex.Instagram.Model.Request;
 using Apex.Instagram.Request.Exception;
@@ -131,7 +132,7 @@ namespace Apex.Instagram.Request
         private HttpClient(Account account)
         {
             _account                = account;
-            _lastCookieSave         = new LastAction(TimeSpan.FromMilliseconds(50)); // Save new cookies only every 50 ms. Reducing this will cause saves to occur more often at the cost of performance.
+            _lastCookieSave         = new LastAction(Delays.Instance.CookieSaveInterval);
             _lock                   = new SemaphoreSlim(1);
             ZeroRatingMiddleware    = new ZeroRatingMiddleware();
             ModifyHeadersMiddleware = new ModifyHeadersMiddleware(_account.AccountInfo.DeviceInfo.UserAgent);

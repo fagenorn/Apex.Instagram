@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 
+using Apex.Instagram.Model.Internal;
 using Apex.Instagram.Model.Request;
 using Apex.Instagram.Storage.Object;
 
@@ -123,6 +125,30 @@ namespace Apex.Instagram.Tests
             Assert.AreEqual(2, result.Cookies.Count);
         }
 
+        [TestMethod]
+        public async Task Load_Store_Epoch()
+        {
+            var fileStorage = new FileStorage();
+            var account = await new AccountBuilder().SetId(0)
+                                                    .SetStorage(fileStorage)
+                                                    .BuildAsync();
+
+            Assert.AreEqual(0, account.LoginClient.LoginInfo.LastLogin.Last.Value);
+            account.LoginClient.LoginInfo.LastLogin.Update();
+            Assert.AreNotEqual(0, account.LoginClient.LoginInfo.LastLogin.Last.Value);
+            account.LoginClient.LoginInfo.LastLogin = new LastAction(TimeSpan.FromDays(1), new Epoch(565));
+            Assert.AreEqual(565, account.LoginClient.LoginInfo.LastLogin.Last.Value);
+            await account.Storage.LoginInfo.SaveAsync(account.LoginClient.LoginInfo);
+
+            account.Dispose();
+
+            account = await new AccountBuilder().SetId(0)
+                                                .SetStorage(fileStorage)
+                                                .BuildAsync();
+
+            Assert.AreEqual(565, account.LoginClient.LoginInfo.LastLogin.Last.Value);
+        }
+
         #region Additional test attributes
 
         //
@@ -133,11 +159,11 @@ namespace Apex.Instagram.Tests
         // public static void MyClassInitialize(TestContext testContext) { }
         //
         // Use ClassCleanup to run code after all tests in a class have run
-//        [ClassCleanup]
-//        public static void MyClassCleanup()
-//        {
-//
-//        }
+        //        [ClassCleanup]
+        //        public static void MyClassCleanup()
+        //        {
+        //
+        //        }
 
         // Use TestInitialize to run code before running each test 
         // [TestInitialize()]

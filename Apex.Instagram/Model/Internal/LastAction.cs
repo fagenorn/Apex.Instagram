@@ -18,7 +18,7 @@ namespace Apex.Instagram.Model.Internal
         #region Properties
 
         [Key(0)]
-        public TimeSpan Limit { get; }
+        public TimeSpan Limit { get; internal set; }
 
         [Key(1)]
         public Epoch Last { get; }

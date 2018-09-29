@@ -1,9 +1,11 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
 using Apex.Instagram.Logger;
 using Apex.Instagram.Login.Exception;
+using Apex.Instagram.Model.Internal;
 using Apex.Instagram.Request.Exception;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -35,14 +37,15 @@ namespace Apex.Instagram.Tests
                                                     .SetPassword("wrong")
                                                     .BuildAsync();
 
-            await Assert.ThrowsExceptionAsync<IncorrectPasswordException>(async () => await account.Login());
+            var account1 = account;
+            await Assert.ThrowsExceptionAsync<IncorrectPasswordException>(async () => await account1.Login());
 
             await account.UpdatePassword("new_password");
 
-            await Assert.ThrowsExceptionAsync<IncorrectPasswordException>(async () => await account.Login());
+            var account2 = account;
+            await Assert.ThrowsExceptionAsync<IncorrectPasswordException>(async () => await account2.Login());
 
             account.Dispose();
-
 
             account = await new AccountBuilder().SetId(0)
                                                 .SetStorage(fileStorage)
@@ -111,7 +114,6 @@ namespace Apex.Instagram.Tests
         [TestMethod]
         public async Task Login_Correctly_Account_Is_Persistent()
         {
-
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(fileStorage)
@@ -120,12 +122,16 @@ namespace Apex.Instagram.Tests
                                                     .SetPassword("wYPs2PP6")
                                                     .BuildAsync();
 
+            Assert.AreEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);
+            Assert.IsTrue(account.LoginClient.LoginInfo.LastLogin.Passed);
             await account.Login();
 
             var info = await account.Storage.LoginInfo.LoadAsync();
 
             Assert.IsTrue(info.IsLoggedIn);
             Assert.AreNotEqual(0, info.Experiments);
+            Assert.AreNotEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);
+            Assert.IsFalse(account.LoginClient.LoginInfo.LastLogin.Passed);
 
             account.Dispose();
 
@@ -136,12 +142,35 @@ namespace Apex.Instagram.Tests
 
             Assert.IsTrue(account.LoginClient.LoginInfo.IsLoggedIn);
 
+            Assert.IsFalse(account.LoginClient.LoginInfo.LastLogin.Passed);
+            Assert.AreNotEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);
+
             await account.Login();
 
             info = await account.Storage.LoginInfo.LoadAsync();
 
             Assert.IsTrue(info.IsLoggedIn);
             Assert.AreNotEqual(0, info.Experiments);
+            Assert.AreNotEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);
+            Assert.IsFalse(account.LoginClient.LoginInfo.LastLogin.Passed);
+
+            account.Dispose();
+
+            account = await new AccountBuilder().SetId(0)
+                                                .SetStorage(fileStorage)
+                                                .SetLogger(Logger)
+                                                .BuildAsync();
+
+            Assert.AreNotEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);
+            Assert.IsFalse(account.LoginClient.LoginInfo.LastLogin.Passed);
+            account.LoginClient.LoginInfo.LastLogin = new LastAction(TimeSpan.FromMinutes(45));
+            Assert.IsTrue(account.LoginClient.LoginInfo.LastLogin.Passed);
+            Assert.AreEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);
+            Assert.AreEqual(TimeSpan.FromMinutes(30), account.LoginClient.LoginInfo.LastLogin.Limit);
+
+            await account.Login();
+            Assert.AreNotEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);
+            Assert.IsFalse(account.LoginClient.LoginInfo.LastLogin.Passed);
         }
 
         #region Additional test attributes

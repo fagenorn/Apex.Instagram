@@ -32,7 +32,7 @@ namespace Apex.Instagram.Tests
             Logger.LogMessagePublished += LoggerOnLogMessagePublished;
 
             var fileStorage = new FileStorage();
-            _account = await new AccountBuilder().SetId(0)
+            _account = await new AccountBuilder().SetId(1)
                                                 .SetStorage(fileStorage)
                                                 .SetLogger(Logger)
                                                 .SetUsername("Lottie.Cheetham1Np")

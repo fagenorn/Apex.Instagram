@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using Apex.Instagram.Constants;
@@ -14,6 +13,10 @@ namespace Apex.Instagram.Login
     {
         private Dictionary<string, Dictionary<string, string>> _experiments;
 
+        private LastAction _lastExperiments = new LastAction(Delays.Instance.ExperimentsRefreshInterval);
+
+        private LastAction _lastLogin = new LastAction(Delays.Instance.AppRefreshInterval);
+
         [Key(0)]
         public bool IsLoggedIn { get; set; }
 
@@ -27,7 +30,15 @@ namespace Apex.Instagram.Login
         public int ZrExpires { get; set; }
 
         [Key(4)]
-        public LastAction LastLogin { get; set; } = new LastAction(Delays.Instance.AppRefreshInterval);
+        public LastAction LastLogin
+        {
+            get => _lastLogin;
+            set
+            {
+                _lastLogin       = value;
+                _lastLogin.Limit = Delays.Instance.AppRefreshInterval;
+            }
+        }
 
         [Key(5)]
         public Dictionary<string, Dictionary<string, string>> Experiments
@@ -56,7 +67,15 @@ namespace Apex.Instagram.Login
         }
 
         [Key(6)]
-        public LastAction LastExperiments { get; set; } = new LastAction(TimeSpan.FromMinutes(120));
+        public LastAction LastExperiments
+        {
+            get => _lastExperiments;
+            set
+            {
+                _lastExperiments       = value;
+                _lastExperiments.Limit = Delays.Instance.ExperimentsRefreshInterval;
+            }
+        }
 
         private string[] ExperimentKeys { get; } =
             {

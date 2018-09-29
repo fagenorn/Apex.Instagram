@@ -10,6 +10,7 @@ namespace Apex.Instagram.Model.Internal
     {
         public Epoch() { Value = Current; }
 
+        [SerializationConstructor]
         public Epoch(double initial) { Value = initial; }
 
         #region Properties
