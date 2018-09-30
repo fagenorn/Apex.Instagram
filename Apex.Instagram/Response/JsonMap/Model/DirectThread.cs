@@ -21,7 +21,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public DirectThreadItem[] Items { get; set; }
 
         [DataMember(Name = "last_activity_at")]
-        public string LastActivityAt { get; set; }
+        public ulong? LastActivityAt { get; set; }
 
         [DataMember(Name = "muted")]
         public bool? Muted { get; set; }
@@ -45,13 +45,13 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string ThreadType { get; set; }
 
         [DataMember(Name = "viewer_id")]
-        public string ViewerId { get; set; }
+        public ulong? ViewerId { get; set; }
 
         [DataMember(Name = "thread_title")]
         public string ThreadTitle { get; set; }
 
         [DataMember(Name = "pending_score")]
-        public string PendingScore { get; set; }
+        public ulong? PendingScore { get; set; }
 
         [DataMember(Name = "vc_muted")]
         public bool? VcMuted { get; set; }

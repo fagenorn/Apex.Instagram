@@ -5,7 +5,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
     public class Hashtag
     {
         [DataMember(Name = "id")]
-        public string Id { get; set; }
+        public ulong? Id { get; set; }
 
         [DataMember(Name = "name")]
         public string Name { get; set; }

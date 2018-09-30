@@ -1,5 +1,9 @@
 ﻿using System.Runtime.Serialization;
 
+using Apex.Instagram.Response.Json;
+
+using Utf8Json;
+
 namespace Apex.Instagram.Response.JsonMap.Model
 {
     public class User
@@ -41,10 +45,11 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string UserId { get; set; }
 
         [DataMember(Name = "pk")]
+        [JsonFormatter(typeof(DurableUlongFormatter))]
         public ulong? Pk { get; set; }
 
         [DataMember(Name = "id")]
-        public string Id { get; set; }
+        public ulong? Id { get; set; }
 
         [DataMember(Name = "is_verified")]
         public bool? IsVerified { get; set; }
@@ -215,7 +220,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string Zip { get; set; }
 
         [DataMember(Name = "city_id")]
-        public string CityId { get; set; }
+        public ulong? CityId { get; set; }
 
         [DataMember(Name = "city_name")]
         public string CityName { get; set; }
@@ -333,5 +338,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
 
         [DataMember(Name = "is_bestie")]
         public bool? IsBestie { get; set; }
+
+        public override string ToString() { return JsonSerializer.PrettyPrint(JsonSerializer.Serialize(this)); }
     }
 }

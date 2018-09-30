@@ -14,7 +14,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string CoverFrameUrl { get; set; }
 
         [DataMember(Name = "published_time")]
-        public string PublishedTime { get; set; }
+        public ulong? PublishedTime { get; set; }
 
         [DataMember(Name = "broadcast_message")]
         public string BroadcastMessage { get; set; }
@@ -26,7 +26,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string MediaId { get; set; }
 
         [DataMember(Name = "id")]
-        public string Id { get; set; }
+        public ulong? Id { get; set; }
 
         [DataMember(Name = "rtmp_playback_url")]
         public string RtmpPlaybackUrl { get; set; }
@@ -47,13 +47,13 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public dynamic SeenRankedPosition { get; set; }
 
         [DataMember(Name = "viewer_count")]
-        public int? ViewerCount { get; set; }
+        public double? ViewerCount { get; set; }
 
         [DataMember(Name = "dash_manifest")]
         public string DashManifest { get; set; }
 
         [DataMember(Name = "expire_at")]
-        public string ExpireAt { get; set; }
+        public ulong? ExpireAt { get; set; }
 
         [DataMember(Name = "encoding_tag")]
         public string EncodingTag { get; set; }

@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace Apex.Instagram.Response.JsonMap.Model
 {
@@ -14,7 +15,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public Link[] Links { get; set; }
 
         [DataMember(Name = "profile_id")]
-        public string ProfileId { get; set; }
+        public ulong? ProfileId { get; set; }
 
         [DataMember(Name = "profile_image")]
         public string ProfileImage { get; set; }
@@ -23,7 +24,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public Media[] Media { get; set; }
 
         [DataMember(Name = "timestamp")]
-        public string Timestamp { get; set; }
+        public double? Timestamp { get; set; }
 
         [DataMember(Name = "tuuid")]
         public string Tuuid { get; set; }
@@ -44,10 +45,10 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string[] Actions { get; set; }
 
         [DataMember(Name = "latest_reel_media")]
-        public string LatestReelMedia { get; set; }
+        public ulong? LatestReelMedia { get; set; }
 
         [DataMember(Name = "comment_id")]
-        public string CommentId { get; set; }
+        public ulong? CommentId { get; set; }
 
         [DataMember(Name = "request_count")]
         public dynamic RequestCount { get; set; }
@@ -56,7 +57,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public InlineFollow InlineFollow { get; set; }
 
         [DataMember(Name = "comment_ids")]
-        public string[] CommentIds { get; set; }
+        public ulong[] CommentIds { get; set; }
 
         [DataMember(Name = "second_profile_id")]
         public string SecondProfileId { get; set; }

@@ -5,7 +5,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
     public class Story
     {
         [DataMember(Name = "pk")]
-        public ulong? Pk { get; set; }
+        public string Pk { get; set; }
 
         [DataMember(Name = "counts")]
         public Counts Counts { get; set; }

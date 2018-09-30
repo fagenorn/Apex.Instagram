@@ -152,7 +152,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public dynamic CommentsDisabled { get; set; }
 
         [DataMember(Name = "reel_mentions")]
-        public ReelMention ReelMentions { get; set; }
+        public ReelMention[] ReelMentions { get; set; }
 
         [DataMember(Name = "story_cta")]
         public StoryCta[] StoryCta { get; set; }

@@ -8,10 +8,10 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string ItemId { get; set; }
 
         [DataMember(Name = "user_id")]
-        public string UserId { get; set; }
+        public ulong? UserId { get; set; }
 
         [DataMember(Name = "timestamp")]
-        public string Timestamp { get; set; }
+        public ulong? Timestamp { get; set; }
 
         [DataMember(Name = "item_type")]
         public string ItemType { get; set; }
