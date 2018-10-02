@@ -1,6 +1,7 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
-using Apex.Instagram.Response.Json;
+using Apex.Instagram.Response.JsonFormatter;
 
 using Utf8Json;
 
@@ -30,7 +31,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public bool? CanBeReportedAsFraud { get; set; }
 
         [DataMember(Name = "profile_pic_url")]
-        public string ProfilePicUrl { get; set; }
+        public Uri ProfilePicUrl { get; set; }
 
         [DataMember(Name = "profile_pic_id")]
         public string ProfilePicId { get; set; }
@@ -232,10 +233,10 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public bool? IsNeedy { get; set; }
 
         [DataMember(Name = "external_url")]
-        public string ExternalUrl { get; set; }
+        public Uri ExternalUrl { get; set; }
 
         [DataMember(Name = "external_lynx_url")]
-        public string ExternalLynxUrl { get; set; }
+        public Uri ExternalLynxUrl { get; set; }
 
         [DataMember(Name = "email")]
         public string Email { get; set; }
@@ -271,7 +272,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public dynamic Fbuid { get; set; }
 
         [DataMember(Name = "page_id")]
-        public string PageId { get; set; }
+        public ulong? PageId { get; set; }
 
         [DataMember(Name = "can_claim_page")]
         public bool? CanClaimPage { get; set; }
@@ -280,7 +281,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public int? FbPageCallToActionIxAppId { get; set; }
 
         [DataMember(Name = "fb_page_call_to_action_ix_url")]
-        public string FbPageCallToActionIxUrl { get; set; }
+        public Uri FbPageCallToActionIxUrl { get; set; }
 
         [DataMember(Name = "can_crosspost_without_fb_token")]
         public bool? CanCrosspostWithoutFbToken { get; set; }

@@ -215,13 +215,13 @@ namespace Apex.Instagram.Tests
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(fileStorage)
                                                     .SetLogger(Logger)
-                                                    .BuildAsync();
+                                                    .BuildAsync().ConfigureAwait(false);
 
             var file        = @"tests/test_file.txt";
             var fileContent = Encoding.UTF8.GetBytes(@"hello");
             using (var fileStream = File.Create(file))
             {
-                await fileStream.WriteAsync(fileContent, 0, fileContent.Length);
+                await fileStream.WriteAsync(fileContent, 0, fileContent.Length).ConfigureAwait(false);
             }
 
             var request = new RequestBuilder(account).SetUrl("https://httpbin.org/post")

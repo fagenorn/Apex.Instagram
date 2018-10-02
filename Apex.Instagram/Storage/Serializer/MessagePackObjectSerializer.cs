@@ -12,11 +12,11 @@ namespace Apex.Instagram.Storage.Serializer
         public async Task<Stream> SerializeAsync<T>(T data)
         {
             var stream = new MemoryStream();
-            await MessagePackSerializer.SerializeAsync(stream, data, CustomCompositeResolver.Instance);
+            await MessagePackSerializer.SerializeAsync(stream, data, CustomCompositeResolver.Instance).ConfigureAwait(false);
 
             return stream;
         }
 
-        public async Task<T> DeserializeAsync<T>(Stream stream) { return await MessagePackSerializer.DeserializeAsync<T>(stream, CustomCompositeResolver.Instance); }
+        public async Task<T> DeserializeAsync<T>(Stream stream) { return await MessagePackSerializer.DeserializeAsync<T>(stream, CustomCompositeResolver.Instance).ConfigureAwait(false); }
     }
 }

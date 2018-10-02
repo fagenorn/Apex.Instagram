@@ -1,6 +1,6 @@
 ﻿using Utf8Json;
 
-namespace Apex.Instagram.Response.Json
+namespace Apex.Instagram.Response.JsonFormatter
 {
     public class DurableUlongFormatter : IJsonFormatter<ulong?>
     {

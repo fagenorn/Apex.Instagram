@@ -202,7 +202,7 @@ namespace Apex.Instagram.Logger
 
             sb.AppendLine();
             sb.AppendLine("Content:");
-            var raw = await content.ReadAsStringAsync();
+            var raw = await content.ReadAsStringAsync().ConfigureAwait(false);
             raw = raw.Contains("<!DOCTYPE html>") ? "<HTML content>" : raw;
 
             try

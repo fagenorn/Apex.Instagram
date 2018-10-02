@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace Apex.Instagram.Response.JsonMap.Model
 {
@@ -35,7 +36,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public ProductImage[] ProductImages { get; set; }
 
         [DataMember(Name = "external_url")]
-        public string ExternalUrl { get; set; }
+        public Uri ExternalUrl { get; set; }
 
         [DataMember(Name = "checkout_style")]
         public string CheckoutStyle { get; set; }

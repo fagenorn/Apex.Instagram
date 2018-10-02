@@ -16,7 +16,8 @@ namespace Apex.Instagram.Request.Instagram
         {
             var request = new RequestBuilder(Account).SetUrl("news/inbox/");
 
-            return await Account.ApiRequest<ActivityNewsResponse>(request.Build());
+            return await Account.ApiRequest<ActivityNewsResponse>(request.Build())
+                                .ConfigureAwait(false);
         }
 
         internal async Task<BootstrapUsersResponse> GetBootstrapUsers()
@@ -35,7 +36,8 @@ namespace Apex.Instagram.Request.Instagram
                 var request = new RequestBuilder(Account).SetUrl("scores/bootstrap/users/")
                                                          .AddParam("surfaces", JsonSerializer.ToJsonString(surfaces));
 
-                return await Account.ApiRequest<BootstrapUsersResponse>(request.Build());
+                return await Account.ApiRequest<BootstrapUsersResponse>(request.Build())
+                                    .ConfigureAwait(false);
             }
             catch (ThrottledException)
             {
@@ -60,7 +62,8 @@ namespace Apex.Instagram.Request.Instagram
                                                      .AddPost("user_id", userId)
                                                      .AddPost("radio_type", "wifi-none");
 
-            return await Account.ApiRequest<FriendshipResponse>(request.Build());
+            return await Account.ApiRequest<FriendshipResponse>(request.Build())
+                                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -79,7 +82,8 @@ namespace Apex.Instagram.Request.Instagram
                                                      .AddPost("user_id", userId)
                                                      .AddPost("radio_type", "wifi-none");
 
-            return await Account.ApiRequest<FriendshipResponse>(request.Build());
+            return await Account.ApiRequest<FriendshipResponse>(request.Build())
+                                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -113,7 +117,8 @@ namespace Apex.Instagram.Request.Instagram
                 request.AddParam("from_module", module);
             }
 
-            return await Account.ApiRequest<UserInfoResponse>(request.Build());
+            return await Account.ApiRequest<UserInfoResponse>(request.Build())
+                                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -147,7 +152,8 @@ namespace Apex.Instagram.Request.Instagram
                 request.AddParam("from_module", module);
             }
 
-            return await Account.ApiRequest<UserInfoResponse>(request.Build());
+            return await Account.ApiRequest<UserInfoResponse>(request.Build())
+                                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -161,7 +167,8 @@ namespace Apex.Instagram.Request.Instagram
         {
             var request = new RequestBuilder(Account).SetUrl($"friendships/show/{userId}/");
 
-            return await Account.ApiRequest<FriendshipsShowResponse>(request.Build());
+            return await Account.ApiRequest<FriendshipsShowResponse>(request.Build())
+                                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -179,7 +186,8 @@ namespace Apex.Instagram.Request.Instagram
                                                      .AddPost("user_ids", string.Join(",", userIds))
                                                      .AddPost("_csrftoken", Account.LoginClient.CsrfToken);
 
-            return await Account.ApiRequest<FriendshipsShowManyResponse>(request.Build());
+            return await Account.ApiRequest<FriendshipsShowManyResponse>(request.Build())
+                                .ConfigureAwait(false);
         }
 
         private async Task<FollowerAndFollowingResponse> GetFollowers(ulong userId, string rankToken, string searchQuery, string maxId)
@@ -197,7 +205,8 @@ namespace Apex.Instagram.Request.Instagram
                 request.AddParam("max_id", maxId);
             }
 
-            return await Account.ApiRequest<FollowerAndFollowingResponse>(request.Build());
+            return await Account.ApiRequest<FollowerAndFollowingResponse>(request.Build())
+                                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -209,5 +218,34 @@ namespace Apex.Instagram.Request.Instagram
         ///     <see cref="IAutoPaginate&lt;FollowerAndFollowingResponse&gt;" />
         /// </returns>
         public IAutoPaginate<FollowerAndFollowingResponse> GetFollowers(ulong userId, string searchQuery = null) { return new AutoPaginateWithRankToken<FollowerAndFollowingResponse>((maxId, rankToken) => GetFollowers(userId, rankToken, searchQuery, maxId)); }
+
+        private async Task<FollowerAndFollowingResponse> GetFollowing(ulong userId, string rankToken, string searchQuery, string maxId)
+        {
+            var request = new RequestBuilder(Account).SetUrl($"friendships/{userId}/following/")
+                                                     .AddParam("rank_token", rankToken);
+
+            if ( searchQuery != null )
+            {
+                request.AddParam("query", searchQuery);
+            }
+
+            if ( maxId != null )
+            {
+                request.AddParam("max_id", maxId);
+            }
+
+            return await Account.ApiRequest<FollowerAndFollowingResponse>(request.Build())
+                                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        ///     Get a list of a users followings.
+        /// </summary>
+        /// <param name="userId">The id of the user.</param>
+        /// <param name="searchQuery">Limit the userlist to ones matching the query.</param>
+        /// <returns>
+        ///     <see cref="IAutoPaginate&lt;FollowerAndFollowingResponse&gt;" />
+        /// </returns>
+        public IAutoPaginate<FollowerAndFollowingResponse> GetFollowing(ulong userId, string searchQuery = null) { return new AutoPaginateWithRankToken<FollowerAndFollowingResponse>((maxId, rankToken) => GetFollowing(userId, rankToken, searchQuery, maxId)); }
     }
 }

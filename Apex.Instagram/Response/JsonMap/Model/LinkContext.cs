@@ -1,11 +1,12 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace Apex.Instagram.Response.JsonMap.Model
 {
     public class LinkContext
     {
         [DataMember(Name = "link_url")]
-        public string LinkUrl { get; set; }
+        public Uri LinkUrl { get; set; }
 
         [DataMember(Name = "link_title")]
         public string LinkTitle { get; set; }
@@ -14,6 +15,6 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string LinkSummary { get; set; }
 
         [DataMember(Name = "link_image_url")]
-        public string LinkImageUrl { get; set; }
+        public Uri LinkImageUrl { get; set; }
     }
 }

@@ -294,7 +294,7 @@
     <Compile Include="Response\JsonMap\TimelineFeedResponse.cs" />
     <Compile Include="Response\JsonMap\TokenResultResponse.cs" />
     <Compile Include="Response\JsonMap\UserInfoResponse.cs" />
-    <Compile Include="Response\Json\DurableUlongFormatter.cs" />
+    <Compile Include="Response\JsonFormatter\DurableUlongFormatter.cs" />
     <Compile Include="Response\ResponseInfo.cs" />
     <Compile Include="Response\JsonMap\Model\Message.cs" />
     <Compile Include="Response\JsonMap\Response.cs" />

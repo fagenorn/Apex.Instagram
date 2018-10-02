@@ -14,8 +14,8 @@ namespace Apex.Instagram.Storage.Serializer
             var stream       = new MemoryStream();
             var streamWriter = new StreamWriter(stream);
             var json         = MessagePackSerializer.ToJson(data, CustomCompositeResolver.Instance);
-            await streamWriter.WriteAsync(json);
-            await streamWriter.FlushAsync();
+            await streamWriter.WriteAsync(json).ConfigureAwait(false);
+            await streamWriter.FlushAsync().ConfigureAwait(false);
 
             return stream;
         }
@@ -26,7 +26,7 @@ namespace Apex.Instagram.Storage.Serializer
             {
                 using (var memoryStream = new MemoryStream(MessagePackSerializer.FromJson(textReader)))
                 {
-                    return await MessagePackSerializer.DeserializeAsync<T>(memoryStream, CustomCompositeResolver.Instance);
+                    return await MessagePackSerializer.DeserializeAsync<T>(memoryStream, CustomCompositeResolver.Instance).ConfigureAwait(false);
                 }
             }
         }

@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace Apex.Instagram.Response.JsonMap.Model
 {
@@ -47,7 +48,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public bool? DisplayViewabilityEligible { get; set; }
 
         [DataMember(Name = "fb_page_url")]
-        public string FbPageUrl { get; set; }
+        public Uri FbPageUrl { get; set; }
 
         [DataMember(Name = "hide_reasons_v2")]
         public HideReason[] HideReasonsV2 { get; set; }

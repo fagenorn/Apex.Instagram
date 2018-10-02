@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace Apex.Instagram.Response.JsonMap.Model
 {
@@ -14,7 +15,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string Name { get; set; }
 
         [DataMember(Name = "profile_pic_url")]
-        public string ProfilePicUrl { get; set; }
+        public Uri ProfilePicUrl { get; set; }
 
         [DataMember(Name = "profile_pic_username")]
         public string ProfilePicUsername { get; set; }

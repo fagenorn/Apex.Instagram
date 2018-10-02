@@ -31,14 +31,14 @@ namespace Apex.Instagram.Request.Instagram
             var request = new RequestBuilder(Account).SetUrl("fbsearch/suggested_searches/")
                                                      .AddParam("type", type);
 
-            return await Account.ApiRequest<SuggestedSearchesResponse>(request.Build());
+            return await Account.ApiRequest<SuggestedSearchesResponse>(request.Build()).ConfigureAwait(false);
         }
 
         public async Task<RecentSearchesResponse> GetRecentSearches()
         {
             var request = new RequestBuilder(Account).SetUrl("fbsearch/recent_searches/");
 
-            return await Account.ApiRequest<RecentSearchesResponse>(request.Build());
+            return await Account.ApiRequest<RecentSearchesResponse>(request.Build()).ConfigureAwait(false);
         }
 
         public async Task<ExploreResponse> GetExploreFeed(string maxId = null, bool isPrefetch = false)
@@ -61,7 +61,7 @@ namespace Apex.Instagram.Request.Instagram
                        .AddParam("module", "explore_popular");
             }
 
-            return await Account.ApiRequest<ExploreResponse>(request.Build());
+            return await Account.ApiRequest<ExploreResponse>(request.Build()).ConfigureAwait(false);
         }
     }
 }

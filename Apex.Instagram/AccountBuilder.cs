@@ -82,21 +82,21 @@ namespace Apex.Instagram
                 throw new AccountBuilderException("You must set a storage interface.");
             }
 
-            var account = await Account.CreateAsync(_storage, _id.Value, _logger);
+            var account = await Account.CreateAsync(_storage, _id.Value, _logger).ConfigureAwait(false);
 
             if ( _proxy != null )
             {
-                await account.UpdateProxy(_proxy);
+                await account.UpdateProxy(_proxy).ConfigureAwait(false);
             }
 
             if ( !string.IsNullOrWhiteSpace(_username) )
             {
-                await account.UpdateUsername(_username);
+                await account.UpdateUsername(_username).ConfigureAwait(false);
             }
 
             if ( !string.IsNullOrWhiteSpace(_password) )
             {
-                await account.UpdatePassword(_password);
+                await account.UpdatePassword(_password).ConfigureAwait(false);
             }
 
             _disposed = true;

@@ -1,11 +1,12 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace Apex.Instagram.Response.JsonMap.Model
 {
     public class ImageCandidate
     {
         [DataMember(Name = "url")]
-        public string Url { get; set; }
+        public Uri Url { get; set; }
 
         [DataMember(Name = "width")]
         public int? Width { get; set; }

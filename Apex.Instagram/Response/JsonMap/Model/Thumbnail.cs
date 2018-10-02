@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace Apex.Instagram.Response.JsonMap.Model
 {
@@ -17,7 +18,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public double? ThumbnailDuration { get; set; }
 
         [DataMember(Name = "sprite_urls")]
-        public string[] SpriteUrls { get; set; }
+        public Uri[] SpriteUrls { get; set; }
 
         [DataMember(Name = "thumbnails_per_row")]
         public int? ThumbnailsPerRow { get; set; }

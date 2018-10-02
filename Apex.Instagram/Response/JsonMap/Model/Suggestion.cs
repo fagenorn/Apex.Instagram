@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace Apex.Instagram.Response.JsonMap.Model
 {
@@ -14,7 +15,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string Algorithm { get; set; }
 
         [DataMember(Name = "thumbnail_urls")]
-        public string[] ThumbnailUrls { get; set; }
+        public Uri[] ThumbnailUrls { get; set; }
 
         [DataMember(Name = "value")]
         public double? Value { get; set; }
@@ -26,7 +27,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public User User { get; set; }
 
         [DataMember(Name = "large_urls")]
-        public string[] LargeUrls { get; set; }
+        public Uri[] LargeUrls { get; set; }
 
         [DataMember(Name = "media_ids")]
         public dynamic MediaIds { get; set; }

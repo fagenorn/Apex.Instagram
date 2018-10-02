@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace Apex.Instagram.Response.JsonMap.Model
 {
@@ -8,7 +9,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public dynamic CardId { get; set; }
 
         [DataMember(Name = "image_url")]
-        public string ImageUrl { get; set; }
+        public Uri ImageUrl { get; set; }
 
         [DataMember(Name = "title")]
         public dynamic Title { get; set; }

@@ -31,7 +31,8 @@ namespace Apex.Instagram.Request
                                          : null;
 
             _proxy.Address = proxy?.Uri;
-            await _account.Storage.Proxy.SaveAsync(proxy);
+            await _account.Storage.Proxy.SaveAsync(proxy)
+                          .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -43,10 +44,10 @@ namespace Apex.Instagram.Request
         /// <returns>Make sure to dispose <see cref="HttpResponseMessage" /> or a memory leak can occur.</returns>
         public async Task<ResponseInfo<T>> GetResponseAsync<T>(HttpRequestMessage request, CancellationToken ct = default) where T : Response.JsonMap.Response
         {
-            await _lock.WaitAsync(ct);
+            await _lock.WaitAsync(ct).ConfigureAwait(false);
             try
             {
-                return await GetResponseAsyncInternal<T>(request, ct);
+                return await GetResponseAsyncInternal<T>(request, ct).ConfigureAwait(false);
             }
             catch (RequestException e)
             {
@@ -58,7 +59,7 @@ namespace Apex.Instagram.Request
             {
                 if ( !ct.IsCancellationRequested && _lastCookieSave.Passed )
                 {
-                    await _account.Storage.Cookie.SaveAsync(_handler.CookieContainer);
+                    await _account.Storage.Cookie.SaveAsync(_handler.CookieContainer).ConfigureAwait(false);
                     _lastCookieSave.Update();
                 }
 
@@ -74,7 +75,7 @@ namespace Apex.Instagram.Request
 
             try
             {
-                result = await _request.SendAsync(request, HttpCompletionOption.ResponseContentRead, ct);
+                result = await _request.SendAsync(request, HttpCompletionOption.ResponseContentRead, ct).ConfigureAwait(false);
                 _account.Logger.Debug<HttpClient>(result);
             }
             catch (HttpRequestException e)
@@ -87,7 +88,13 @@ namespace Apex.Instagram.Request
                         break;
                     case IOException _ when depth < Constants.Request.Instance.MaxRequestRetries:
 
-                        return await GetResponseAsyncInternal<T>(request, ct, depth + 1);
+                        var requestClone = await CloneHttpRequestMessageAsync(request)
+                                               .ConfigureAwait(false);
+
+                        request.Dispose();
+
+                        return await GetResponseAsyncInternal<T>(requestClone, ct, depth + 1)
+                                   .ConfigureAwait(false);
                     default:
 
                         throw new RequestException("Critical request error occured.", e);
@@ -102,7 +109,7 @@ namespace Apex.Instagram.Request
                 throw new RequestException("Request has been cancelled.", e);
             }
 
-            return await ResponseInfo<T>.CreateAsync<T>(result);
+            return await ResponseInfo<T>.CreateAsync<T>(result).ConfigureAwait(false);
         }
 
         public string GetProxy() { return _proxy.Address == null ? string.Empty : _proxy.Address.AbsoluteUri; }
@@ -117,6 +124,43 @@ namespace Apex.Instagram.Request
 
             return cookies[key]
                 ?.Value;
+        }
+
+        public async Task<HttpRequestMessage> CloneHttpRequestMessageAsync(HttpRequestMessage request)
+        {
+            var clone = new HttpRequestMessage(request.Method, request.RequestUri);
+            var ms    = new MemoryStream();
+            if ( request.Content != null )
+            {
+                await request.Content.CopyToAsync(ms)
+                             .ConfigureAwait(false);
+
+                ms.Position   = 0;
+                clone.Content = new StreamContent(ms);
+
+                // Copy the content headers
+                if ( request.Content.Headers != null )
+                {
+                    foreach ( var h in request.Content.Headers )
+                    {
+                        clone.Content.Headers.Add(h.Key, h.Value);
+                    }
+                }
+            }
+
+            clone.Version = request.Version;
+
+            foreach ( var prop in request.Properties )
+            {
+                clone.Properties.Add(prop);
+            }
+
+            foreach ( var header in request.Headers )
+            {
+                clone.Headers.TryAddWithoutValidation(header.Key, header.Value);
+            }
+
+            return clone;
         }
 
         #region Properties
@@ -140,8 +184,11 @@ namespace Apex.Instagram.Request
 
         private async Task<HttpClient> InitializeAsync()
         {
-            var cookies = await _account.Storage.Cookie.LoadAsync();
-            var proxy   = await _account.Storage.Proxy.LoadAsync();
+            var cookies = await _account.Storage.Cookie.LoadAsync()
+                                        .ConfigureAwait(false);
+
+            var proxy = await _account.Storage.Proxy.LoadAsync()
+                                      .ConfigureAwait(false);
 
             _proxy = new WebProxy
                      {

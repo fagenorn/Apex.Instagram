@@ -23,7 +23,7 @@ namespace Apex.Instagram.Storage.Object
 
         public async Task<T> LoadAsync()
         {
-            await _lock.WaitAsync(_cancellationToken);
+            await _lock.WaitAsync(_cancellationToken).ConfigureAwait(false);
             try
             {
                 using (var stream = _storage.Load(_id, _key))
@@ -33,7 +33,7 @@ namespace Apex.Instagram.Storage.Object
                         return default;
                     }
 
-                    return await _serializer.DeserializeAsync<T>(stream);
+                    return await _serializer.DeserializeAsync<T>(stream).ConfigureAwait(false);
                 }
             }
             finally
@@ -44,12 +44,12 @@ namespace Apex.Instagram.Storage.Object
 
         public async Task SaveAsync(T data)
         {
-            await _lock.WaitAsync(_cancellationToken);
+            await _lock.WaitAsync(_cancellationToken).ConfigureAwait(false);
             try
             {
-                using (var stream = await _serializer.SerializeAsync(data))
+                using (var stream = await _serializer.SerializeAsync(data).ConfigureAwait(false))
                 {
-                    await _storage.SaveAsync(_id, _key, stream, _cancellationToken);
+                    await _storage.SaveAsync(_id, _key, stream, _cancellationToken).ConfigureAwait(false);
                 }
             }
             finally

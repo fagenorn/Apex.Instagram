@@ -27,7 +27,7 @@ namespace Apex.Instagram.Request.Middleware
         {
             if ( _rules.Count == 0 )
             {
-                return await next(request);
+                return await next(request).ConfigureAwait(false);
             }
 
             var oldUri = request.RequestUri;
@@ -38,7 +38,7 @@ namespace Apex.Instagram.Request.Middleware
                 request.RequestUri = newUri;
             }
 
-            return await next(request);
+            return await next(request).ConfigureAwait(false);
         }
 
         public void Reset() { Update(_defaultRewrite); }

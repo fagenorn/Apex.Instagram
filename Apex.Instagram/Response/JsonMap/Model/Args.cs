@@ -36,7 +36,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string ProfileName { get; set; }
 
         [DataMember(Name = "action_url")]
-        public string ActionUrl { get; set; }
+        public Uri ActionUrl { get; set; }
 
         [DataMember(Name = "destination")]
         public string Destination { get; set; }

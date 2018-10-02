@@ -32,7 +32,7 @@ namespace Apex.Instagram
                 throw new ObjectDisposedException(nameof(Account));
             }
 
-            using (var result = await HttpClient.GetResponseAsync<T>(request, _cancellationTokenSource.Token))
+            using (var result = await HttpClient.GetResponseAsync<T>(request, _cancellationTokenSource.Token).ConfigureAwait(false))
             {
                 return result.Response;
             }
@@ -49,18 +49,18 @@ namespace Apex.Instagram
             Storage?.Dispose();
         }
 
-        public async Task UpdateProxy(Proxy proxy) { await HttpClient.UpdateProxy(proxy); }
+        public async Task UpdateProxy(Proxy proxy) { await HttpClient.UpdateProxy(proxy).ConfigureAwait(false); }
 
         public async Task UpdateUsername(string username)
         {
             AccountInfo.Username = username;
-            await Storage.AccountInfo.SaveAsync(AccountInfo);
+            await Storage.AccountInfo.SaveAsync(AccountInfo).ConfigureAwait(false);
         }
 
         public async Task UpdatePassword(string password)
         {
             AccountInfo.Password = password;
-            await Storage.AccountInfo.SaveAsync(AccountInfo);
+            await Storage.AccountInfo.SaveAsync(AccountInfo).ConfigureAwait(false);
         }
 
         public string GetProxy() { return HttpClient.GetProxy(); }
@@ -68,7 +68,7 @@ namespace Apex.Instagram
         /// <summary>
         ///     Log into the account. A full login flow will only be done if needed.
         /// </summary>
-        public async Task Login() { await LoginClient.Login(); }
+        public async Task Login() { await LoginClient.Login().ConfigureAwait(false); }
 
         #endregion
 
@@ -128,7 +128,7 @@ namespace Apex.Instagram
 
         private async Task<Account> InitializeAsync()
         {
-            AccountInfo = await Storage.AccountInfo.LoadAsync();
+            AccountInfo = await Storage.AccountInfo.LoadAsync().ConfigureAwait(false);
             if ( AccountInfo == null )
             {
                 AccountInfo = new AccountInfo
@@ -141,11 +141,11 @@ namespace Apex.Instagram
                                   DeviceInfo    = DeviceGenerator.Instance.Get()
                               };
 
-                await Storage.AccountInfo.SaveAsync(AccountInfo);
+                await Storage.AccountInfo.SaveAsync(AccountInfo).ConfigureAwait(false);
             }
 
-            LoginClient = await LoginClient.CreateAsync(this); // This needs to be created first so middlewares can be initialized correctly.
-            HttpClient  = await HttpClient.CreateAsync(this);
+            LoginClient = await LoginClient.CreateAsync(this).ConfigureAwait(false); // This needs to be created first so middlewares can be initialized correctly.
+            HttpClient  = await HttpClient.CreateAsync(this).ConfigureAwait(false);
 
             return this;
         }

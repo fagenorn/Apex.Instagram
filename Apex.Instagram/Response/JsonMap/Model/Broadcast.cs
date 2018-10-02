@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace Apex.Instagram.Response.JsonMap.Model
 {
@@ -11,7 +12,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string BroadcastStatus { get; set; }
 
         [DataMember(Name = "cover_frame_url")]
-        public string CoverFrameUrl { get; set; }
+        public Uri CoverFrameUrl { get; set; }
 
         [DataMember(Name = "published_time")]
         public ulong? PublishedTime { get; set; }
@@ -29,13 +30,13 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public ulong? Id { get; set; }
 
         [DataMember(Name = "rtmp_playback_url")]
-        public string RtmpPlaybackUrl { get; set; }
+        public Uri RtmpPlaybackUrl { get; set; }
 
         [DataMember(Name = "dash_abr_playback_url")]
-        public string DashAbrPlaybackUrl { get; set; }
+        public Uri DashAbrPlaybackUrl { get; set; }
 
         [DataMember(Name = "dash_playback_url")]
-        public string DashPlaybackUrl { get; set; }
+        public Uri DashPlaybackUrl { get; set; }
 
         [DataMember(Name = "ranked_position")]
         public dynamic RankedPosition { get; set; }

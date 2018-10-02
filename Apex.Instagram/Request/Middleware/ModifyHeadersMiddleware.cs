@@ -19,7 +19,7 @@ namespace Apex.Instagram.Request.Middleware
             SetHeader(request.Headers, "Accept-Encoding", Constants.Request.Instance.HeaderAcceptEncoding);
             SetHeader(request.Headers, "Accept-Language", Constants.Request.Instance.HeaderAcceptLanguage);
 
-            return await next(request);
+            return await next(request).ConfigureAwait(false);
         }
 
         private void SetHeader(HttpRequestHeaders headers, string name, string value)

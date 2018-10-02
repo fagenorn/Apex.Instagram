@@ -30,7 +30,7 @@ namespace Apex.Instagram.Request.Instagram.Paginate
                 throw new EndOfPageException();
             }
 
-            var response = await _action(_maxId, _rankToken);
+            var response = await _action(_maxId, _rankToken).ConfigureAwait(false);
             _maxId = response.NextMaxId;
 
             if ( string.IsNullOrWhiteSpace(_maxId) )

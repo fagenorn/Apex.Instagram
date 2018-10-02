@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace Apex.Instagram.Response.JsonMap.Model
 {
@@ -314,7 +315,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string OverlaySubtitle { get; set; }
 
         [DataMember(Name = "fb_page_url")]
-        public string FbPageUrl { get; set; }
+        public Uri FbPageUrl { get; set; }
 
         [DataMember(Name = "playback_duration_secs")]
         public dynamic PlaybackDurationSecs { get; set; }

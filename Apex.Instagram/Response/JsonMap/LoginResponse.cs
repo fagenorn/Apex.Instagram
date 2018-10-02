@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 using Apex.Instagram.Response.JsonMap.Model;
 
@@ -13,7 +14,7 @@ namespace Apex.Instagram.Response.JsonMap
         public bool? HasAnonymousProfilePicture { get; set; }
 
         [DataMember(Name = "profile_pic_url")]
-        public string ProfilePicUrl { get; set; }
+        public Uri ProfilePicUrl { get; set; }
 
         [DataMember(Name = "profile_pic_id")]
         public string ProfilePicId { get; set; }
@@ -73,13 +74,13 @@ namespace Apex.Instagram.Response.JsonMap
         public TwoFactorInfo TwoFactorInfo { get; set; }
 
         [DataMember(Name = "checkpoint_url")]
-        public string CheckpointUrl { get; set; }
+        public Uri CheckpointUrl { get; set; }
 
         [DataMember(Name = "lock")]
         public dynamic Lock { get; set; }
 
         [DataMember(Name = "help_url")]
-        public string HelpUrl { get; set; }
+        public Uri HelpUrl { get; set; }
 
         [DataMember(Name = "challenge")]
         public Challenge Challenge { get; set; }
