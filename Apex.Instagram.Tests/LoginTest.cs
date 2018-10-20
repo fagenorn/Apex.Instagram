@@ -118,8 +118,8 @@ namespace Apex.Instagram.Tests
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(fileStorage)
                                                     .SetLogger(Logger)
-                                                    .SetUsername("Lottie.Cheetham1Np")
-                                                    .SetPassword("wYPs2PP6")
+                                                    .SetUsername("ezequiel.orson5aw")
+                                                    .SetPassword("sCEk5VU0")
                                                     .BuildAsync();
 
             Assert.AreEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);

@@ -35,8 +35,8 @@ namespace Apex.Instagram.Tests
             _account = await new AccountBuilder().SetId(1)
                                                 .SetStorage(fileStorage)
                                                 .SetLogger(Logger)
-                                                .SetUsername("Lottie.Cheetham1Np")
-                                                .SetPassword("wYPs2PP6")
+                                                .SetUsername("ezequiel.orson5aw")
+                                                .SetPassword("sCEk5VU0")
                                                 .BuildAsync();
 
             await _account.Login();
@@ -57,6 +57,7 @@ namespace Apex.Instagram.Tests
         [ClassCleanup]
         public static void MyClassCleanup()
         {
+            _account.Dispose();
             if ( Directory.Exists("tests") )
             {
                 var files = Directory.GetFiles("tests");
