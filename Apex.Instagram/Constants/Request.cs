@@ -63,8 +63,6 @@ namespace Apex.Instagram.Constants
 
         public string HeaderConnectionType { get; } = "WIFI";
 
-        public string HeaderCapabilities { get; } = "3brTPw==";
-
         public string HeaderAcceptEncoding { get; } = "gzip,deflate";
 
         public string HeaderAcceptLanguage { get; } = "en-US";
