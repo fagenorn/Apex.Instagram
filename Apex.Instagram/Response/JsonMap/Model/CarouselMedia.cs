@@ -53,6 +53,9 @@ namespace Apex.Instagram.Response.JsonMap.Model
         [DataMember(Name = "media_type")]
         public int? MediaType { get; set; }
 
+        [DataMember(Name = "dynamic_item_id")]
+        public string DynamicItemId { get; set; }
+
         [DataMember(Name = "usertags")]
         public Usertag Usertags { get; set; }
 

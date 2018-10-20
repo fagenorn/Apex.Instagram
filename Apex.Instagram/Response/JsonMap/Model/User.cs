@@ -77,10 +77,13 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public dynamic UnseenCount { get; set; }
 
         [DataMember(Name = "mutual_followers_count")]
-        public dynamic MutualFollowersCount { get; set; }
+        public int? MutualFollowersCount { get; set; }
 
         [DataMember(Name = "follower_count")]
         public int? FollowerCount { get; set; }
+
+        [DataMember(Name = "search_subtitle")]
+        public string SearchSubtitle { get; set; }
 
         [DataMember(Name = "social_context")]
         public string SocialContext { get; set; }
@@ -137,7 +140,10 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public dynamic IncludeDirectBlacklistStatus { get; set; }
 
         [DataMember(Name = "can_see_organic_insights")]
-        public dynamic CanSeeOrganicInsights { get; set; }
+        public bool? CanSeeOrganicInsights { get; set; }
+
+        [DataMember(Name = "has_placed_orders")]
+        public bool? HasPlacedOrders { get; set; }
 
         [DataMember(Name = "can_convert_to_business")]
         public bool? CanConvertToBusiness { get; set; }

@@ -15,6 +15,9 @@ namespace Apex.Instagram.Response.JsonMap
         [DataMember(Name = "qp_data")]
         public QpData[] QpData { get; set; }
 
+        [DataMember(Name = "client_cache_ttl_in_sec")]
+        public int? ClientCacheTtlInSec { get; set; }
+
         [DataMember(Name = "error_msg")]
         public dynamic ErrorMsg { get; set; }
     }

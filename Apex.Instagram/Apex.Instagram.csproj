@@ -194,7 +194,7 @@
     <Compile Include="Response\JsonMap\Model\ContextualFilters.cs" />
     <Compile Include="Response\JsonMap\Model\Counts.cs" />
     <Compile Include="Response\JsonMap\Model\CoverMedia.cs" />
-    <Compile Include="Response\JsonMap\Model\Creatives.cs" />
+    <Compile Include="Response\JsonMap\Model\Creative.cs" />
     <Compile Include="Response\JsonMap\Model\DirectExpiringSummary.cs" />
     <Compile Include="Response\JsonMap\Model\DirectInbox.cs" />
     <Compile Include="Response\JsonMap\Model\DirectLink.cs" />
@@ -269,6 +269,7 @@
     <Compile Include="Response\JsonMap\Model\Suggested.cs" />
     <Compile Include="Response\JsonMap\Model\SuggestedUsers.cs" />
     <Compile Include="Response\JsonMap\Model\Suggestion.cs" />
+    <Compile Include="Response\JsonMap\Model\SuggestionCard.cs" />
     <Compile Include="Response\JsonMap\Model\Surface.cs" />
     <Compile Include="Response\JsonMap\Model\SystemControl.cs" />
     <Compile Include="Response\JsonMap\Model\Template.cs" />
@@ -278,8 +279,10 @@
     <Compile Include="Response\JsonMap\Model\Token.cs" />
     <Compile Include="Response\JsonMap\Model\TopLive.cs" />
     <Compile Include="Response\JsonMap\Model\TraceControl.cs" />
+    <Compile Include="Response\JsonMap\Model\TraySuggestions.cs" />
     <Compile Include="Response\JsonMap\Model\TwoFactorInfo.cs" />
     <Compile Include="Response\JsonMap\Model\User.cs" />
+    <Compile Include="Response\JsonMap\Model\UserCard.cs" />
     <Compile Include="Response\JsonMap\Model\Usertag.cs" />
     <Compile Include="Response\JsonMap\Model\VideoCallEvent.cs" />
     <Compile Include="Response\JsonMap\Model\VideoVersions.cs" />

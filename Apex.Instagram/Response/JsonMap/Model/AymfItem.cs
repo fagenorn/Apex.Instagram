@@ -6,5 +6,8 @@ namespace Apex.Instagram.Response.JsonMap.Model
     {
         [DataMember(Name = "caption")]
         public new string Caption { get; set; }
+
+        [DataMember(Name = "uuid")]
+        public string Uuid { get; set; }
     }
 }

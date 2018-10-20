@@ -98,6 +98,9 @@ namespace Apex.Instagram.Response.JsonMap.Model
         [DataMember(Name = "organic_tracking_token")]
         public string OrganicTrackingToken { get; set; }
 
+        [DataMember(Name = "follow_hashtag_info")]
+        public Hashtag FollowHashtagInfo { get; set; }
+
         [DataMember(Name = "expiring_at")]
         public ulong? ExpiringAt { get; set; }
 
@@ -167,6 +170,9 @@ namespace Apex.Instagram.Response.JsonMap.Model
         [DataMember(Name = "carousel_media_type")]
         public dynamic CarouselMediaType { get; set; }
 
+        [DataMember(Name = "carousel_media_count")]
+        public int? CarouselMediaCount { get; set; }
+
         [DataMember(Name = "likers")]
         public User[] Likers { get; set; }
 
@@ -206,6 +212,9 @@ namespace Apex.Instagram.Response.JsonMap.Model
         [DataMember(Name = "top_likers")]
         public string[] TopLikers { get; set; }
 
+        [DataMember(Name = "direct_reply_to_author_enabled")]
+        public bool? DirectReplyToAuthorEnabled { get; set; }
+
         [DataMember(Name = "suggested_users")]
         public SuggestedUsers SuggestedUsers { get; set; }
 
@@ -238,6 +247,9 @@ namespace Apex.Instagram.Response.JsonMap.Model
 
         [DataMember(Name = "algorithm")]
         public string Algorithm { get; set; }
+
+        [DataMember(Name = "connection_id")]
+        public string ConnectionId { get; set; }
 
         [DataMember(Name = "social_context")]
         public string SocialContext { get; set; }
@@ -433,6 +445,12 @@ namespace Apex.Instagram.Response.JsonMap.Model
 
         [DataMember(Name = "has_shared_to_fb")]
         public int? HasSharedToFb { get; set; }
+
+        [DataMember(Name = "main_feed_carousel_starting_media_id")]
+        public string MainFeedCarouselStartingMediaId { get; set; }
+
+        [DataMember(Name = "main_feed_carousel_has_unseen_cover_media")]
+        public bool? MainFeedCarouselHasUnseenCoverMedia { get; set; }
 
         [DataMember(Name = "inventory_source")]
         public string InventorySource { get; set; }

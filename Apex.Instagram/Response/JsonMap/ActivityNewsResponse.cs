@@ -24,6 +24,9 @@ namespace Apex.Instagram.Response.JsonMap
         [DataMember(Name = "subscription")]
         public Subscription Subscription { get; set; }
 
+        [DataMember(Name = "partition")]
+        public dynamic Partition { get; set; }
+
         [DataMember(Name = "continuation_token")]
         public dynamic ContinuationToken { get; set; }
 

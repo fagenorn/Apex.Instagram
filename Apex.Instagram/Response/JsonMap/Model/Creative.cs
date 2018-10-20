@@ -2,7 +2,7 @@
 
 namespace Apex.Instagram.Response.JsonMap.Model
 {
-    public class Creatives
+    public class Creative
     {
         [DataMember(Name = "title")]
         public Text Title { get; set; }

@@ -16,6 +16,9 @@ namespace Apex.Instagram.Response.JsonMap.Model
         [DataMember(Name = "suggested_users")]
         public SuggestedUsers SuggestedUsers { get; set; }
 
+        [DataMember(Name = "end_of_feed_demarcator")]
+        public dynamic EndOfFeedDemarcator { get; set; }
+
         [DataMember(Name = "ad_link_type")]
         public int? AdLinkType { get; set; }
     }

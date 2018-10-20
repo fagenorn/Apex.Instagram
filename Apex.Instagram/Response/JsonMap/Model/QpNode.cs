@@ -23,6 +23,6 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public Template Template { get; set; }
 
         [DataMember(Name = "creatives")]
-        public Creatives Creatives { get; set; }
+        public Creative[] Creatives { get; set; }
     }
 }

@@ -11,8 +11,14 @@ namespace Apex.Instagram.Response.JsonMap.Model
         [DataMember(Name = "text")]
         public string Text { get; set; }
 
+        [DataMember(Name = "icon_url")]
+        public Uri IconUrl { get; set; }
+
         [DataMember(Name = "links")]
         public Link[] Links { get; set; }
+
+        [DataMember(Name = "rich_text")]
+        public string RichText { get; set; }
 
         [DataMember(Name = "profile_id")]
         public ulong? ProfileId { get; set; }
@@ -22,6 +28,9 @@ namespace Apex.Instagram.Response.JsonMap.Model
 
         [DataMember(Name = "media")]
         public Media[] Media { get; set; }
+
+        [DataMember(Name = "comment_notif_type")]
+        public string CommentNotifType { get; set; }
 
         [DataMember(Name = "timestamp")]
         public double? Timestamp { get; set; }

@@ -29,5 +29,8 @@ namespace Apex.Instagram.Response.JsonMap
 
         [DataMember(Name = "has_new_nux_story")]
         public bool? HasNewNuxStory { get; set; }
+
+        [DataMember(Name = "suggestions")]
+        public TraySuggestions[] Suggestions { get; set; }
     }
 }

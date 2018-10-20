@@ -34,6 +34,9 @@ namespace Apex.Instagram.Response.JsonMap.Model
         [DataMember(Name = "suggestions")]
         public Suggestion[] Suggestions { get; set; }
 
+        [DataMember(Name = "suggestion_cards")]
+        public SuggestionCard[] SuggestionCards { get; set; }
+
         [DataMember(Name = "netego_type")]
         public dynamic NetegoType { get; set; }
     }
