@@ -11,7 +11,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public int? TotalNumColumns { get; set; }
 
         [DataMember(Name = "aspect_ratio")]
-        public int? AspectRatio { get; set; }
+        public double? AspectRatio { get; set; }
 
         [DataMember(Name = "autoplay")]
         public bool? Autoplay { get; set; }

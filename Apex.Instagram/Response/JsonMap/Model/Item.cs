@@ -360,7 +360,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public ReelShare ReelShare { get; set; }
 
         [DataMember(Name = "organic_post_id")]
-        public string OrganicPostId { get; set; }
+        public ulong? OrganicPostId { get; set; }
 
         [DataMember(Name = "sponsor_tags")]
         public User[] SponsorTags { get; set; }

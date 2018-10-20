@@ -16,8 +16,14 @@ namespace Apex.Instagram.Response.JsonFormatter
             switch ( token )
             {
                 case JsonToken.String:
+                    var value = reader.ReadString();
 
-                    return ulong.Parse(reader.ReadString());
+                    if ( string.IsNullOrWhiteSpace(value) )
+                    {
+                        return 0;
+                    }
+
+                    return ulong.TryParse(value, out var result) ? result : 0;
                 default:
 
                     return formatterResolver.GetFormatterWithVerify<ulong?>()

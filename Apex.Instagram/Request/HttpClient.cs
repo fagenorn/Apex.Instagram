@@ -126,7 +126,7 @@ namespace Apex.Instagram.Request
                 ?.Value;
         }
 
-        public async Task<HttpRequestMessage> CloneHttpRequestMessageAsync(HttpRequestMessage request)
+        private async Task<HttpRequestMessage> CloneHttpRequestMessageAsync(HttpRequestMessage request)
         {
             var clone = new HttpRequestMessage(request.Method, request.RequestUri);
             var ms    = new MemoryStream();
