@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 
 using Apex.Instagram.Constants;
+using Apex.Instagram.Request.Exception;
 using Apex.Instagram.Request.Signature;
 using Apex.Instagram.Response.JsonMap;
 using Apex.Instagram.Response.JsonMap.Model;
@@ -27,7 +28,8 @@ namespace Apex.Instagram.Request.Instagram
                 request.AddPost("subno_key", subnoKey);
             }
 
-            return await Account.ApiRequest<MsisdnHeaderResponse>(request.Build()).ConfigureAwait(false);
+            return await Account.ApiRequest<MsisdnHeaderResponse>(request.Build())
+                                .ConfigureAwait(false);
         }
 
         public async Task<SyncResponse> SyncDeviceFeatures(bool preLogin = false)
@@ -48,21 +50,24 @@ namespace Apex.Instagram.Request.Instagram
                        .AddPost("_csrftoken", Account.LoginClient.CsrfToken);
             }
 
-            return await Account.ApiRequest<SyncResponse>(request.Build()).ConfigureAwait(false);
+            return await Account.ApiRequest<SyncResponse>(request.Build())
+                                .ConfigureAwait(false);
         }
 
         public async Task<ProfileNoticeResponse> GetProfileNotice()
         {
             var request = new RequestBuilder(Account).SetUrl("users/profile_notice/");
 
-            return await Account.ApiRequest<ProfileNoticeResponse>(request.Build()).ConfigureAwait(false);
+            return await Account.ApiRequest<ProfileNoticeResponse>(request.Build())
+                                .ConfigureAwait(false);
         }
 
         public async Task<LoomFetchConfigResponse> GetLoomFetchConfig()
         {
             var request = new RequestBuilder(Account).SetUrl("loom/fetch_config/");
 
-            return await Account.ApiRequest<LoomFetchConfigResponse>(request.Build()).ConfigureAwait(false);
+            return await Account.ApiRequest<LoomFetchConfigResponse>(request.Build())
+                                .ConfigureAwait(false);
         }
 
         public async Task<SyncResponse> SyncUserFeatures()
@@ -75,31 +80,43 @@ namespace Apex.Instagram.Request.Instagram
                                                      .AddPost("id", Account.AccountInfo.AccountId)
                                                      .AddPost("experiments", Version.Instance.Experiments);
 
-            var response = await Account.ApiRequest<SyncResponse>(request.Build()).ConfigureAwait(false);
-            await SaveExperiments(response).ConfigureAwait(false);
+            var response = await Account.ApiRequest<SyncResponse>(request.Build())
+                                        .ConfigureAwait(false);
+
+            await SaveExperiments(response)
+                .ConfigureAwait(false);
 
             return response;
         }
 
         public async Task<LauncherSyncResponse> SendLauncherSync(bool preLogin)
         {
-            var request = new RequestBuilder(Account).SetUrl("launcher/sync/")
-                                                     .AddPost("_csrftoken", Account.LoginClient.CsrfToken)
-                                                     .AddPost("configs", string.Empty);
-
-            if ( preLogin )
+            try
             {
-                request.SetNeedsAuth(false)
-                       .AddPost("id", Account.AccountInfo.Uuid);
-            }
-            else
-            {
-                request.AddPost("id", Account.AccountInfo.AccountId)
-                       .AddPost("_uuid", Account.AccountInfo.Uuid)
-                       .AddPost("_uid", Account.AccountInfo.AccountId);
-            }
+                var request = new RequestBuilder(Account).SetUrl("launcher/sync/")
+                                                         .AddPost("_csrftoken", Account.LoginClient.CsrfToken)
+                                                         .AddPost("configs", string.Empty);
 
-            return await Account.ApiRequest<LauncherSyncResponse>(request.Build()).ConfigureAwait(false);
+                if ( preLogin )
+                {
+                    request.SetNeedsAuth(false)
+                           .AddPost("id", Account.AccountInfo.Uuid);
+                }
+                else
+                {
+                    request.AddPost("id", Account.AccountInfo.AccountId)
+                           .AddPost("_uuid", Account.AccountInfo.Uuid)
+                           .AddPost("_uid", Account.AccountInfo.AccountId);
+                }
+
+                return await Account.ApiRequest<LauncherSyncResponse>(request.Build())
+                                    .ConfigureAwait(false);
+            }
+            catch (ConsentRequiredException)
+            {
+                // Caused for accounts created before 05/24/2018 logging from europe who haven't accepted GDPR changes.
+                return null;
+            }
         }
 
         public async Task<GenericResponse> LogAttribution()
@@ -108,7 +125,8 @@ namespace Apex.Instagram.Request.Instagram
                                                      .SetNeedsAuth(false)
                                                      .AddPost("adid", Account.AccountInfo.AdvertisingId);
 
-            return await Account.ApiRequest<GenericResponse>(request.Build()).ConfigureAwait(false);
+            return await Account.ApiRequest<GenericResponse>(request.Build())
+                                .ConfigureAwait(false);
         }
 
         public async Task<TokenResultResponse> FetchZeroRatingToken(string reason = "token_expired")
@@ -120,8 +138,11 @@ namespace Apex.Instagram.Request.Instagram
                                                      .AddParam("fetch_reason", reason)
                                                      .AddParam("token_hash", Account.LoginClient.LoginInfo.ZrToken);
 
-            var response = await Account.ApiRequest<TokenResultResponse>(request.Build()).ConfigureAwait(false);
-            await SaveZeroRatingToken(response.Token).ConfigureAwait(false);
+            var response = await Account.ApiRequest<TokenResultResponse>(request.Build())
+                                        .ConfigureAwait(false);
+
+            await SaveZeroRatingToken(response.Token)
+                .ConfigureAwait(false);
 
             return response;
         }
@@ -144,7 +165,8 @@ namespace Apex.Instagram.Request.Instagram
             Account.LoginClient.LoginInfo.ZrToken   = token.TokenHash;
             Account.LoginClient.LoginInfo.ZrExpires = token.ExpiresAt();
 
-            await Account.Storage.LoginInfo.SaveAsync(Account.LoginClient.LoginInfo).ConfigureAwait(false);
+            await Account.Storage.LoginInfo.SaveAsync(Account.LoginClient.LoginInfo)
+                         .ConfigureAwait(false);
         }
 
         private async Task SaveExperiments(SyncResponse syncResponse)
@@ -180,7 +202,8 @@ namespace Apex.Instagram.Request.Instagram
             Account.LoginClient.LoginInfo.Experiments = experiments;
             Account.LoginClient.LoginInfo.LastExperiments.Update();
 
-            await Account.Storage.LoginInfo.SaveAsync(Account.LoginClient.LoginInfo).ConfigureAwait(false);
+            await Account.Storage.LoginInfo.SaveAsync(Account.LoginClient.LoginInfo)
+                         .ConfigureAwait(false);
         }
 
         public async Task<FetchQpDataResponse> GetQpFetch()
@@ -205,7 +228,8 @@ namespace Apex.Instagram.Request.Instagram
                                                      .AddPost("version", 1)
                                                      .AddPost("scale", 2);
 
-            return await Account.ApiRequest<FetchQpDataResponse>(request.Build()).ConfigureAwait(false);
+            return await Account.ApiRequest<FetchQpDataResponse>(request.Build())
+                                .ConfigureAwait(false);
         }
 
         public async Task<FacebookOtaResponse> GetFacebookOta()
@@ -220,7 +244,8 @@ namespace Apex.Instagram.Request.Instagram
                                                      .AddParam("custom_app_id", Facebook.Instance.FacebookOrcaApplicationId)
                                                      .AddParam("custom_device_id", Account.AccountInfo.Uuid);
 
-            return await Account.ApiRequest<FacebookOtaResponse>(request.Build()).ConfigureAwait(false);
+            return await Account.ApiRequest<FacebookOtaResponse>(request.Build())
+                                .ConfigureAwait(false);
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Apex.Instagram.Logger;
 using Apex.Instagram.Login.Exception;
 using Apex.Instagram.Model.Internal;
+using Apex.Instagram.Model.Request;
 using Apex.Instagram.Request.Exception;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -118,8 +119,8 @@ namespace Apex.Instagram.Tests
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(fileStorage)
                                                     .SetLogger(Logger)
-                                                    .SetUsername("ezequiel.orson5aw")
-                                                    .SetPassword("sCEk5VU0")
+                                                    .SetUsername("Micheline.Battiest2Ci")
+                                                    .SetPassword("iMHh5GQ4")
                                                     .BuildAsync();
 
             Assert.AreEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);

@@ -7,9 +7,12 @@ using System.Net.Http.Headers;
 using System.Text;
 
 using Apex.Instagram.Request.Exception;
+using Apex.Instagram.Request.Internal;
 using Apex.Instagram.Request.Model;
 using Apex.Instagram.Request.Signature;
 using Apex.Instagram.Utils;
+
+using Version = Apex.Instagram.Constants.Version;
 
 namespace Apex.Instagram.Request
 {
@@ -238,7 +241,7 @@ namespace Apex.Instagram.Request
             }
 
             AddHeader("X-IG-App-ID", Constants.Request.Instance.HeaderFacebookAnalyticsApplicationId);
-            AddHeader("X-IG-Capabilities", Constants.Version.Instance.HeaderCapabilities);
+            AddHeader("X-IG-Capabilities", Version.Instance.HeaderCapabilities);
             AddHeader("X-IG-Connection-Type", Constants.Request.Instance.HeaderConnectionType);
             AddHeader("X-IG-Connection-Speed", Randomizer.Instance.Number(3700, 1000) + "kbps");
             AddHeader("X-IG-Bandwidth-Speed-KBPS", "-1.000");
@@ -291,7 +294,7 @@ namespace Apex.Instagram.Request
             return multipartContent;
         }
 
-        private FormUrlEncodedContent BuildFormUrlEncodedContent()
+        private BetterFormUrlEncodedContent BuildFormUrlEncodedContent()
         {
             var postData = new Dictionary<string, string>();
             foreach ( var post in _posts )
@@ -299,8 +302,8 @@ namespace Apex.Instagram.Request
                 postData[post.Key] = post.Value.ToString();
             }
 
-            var content = new FormUrlEncodedContent(postData);
-            content.Headers.ContentType.CharSet   = "UTF-8";
+            var content = new BetterFormUrlEncodedContent(postData);
+
             return content;
         }
 

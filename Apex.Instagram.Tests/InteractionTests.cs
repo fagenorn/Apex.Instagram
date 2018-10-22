@@ -35,8 +35,8 @@ namespace Apex.Instagram.Tests
             _account = await new AccountBuilder().SetId(1)
                                                 .SetStorage(fileStorage)
                                                 .SetLogger(Logger)
-                                                .SetUsername("ezequiel.orson5aw")
-                                                .SetPassword("sCEk5VU0")
+                                                .SetUsername("Micheline.Battiest2Ci")
+                                                .SetPassword("iMHh5GQ4")
                                                 .BuildAsync();
 
             await _account.Login();
