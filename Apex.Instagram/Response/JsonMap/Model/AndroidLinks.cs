@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 using Apex.Instagram.Response.JsonFormatter;
 
@@ -12,7 +13,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public int? LinkType { get; set; }
 
         [DataMember(Name = "webUri")]
-        public string WebUri { get; set; }
+        public Uri WebUri { get; set; }
 
         [DataMember(Name = "androidClass")]
         public string AndroidClass { get; set; }
@@ -30,6 +31,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string RedirectUri { get; set; }
 
         [DataMember(Name = "igUserId")]
+        [JsonFormatter(typeof(DurableUlongFormatter))]
         public ulong? IgUserId { get; set; }
 
         [DataMember(Name = "leadGenFormId")]

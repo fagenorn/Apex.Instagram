@@ -5,9 +5,9 @@ namespace Apex.Instagram.Response.JsonMap.Model
     public class TimeRange
     {
         [DataMember(Name = "start")]
-        public string Start { get; set; }
+        public ulong? Start { get; set; }
 
         [DataMember(Name = "end")]
-        public string End { get; set; }
+        public ulong? End { get; set; }
     }
 }
