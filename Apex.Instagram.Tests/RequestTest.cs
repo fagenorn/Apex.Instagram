@@ -4,7 +4,6 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-
 using Apex.Instagram.Logger;
 using Apex.Instagram.Model.Request;
 using Apex.Instagram.Request;
@@ -12,11 +11,8 @@ using Apex.Instagram.Request.Exception;
 using Apex.Instagram.Request.Exception.EndpointException;
 using Apex.Instagram.Response.JsonMap;
 using Apex.Instagram.Tests.Maps;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Utf8Json;
-
 using HttpClient = System.Net.Http.HttpClient;
 
 namespace Apex.Instagram.Tests
@@ -40,39 +36,39 @@ namespace Apex.Instagram.Tests
         {
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
-                                                    .SetLogger(Logger)
-                                                    .BuildAsync();
+                .SetStorage(fileStorage)
+                .SetLogger(Logger)
+                .BuildAsync();
 
             var request = new RequestBuilder(account).SetUrl("https://httpbin.org/cookies")
-                                                     .SetAddDefaultHeaders(false)
-                                                     .SetNeedsAuth(false)
-                                                     .Build();
+                .SetAddDefaultHeaders(false)
+                .SetNeedsAuth(false);
 
             var request1 = request;
-            await Assert.ThrowsExceptionAsync<EndpointException>(async () => await account.ApiRequest<GenericResponse>(request1));
+            await Assert.ThrowsExceptionAsync<EndpointException>(async () =>
+                await account.ApiRequest<GenericResponse>(request1.Build));
 
             Assert.AreEqual(0, (await account.Storage.Cookie.LoadAsync()).Cookies.Count);
             Assert.IsNull(account.GetCookie("freeform"));
 
             request = new RequestBuilder(account).SetUrl("https://httpbin.org/cookies/set")
-                                                 .SetAddDefaultHeaders(false)
-                                                 .SetNeedsAuth(false)
-                                                 .AddParam("freeform", "test")
-                                                 .Build();
+                .SetAddDefaultHeaders(false)
+                .SetNeedsAuth(false)
+                .AddParam("freeform", "test");
 
             var request2 = request;
-            await Assert.ThrowsExceptionAsync<EndpointException>(async () => await account.ApiRequest<GenericResponse>(request2));
+            await Assert.ThrowsExceptionAsync<EndpointException>(async () =>
+                await account.ApiRequest<GenericResponse>(request2.Build));
 
             Assert.AreEqual("test", account.GetCookie("freeform"));
 
             request = new RequestBuilder(account).SetUrl("https://httpbin.org/cookies")
-                                                 .SetAddDefaultHeaders(false)
-                                                 .SetNeedsAuth(false)
-                                                 .Build();
+                .SetAddDefaultHeaders(false)
+                .SetNeedsAuth(false);
 
             var request3 = request;
-            await Assert.ThrowsExceptionAsync<EndpointException>(async () => await account.ApiRequest<GenericResponse>(request3));
+            await Assert.ThrowsExceptionAsync<EndpointException>(async () =>
+                await account.ApiRequest<GenericResponse>(request3.Build));
 
             Assert.AreEqual("test", account.GetCookie("freeform"));
         }
@@ -82,27 +78,27 @@ namespace Apex.Instagram.Tests
         {
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
-                                                    .SetLogger(Logger)
-                                                    .BuildAsync();
+                .SetStorage(fileStorage)
+                .SetLogger(Logger)
+                .BuildAsync();
 
             var request = new RequestBuilder(account).SetUrl("https://httpbin.org/cookies/set")
-                                                     .SetAddDefaultHeaders(false)
-                                                     .SetNeedsAuth(false)
-                                                     .AddParam("freeform", "test")
-                                                     .Build();
+                .SetAddDefaultHeaders(false)
+                .SetNeedsAuth(false)
+                .AddParam("freeform", "test");
 
             Assert.IsNull(await account.Storage.Cookie.LoadAsync());
             var account1 = account;
             var request1 = request;
-            await Assert.ThrowsExceptionAsync<EndpointException>(async () => await account1.ApiRequest<GenericResponse>(request1));
+            await Assert.ThrowsExceptionAsync<EndpointException>(async () =>
+                await account1.ApiRequest<GenericResponse>(request1.Build));
 
             Assert.AreEqual("test", account.GetCookie("freeform"));
             Assert.AreEqual(1, (await account.Storage.Cookie.LoadAsync()).Cookies.Count);
 
             account = await new AccountBuilder().SetId(0)
-                                                .SetStorage(fileStorage)
-                                                .BuildAsync();
+                .SetStorage(fileStorage)
+                .BuildAsync();
 
             Assert.AreEqual(1, (await account.Storage.Cookie.LoadAsync()).Cookies.Count);
             Assert.AreEqual("test", account.GetCookie("freeform"));
@@ -111,37 +107,38 @@ namespace Apex.Instagram.Tests
         [TestMethod]
         public async Task Temporary_Headers()
         {
-            const string defaultHeaderKey   = "X-Ig-Bandwidth-Totalbytes-B";
+            const string defaultHeaderKey = "X-Ig-Bandwidth-Totalbytes-B";
             const string defaultHeaderValue = "0";
 
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
-                                                    .BuildAsync();
+                .SetStorage(fileStorage)
+                .BuildAsync();
 
             var request = new RequestBuilder(account).SetUrl("https://httpbin.org/headers")
-                                                     .SetAddDefaultHeaders(false)
-                                                     .SetNeedsAuth(false)
-                                                     .AddHeader("Test", "best")
-                                                     .Build();
+                .SetAddDefaultHeaders(false)
+                .SetNeedsAuth(false)
+                .AddHeader("Test", "best")
+                .Build();
 
             var response = await GetClient(account)
-                               .SendAsync(request);
+                .SendAsync(request);
 
             request.Dispose();
 
             Assert.IsTrue(response.IsSuccessStatusCode);
-            var headersResponse = JsonSerializer.Deserialize<HeadersJsonMap>(await response.Content.ReadAsStringAsync());
+            var headersResponse =
+                JsonSerializer.Deserialize<HeadersJsonMap>(await response.Content.ReadAsStringAsync());
             Assert.AreEqual("best", headersResponse.headers["Test"]);
             Assert.IsFalse(headersResponse.headers.ContainsKey(defaultHeaderKey));
 
             request = new RequestBuilder(account).SetUrl("https://httpbin.org/headers")
-                                                 .SetAddDefaultHeaders(false)
-                                                 .SetNeedsAuth(false)
-                                                 .Build();
+                .SetAddDefaultHeaders(false)
+                .SetNeedsAuth(false)
+                .Build();
 
             response = await GetClient(account)
-                           .SendAsync(request);
+                .SendAsync(request);
 
             request.Dispose();
 
@@ -151,11 +148,11 @@ namespace Apex.Instagram.Tests
             Assert.IsFalse(headersResponse.headers.ContainsKey(defaultHeaderKey));
 
             request = new RequestBuilder(account).SetUrl("https://httpbin.org/headers")
-                                                 .SetNeedsAuth(false)
-                                                 .Build();
+                .SetNeedsAuth(false)
+                .Build();
 
             response = await GetClient(account)
-                           .SendAsync(request);
+                .SendAsync(request);
 
             request.Dispose();
 
@@ -170,27 +167,29 @@ namespace Apex.Instagram.Tests
         {
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
-                                                    .SetLogger(Logger)
-                                                    .BuildAsync();
+                .SetStorage(fileStorage)
+                .SetLogger(Logger)
+                .BuildAsync();
 
             var request = new RequestBuilder(account).SetUrl("https://httpbin.org/post")
-                                                     .SetNeedsAuth(false)
-                                                     .AddPost("test", "best")
-                                                     .AddPost("test2", "best2")
-                                                     .AddPost("test3", "best3", false)
-                                                     .Build();
+                .SetNeedsAuth(false)
+                .AddPost("test", "best")
+                .AddPost("test2", "best2")
+                .AddPost("test3", "best3", false)
+                .Build();
 
             account.Logger.Debug<HttpClient>(request);
             var response = await GetClient(account)
-                               .SendAsync(request);
+                .SendAsync(request);
 
             request.Dispose();
 
             Assert.IsTrue(response.IsSuccessStatusCode);
             var postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
             Assert.AreEqual(@"4", (string) postResponse["form"]["ig_sig_key_version"]);
-            Assert.AreEqual(@"a50cbc3219ec82fb34a3e6ddeb52467a9324853ed6071c40aaaa2987bfdb6bd1.{""test"":""best"",""test2"":""best2""}", (string) postResponse["form"]["signed_body"]);
+            Assert.AreEqual(
+                @"a50cbc3219ec82fb34a3e6ddeb52467a9324853ed6071c40aaaa2987bfdb6bd1.{""test"":""best"",""test2"":""best2""}",
+                (string) postResponse["form"]["signed_body"]);
             Assert.AreEqual(@"best3", (string) postResponse["form"]["test3"]);
         }
 
@@ -200,7 +199,7 @@ namespace Apex.Instagram.Tests
 
             var accClient = account.HttpClient;
 
-            var type2   = typeof(Request.HttpClient);
+            var type2 = typeof(Request.HttpClient);
             var client2 = type2.GetField("_request", BindingFlags.NonPublic | BindingFlags.Instance);
 
             Debug.Assert(client2 != null, nameof(client2) + " != null");
@@ -213,11 +212,11 @@ namespace Apex.Instagram.Tests
         {
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
-                                                    .SetLogger(Logger)
-                                                    .BuildAsync().ConfigureAwait(false);
+                .SetStorage(fileStorage)
+                .SetLogger(Logger)
+                .BuildAsync().ConfigureAwait(false);
 
-            var file        = @"tests/test_file.txt";
+            var file = @"tests/test_file.txt";
             var fileContent = Encoding.UTF8.GetBytes(@"hello");
             using (var fileStream = File.Create(file))
             {
@@ -225,15 +224,15 @@ namespace Apex.Instagram.Tests
             }
 
             var request = new RequestBuilder(account).SetUrl("https://httpbin.org/post")
-                                                     .SetNeedsAuth(false)
-                                                     .AddFile("file_name", file)
-                                                     .AddPost("test", "best")
-                                                     .SetSignedPost(false)
-                                                     .Build();
+                .SetNeedsAuth(false)
+                .AddFile("file_name", file)
+                .AddPost("test", "best")
+                .SetSignedPost(false)
+                .Build();
 
             account.Logger.Debug<HttpClient>(request);
             var response = await GetClient(account)
-                               .SendAsync(request);
+                .SendAsync(request);
 
             request.Dispose();
 
@@ -248,27 +247,29 @@ namespace Apex.Instagram.Tests
         {
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
-                                                    .SetLogger(Logger)
-                                                    .BuildAsync();
+                .SetStorage(fileStorage)
+                .SetLogger(Logger)
+                .BuildAsync();
 
             var request = new RequestBuilder(account).SetUrl("https://httpbin.org/get")
-                                                     .SetNeedsAuth(false)
-                                                     .AddParam("test", "best", true)
-                                                     .AddParam("test2", "best2", true)
-                                                     .AddParam("test3", "best3")
-                                                     .SetSignedGet(true)
-                                                     .Build();
+                .SetNeedsAuth(false)
+                .AddParam("test", "best", true)
+                .AddParam("test2", "best2", true)
+                .AddParam("test3", "best3")
+                .SetSignedGet(true)
+                .Build();
 
             var response = await GetClient(account)
-                               .SendAsync(request);
+                .SendAsync(request);
 
             request.Dispose();
 
             Assert.IsTrue(response.IsSuccessStatusCode);
             var postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
             Assert.AreEqual(@"4", (string) postResponse["args"]["ig_sig_key_version"]);
-            Assert.AreEqual(@"a50cbc3219ec82fb34a3e6ddeb52467a9324853ed6071c40aaaa2987bfdb6bd1.{""test"":""best"",""test2"":""best2""}", (string) postResponse["args"]["signed_body"]);
+            Assert.AreEqual(
+                @"a50cbc3219ec82fb34a3e6ddeb52467a9324853ed6071c40aaaa2987bfdb6bd1.{""test"":""best"",""test2"":""best2""}",
+                (string) postResponse["args"]["signed_body"]);
             Assert.AreEqual(@"best3", (string) postResponse["args"]["test3"]);
         }
 
@@ -277,15 +278,15 @@ namespace Apex.Instagram.Tests
         {
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
-                                                    .SetLogger(Logger)
-                                                    .BuildAsync();
+                .SetStorage(fileStorage)
+                .SetLogger(Logger)
+                .BuildAsync();
 
             var request = new RequestBuilder(account).SetUrl("https://httpbin.org/status/400")
-                                                     .SetNeedsAuth(false)
-                                                     .Build();
+                .SetNeedsAuth(false);
 
-            await Assert.ThrowsExceptionAsync<BadRequestException>(async () => await account.ApiRequest<GenericResponse>(request));
+            await Assert.ThrowsExceptionAsync<BadRequestException>(async () =>
+                await account.ApiRequest<GenericResponse>(request.Build));
         }
 
         [TestMethod]
@@ -293,15 +294,15 @@ namespace Apex.Instagram.Tests
         {
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
-                                                    .SetLogger(Logger)
-                                                    .BuildAsync();
+                .SetStorage(fileStorage)
+                .SetLogger(Logger)
+                .BuildAsync();
 
             var request = new RequestBuilder(account).SetUrl("https://httpbin.org/status/407")
-                                                     .SetNeedsAuth(false)
-                                                     .Build();
+                .SetNeedsAuth(false);
 
-            await Assert.ThrowsExceptionAsync<ProxyAuthenticationRequiredException>(async () => await account.ApiRequest<GenericResponse>(request));
+            await Assert.ThrowsExceptionAsync<ProxyAuthenticationRequiredException>(async () =>
+                await account.ApiRequest<GenericResponse>(request.Build));
         }
 
         [TestMethod]
@@ -309,15 +310,14 @@ namespace Apex.Instagram.Tests
         {
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
-                                                    .SetLogger(Logger)
-                                                    .BuildAsync();
+                .SetStorage(fileStorage)
+                .SetLogger(Logger)
+                .BuildAsync();
 
             var request = new RequestBuilder(account).SetUrl("http://httpbin.org/delay/1")
-                                                     .SetNeedsAuth(false)
-                                                     .Build();
+                .SetNeedsAuth(false);
 
-            var taskResult = account.ApiRequest<GenericResponse>(request);
+            var taskResult = account.ApiRequest<GenericResponse>(request.Build);
 
             request.Dispose();
             var ex = await Assert.ThrowsExceptionAsync<RequestException>(async () => await taskResult);
@@ -329,25 +329,24 @@ namespace Apex.Instagram.Tests
         {
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
-                                                    .SetLogger(Logger)
-                                                    .BuildAsync();
+                .SetStorage(fileStorage)
+                .SetLogger(Logger)
+                .BuildAsync();
 
             var request = new RequestBuilder(account).SetUrl("http://httpbin.org/delay/1")
-                                                     .SetNeedsAuth(false)
-                                                     .Build();
+                .SetNeedsAuth(false);
 
-            var taskResult = account.ApiRequest<GenericResponse>(request);
+            var taskResult = account.ApiRequest<GenericResponse>(request.Build);
 
             account.Dispose();
             var ex = await Assert.ThrowsExceptionAsync<RequestException>(async () => await taskResult);
             Assert.IsInstanceOfType(ex.InnerException, typeof(OperationCanceledException));
 
             request = new RequestBuilder(account).SetUrl("http://httpbin.org/delay/1")
-                                                     .SetNeedsAuth(false)
-                                                     .Build();
+                .SetNeedsAuth(false);
 
-            await Assert.ThrowsExceptionAsync<ObjectDisposedException>(async () => await account.ApiRequest<GenericResponse>(request));
+            await Assert.ThrowsExceptionAsync<ObjectDisposedException>(async () =>
+                await account.ApiRequest<GenericResponse>(request.Build));
         }
 
         [TestMethod]
@@ -356,15 +355,14 @@ namespace Apex.Instagram.Tests
         {
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
-                                                    .SetLogger(Logger)
-                                                    .BuildAsync();
+                .SetStorage(fileStorage)
+                .SetLogger(Logger)
+                .BuildAsync();
 
             var request = new RequestBuilder(account).SetUrl("https://httpbin.org/status/429")
-                                                     .SetNeedsAuth(false)
-                                                     .Build();
+                .SetNeedsAuth(false);
 
-            await account.ApiRequest<GenericResponse>(request);
+            await account.ApiRequest<GenericResponse>(request.Build);
         }
 
         [TestMethod]
@@ -373,15 +371,14 @@ namespace Apex.Instagram.Tests
         {
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
-                                                    .SetLogger(Logger)
-                                                    .BuildAsync();
+                .SetStorage(fileStorage)
+                .SetLogger(Logger)
+                .BuildAsync();
 
             var request = new RequestBuilder(account).SetUrl("https://httpbin.org/status/431")
-                                                     .SetNeedsAuth(false)
-                                                     .Build();
+                .SetNeedsAuth(false);
 
-            await account.ApiRequest<GenericResponse>(request);
+            await account.ApiRequest<GenericResponse>(request.Build);
         }
 
         [TestMethod]
@@ -389,23 +386,21 @@ namespace Apex.Instagram.Tests
         {
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
-                                                    .SetLogger(Logger)
-                                                    .BuildAsync();
+                .SetStorage(fileStorage)
+                .SetLogger(Logger)
+                .BuildAsync();
 
             int? lastFinished = null;
 
             var request = new RequestBuilder(account).SetUrl("http://httpbin.org/delay/2")
-                                                     .SetNeedsAuth(false)
-                                                     .Build();
+                .SetNeedsAuth(false);
 
-            var taskResult = account.ApiRequest<GenericResponse>(request).ContinueWith(x => lastFinished = 1);
+            var taskResult = account.ApiRequest<GenericResponse>(request.Build).ContinueWith(x => lastFinished = 1);
 
             var request2 = new RequestBuilder(account).SetUrl("http://httpbin.org/get")
-                                                     .SetNeedsAuth(false)
-                                                     .Build();
+                .SetNeedsAuth(false);
 
-            var taskResult2 = account.ApiRequest<GenericResponse>(request2).ContinueWith(x => lastFinished = 2);
+            var taskResult2 = account.ApiRequest<GenericResponse>(request2.Build).ContinueWith(x => lastFinished = 2);
 
             await taskResult2;
             await taskResult;
@@ -419,15 +414,15 @@ namespace Apex.Instagram.Tests
         {
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
-                                                    .SetLogger(Logger)
-                                                    .BuildAsync();
+                .SetStorage(fileStorage)
+                .SetLogger(Logger)
+                .BuildAsync();
 
             var request = new RequestBuilder(account).SetUrl("https://non-existent-website-123-host-dns.org/")
-                                                     .SetNeedsAuth(false)
-                                                     .Build();
+                .SetNeedsAuth(false);
 
-            await Assert.ThrowsExceptionAsync<RequestException>(async () => await account.ApiRequest<GenericResponse>(request));
+            await Assert.ThrowsExceptionAsync<RequestException>(async () =>
+                await account.ApiRequest<GenericResponse>(request.Build));
         }
 
         [TestMethod]
@@ -435,16 +430,16 @@ namespace Apex.Instagram.Tests
         {
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
-                                                    .SetLogger(Logger)
-                                                    .SetProxy(new Proxy("http://104.236.122.201:3128", "kash", "wrong_password"))
-                                                    .BuildAsync();
+                .SetStorage(fileStorage)
+                .SetLogger(Logger)
+                .SetProxy(new Proxy("http://104.236.122.201:3128", "kash", "wrong_password"))
+                .BuildAsync();
 
             var request = new RequestBuilder(account).SetUrl("https://httpbin.org/ip")
-                                                     .SetNeedsAuth(false)
-                                                     .Build();
+                .SetNeedsAuth(false);
 
-            await Assert.ThrowsExceptionAsync<ProxyAuthenticationRequiredException>(async () => await account.ApiRequest<GenericResponse>(request));
+            await Assert.ThrowsExceptionAsync<ProxyAuthenticationRequiredException>(async () =>
+                await account.ApiRequest<GenericResponse>(request.Build));
         }
 
         [TestMethod]
@@ -452,16 +447,16 @@ namespace Apex.Instagram.Tests
         {
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
-                                                    .SetLogger(Logger)
-                                                    .SetProxy(new Proxy("http://104.236.122.201:3128"))
-                                                    .BuildAsync();
+                .SetStorage(fileStorage)
+                .SetLogger(Logger)
+                .SetProxy(new Proxy("http://104.236.122.201:3128"))
+                .BuildAsync();
 
             var request = new RequestBuilder(account).SetUrl("https://httpbin.org/ip")
-                                                     .SetNeedsAuth(false)
-                                                     .Build();
+                .SetNeedsAuth(false);
 
-            await Assert.ThrowsExceptionAsync<ProxyAuthenticationRequiredException>(async () => await account.ApiRequest<GenericResponse>(request));
+            await Assert.ThrowsExceptionAsync<ProxyAuthenticationRequiredException>(async () =>
+                await account.ApiRequest<GenericResponse>(request.Build));
         }
 
         [TestMethod]
@@ -469,17 +464,17 @@ namespace Apex.Instagram.Tests
         {
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
-                                                    .SetLogger(Logger)
-                                                    .SetProxy(new Proxy("http://104.236.122.201:3128", "kash", "gevel22jj3"))
-                                                    .BuildAsync();
+                .SetStorage(fileStorage)
+                .SetLogger(Logger)
+                .SetProxy(new Proxy("http://104.236.122.201:3128", "kash", "gevel22jj3"))
+                .BuildAsync();
 
             var request = new RequestBuilder(account).SetUrl("https://httpbin.org/ip")
-                                                     .SetNeedsAuth(false)
-                                                     .Build();
+                .SetNeedsAuth(false)
+                .Build();
 
             var response = await GetClient(account)
-                               .SendAsync(request);
+                .SendAsync(request);
 
             request.Dispose();
 
@@ -490,11 +485,11 @@ namespace Apex.Instagram.Tests
             await account.UpdateProxy(null);
 
             request = new RequestBuilder(account).SetUrl("https://httpbin.org/ip")
-                                                 .SetNeedsAuth(false)
-                                                 .Build();
+                .SetNeedsAuth(false)
+                .Build();
 
             response = await GetClient(account)
-                           .SendAsync(request);
+                .SendAsync(request);
 
             request.Dispose();
             Assert.IsTrue(response.IsSuccessStatusCode);
@@ -504,11 +499,11 @@ namespace Apex.Instagram.Tests
             await account.UpdateProxy(new Proxy("http://104.236.122.201:3128", "kash", "gevel22jj3"));
 
             request = new RequestBuilder(account).SetUrl("https://httpbin.org/ip")
-                                                 .SetNeedsAuth(false)
-                                                 .Build();
+                .SetNeedsAuth(false)
+                .Build();
 
             response = await GetClient(account)
-                           .SendAsync(request);
+                .SendAsync(request);
 
             request.Dispose();
             Assert.IsTrue(response.IsSuccessStatusCode);
@@ -521,17 +516,17 @@ namespace Apex.Instagram.Tests
         {
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
-                                                    .SetLogger(Logger)
-                                                    .SetProxy(new Proxy("http://[2604:a880:800:10::a:9001]:3128/", "kash", "gevel22jj3"))
-                                                    .BuildAsync();
+                .SetStorage(fileStorage)
+                .SetLogger(Logger)
+                .SetProxy(new Proxy("http://[2604:a880:800:10::a:9001]:3128/", "kash", "gevel22jj3"))
+                .BuildAsync();
 
             var request = new RequestBuilder(account).SetUrl("https://httpbin.org/ip")
-                                                     .SetNeedsAuth(false)
-                                                     .Build();
+                .SetNeedsAuth(false)
+                .Build();
 
             var response = await GetClient(account)
-                               .SendAsync(request);
+                .SendAsync(request);
 
             request.Dispose();
 
@@ -542,11 +537,11 @@ namespace Apex.Instagram.Tests
             await account.UpdateProxy(null);
 
             request = new RequestBuilder(account).SetUrl("https://httpbin.org/ip")
-                                                 .SetNeedsAuth(false)
-                                                 .Build();
+                .SetNeedsAuth(false)
+                .Build();
 
             response = await GetClient(account)
-                           .SendAsync(request);
+                .SendAsync(request);
 
             request.Dispose();
             Assert.IsTrue(response.IsSuccessStatusCode);
@@ -556,11 +551,11 @@ namespace Apex.Instagram.Tests
             await account.UpdateProxy(new Proxy("http://[2604:a880:800:10::a:9001]:3128", "kash", "gevel22jj3"));
 
             request = new RequestBuilder(account).SetUrl("https://httpbin.org/ip")
-                                                 .SetNeedsAuth(false)
-                                                 .Build();
+                .SetNeedsAuth(false)
+                .Build();
 
             response = await GetClient(account)
-                           .SendAsync(request);
+                .SendAsync(request);
 
             request.Dispose();
             Assert.IsTrue(response.IsSuccessStatusCode);
@@ -573,15 +568,14 @@ namespace Apex.Instagram.Tests
         {
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
-                                                    .SetLogger(Logger)
-                                                    .BuildAsync();
+                .SetStorage(fileStorage)
+                .SetLogger(Logger)
+                .BuildAsync();
 
             var request = new RequestBuilder(account).SetUrl("http://ptsv2.com/t/3e37m-1532618200/post")
-                                                     .SetNeedsAuth(false)
-                                                     .Build();
+                .SetNeedsAuth(false);
 
-            var result = await account.ApiRequest<GenericResponse>(request);
+            var result = await account.ApiRequest<GenericResponse>(request.Build);
             Assert.AreEqual("ok", result.Status);
         }
 
@@ -590,15 +584,16 @@ namespace Apex.Instagram.Tests
         {
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
-                                                    .SetLogger(Logger)
-                                                    .BuildAsync();
+                .SetStorage(fileStorage)
+                .SetLogger(Logger)
+                .BuildAsync();
 
             var request = new RequestBuilder(account).SetUrl("http://ptsv2.com/t/a1boc-1532620880/post")
-                                                     .SetNeedsAuth(false)
-                                                     .Build();
+                .SetNeedsAuth(false);
 
-            var exception = await Assert.ThrowsExceptionAsync<EndpointException>(async () => await account.ApiRequest<GenericResponse>(request));
+            var exception =
+                await Assert.ThrowsExceptionAsync<EndpointException>(async () =>
+                    await account.ApiRequest<GenericResponse>(request.Build));
             Assert.AreEqual("Some random message", exception.Message);
         }
 
@@ -607,15 +602,16 @@ namespace Apex.Instagram.Tests
         {
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
-                                                    .SetLogger(Logger)
-                                                    .BuildAsync();
+                .SetStorage(fileStorage)
+                .SetLogger(Logger)
+                .BuildAsync();
 
             var request = new RequestBuilder(account).SetUrl("http://ptsv2.com/t/1ikd3-1532626976/post")
-                                                     .SetNeedsAuth(false)
-                                                     .Build();
+                .SetNeedsAuth(false);
 
-            var exception = await Assert.ThrowsExceptionAsync<EndpointException>(async () => await account.ApiRequest<GenericResponse>(request));
+            var exception =
+                await Assert.ThrowsExceptionAsync<EndpointException>(async () =>
+                    await account.ApiRequest<GenericResponse>(request.Build));
             Assert.AreEqual("Select a valid choice. 0 is not one of the available choices.", exception.Message);
         }
 
@@ -624,15 +620,15 @@ namespace Apex.Instagram.Tests
         {
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
-                                                    .SetLogger(Logger)
-                                                    .BuildAsync();
+                .SetStorage(fileStorage)
+                .SetLogger(Logger)
+                .BuildAsync();
 
             var request = new RequestBuilder(account).SetUrl("http://ptsv2.com/t/j4y3y-1532627784/post")
-                                                     .SetNeedsAuth(false)
-                                                     .Build();
+                .SetNeedsAuth(false);
 
-            await Assert.ThrowsExceptionAsync<ForcedPasswordResetException>(async () => await account.ApiRequest<GenericResponse>(request));
+            await Assert.ThrowsExceptionAsync<ForcedPasswordResetException>(async () =>
+                await account.ApiRequest<GenericResponse>(request.Build));
         }
 
         [TestMethod]
@@ -640,15 +636,15 @@ namespace Apex.Instagram.Tests
         {
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
-                                                    .SetLogger(Logger)
-                                                    .BuildAsync();
+                .SetStorage(fileStorage)
+                .SetLogger(Logger)
+                .BuildAsync();
 
             var request = new RequestBuilder(account).SetUrl("http://ptsv2.com/t/2x2zs-1532628038/post")
-                                                     .SetNeedsAuth(false)
-                                                     .Build();
+                .SetNeedsAuth(false);
 
-            await Assert.ThrowsExceptionAsync<ThrottledException>(async () => await account.ApiRequest<GenericResponse>(request));
+            await Assert.ThrowsExceptionAsync<ThrottledException>(async () =>
+                await account.ApiRequest<GenericResponse>(request.Build));
         }
 
         #region Additional test attributes
@@ -658,9 +654,15 @@ namespace Apex.Instagram.Tests
         //
         // Use ClassInitialize to run code before running the first test in the class
         [ClassInitialize]
-        public static void MyClassInitialize(TestContext testContext) { Logger.LogMessagePublished += LoggerOnLogMessagePublished; }
+        public static void MyClassInitialize(TestContext testContext)
+        {
+            Logger.LogMessagePublished += LoggerOnLogMessagePublished;
+        }
 
-        private static void LoggerOnLogMessagePublished(object sender, ApexLogMessagePublishedEventArgs e) { Debug.WriteLine(e.TraceMessage); }
+        private static void LoggerOnLogMessagePublished(object sender, ApexLogMessagePublishedEventArgs e)
+        {
+            Debug.WriteLine(e.TraceMessage);
+        }
 
         //
         // Use ClassCleanup to run code after all tests in a class have run
@@ -679,13 +681,10 @@ namespace Apex.Instagram.Tests
         [TestCleanup]
         public void MyTestCleanup()
         {
-            if ( Directory.Exists("tests") )
+            if (Directory.Exists("tests"))
             {
                 var files = Directory.GetFiles("tests");
-                foreach ( var file in files )
-                {
-                    File.Delete(file);
-                }
+                foreach (var file in files) File.Delete(file);
             }
         }
 

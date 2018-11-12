@@ -122,7 +122,7 @@ namespace Apex.Instagram.Request.Instagram
                 request.AddPost("recovered_from_crash", "1");
             }
 
-            return await Account.ApiRequest<TimelineFeedResponse>(request.Build()).ConfigureAwait(false);
+            return await Account.ApiRequest<TimelineFeedResponse>(request.Build).ConfigureAwait(false);
 
             bool ExistsOption(string name) { return options != null && options.ContainsKey(name); }
 

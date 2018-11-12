@@ -25,7 +25,7 @@ namespace Apex.Instagram
 
         internal string GetCookie(string key) { return HttpClient.GetCookie(key); }
 
-        internal async Task<T> ApiRequest<T>(HttpRequestMessage request) where T : Response.JsonMap.Response
+        internal async Task<T> ApiRequest<T>(Func<HttpRequestMessage> request) where T : Response.JsonMap.Response
         {
             if ( _cancellationTokenSource.IsCancellationRequested )
             {
