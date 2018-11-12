@@ -69,7 +69,7 @@ namespace Apex.Instagram
         {
             if ( _disposed )
             {
-                throw new AccountBuilderException("Account has already been buildt.");
+                throw new AccountBuilderException("Account has already been build.");
             }
 
             if ( _id == null )

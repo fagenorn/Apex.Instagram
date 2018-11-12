@@ -217,7 +217,7 @@ namespace Apex.Instagram.Request.Instagram
         /// <returns>
         ///     <see cref="IAutoPaginate&lt;FollowerAndFollowingResponse&gt;" />
         /// </returns>
-        public IAutoPaginate<FollowerAndFollowingResponse> GetFollowers(ulong userId, string searchQuery = null) { return new AutoPaginateWithRankToken<FollowerAndFollowingResponse>((maxId, rankToken) => GetFollowers(userId, rankToken, searchQuery, maxId)); }
+        public IAutoPaginate<FollowerAndFollowingResponse> GetFollowers(ulong userId, string searchQuery = null) { return new AutoPaginateWithRankToken<FollowerAndFollowingResponse>(parameters => GetFollowers(userId, parameters.rankToken, searchQuery, parameters.maxId)); }
 
         private async Task<FollowerAndFollowingResponse> GetFollowing(ulong userId, string rankToken, string searchQuery, string maxId)
         {
@@ -246,6 +246,6 @@ namespace Apex.Instagram.Request.Instagram
         /// <returns>
         ///     <see cref="IAutoPaginate&lt;FollowerAndFollowingResponse&gt;" />
         /// </returns>
-        public IAutoPaginate<FollowerAndFollowingResponse> GetFollowing(ulong userId, string searchQuery = null) { return new AutoPaginateWithRankToken<FollowerAndFollowingResponse>((maxId, rankToken) => GetFollowing(userId, rankToken, searchQuery, maxId)); }
+        public IAutoPaginate<FollowerAndFollowingResponse> GetFollowing(ulong userId, string searchQuery = null) { return new AutoPaginateWithRankToken<FollowerAndFollowingResponse>(parameters => GetFollowing(userId, parameters.rankToken, searchQuery, parameters.maxId)); }
     }
 }
