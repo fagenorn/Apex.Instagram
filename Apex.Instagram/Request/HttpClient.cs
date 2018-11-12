@@ -179,7 +179,9 @@ namespace Apex.Instagram.Request
             _lastCookieSave         = new LastAction(Delays.Instance.CookieSaveInterval);
             _lock                   = new SemaphoreSlim(1);
             ZeroRatingMiddleware    = new ZeroRatingMiddleware();
-            ModifyHeadersMiddleware = new ModifyHeadersMiddleware(_account.AccountInfo.DeviceInfo.UserAgent);
+            ModifyHeadersMiddleware = new ModifyHeadersMiddleware(Constants.Request.Instance.PermanentHeaders);
+
+            ModifyHeadersMiddleware.AddHeader("User-Agent", _account.AccountInfo.DeviceInfo.UserAgent);
         }
 
         private async Task<HttpClient> InitializeAsync()

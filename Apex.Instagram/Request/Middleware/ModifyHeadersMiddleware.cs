@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -7,19 +8,28 @@ namespace Apex.Instagram.Request.Middleware
 {
     internal class ModifyHeadersMiddleware : IMiddleware
     {
-        private readonly string _userAgent;
+        private readonly Dictionary<string, string> _headers;
 
-        public ModifyHeadersMiddleware(string userAgent) { _userAgent = userAgent; }
+        public ModifyHeadersMiddleware(Dictionary<string, string> headers) { _headers = headers; }
 
         public async Task<HttpResponseMessage> Invoke(HttpRequestMessage request, Func<HttpRequestMessage, Task<HttpResponseMessage>> next)
         {
-            SetHeader(request.Headers, "User-Agent", _userAgent);
-            SetHeader(request.Headers, "X-FB-HTTP-Engine", Constants.Request.Instance.XFbHttpEngine);
-            SetHeader(request.Headers, "Accept", "*/*");
-            SetHeader(request.Headers, "Accept-Encoding", Constants.Request.Instance.HeaderAcceptEncoding);
-            SetHeader(request.Headers, "Accept-Language", Constants.Request.Instance.HeaderAcceptLanguage);
+            foreach (var header in _headers)
+            {
+                SetHeader(request.Headers, header.Key, header.Value);
+            }
 
             return await next(request).ConfigureAwait(false);
+        }
+
+        public void AddHeader(string key, string name)
+        {
+            if (_headers.ContainsKey(name))
+            {
+                _headers.Remove(name);
+            }
+
+            _headers.Add(key, name);
         }
 
         private void SetHeader(HttpRequestHeaders headers, string name, string value)
