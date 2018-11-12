@@ -426,6 +426,22 @@ namespace Apex.Instagram.Tests
         }
 
         [TestMethod]
+        public async Task Request_IOException_Retry()
+        {
+            var fileStorage = new FileStorage();
+            var account = await new AccountBuilder().SetId(0)
+                .SetStorage(fileStorage)
+                .SetLogger(Logger)
+                .BuildAsync();
+
+            var request = new RequestBuilder(account).SetUrl("www.google.com:81")
+                .SetNeedsAuth(false);
+
+            await Assert.ThrowsExceptionAsync<RequestException>(async () =>
+                await account.ApiRequest<GenericResponse>(request.Build));
+        }
+
+        [TestMethod]
         public async Task Generic_Api_Request_With_Proxy_Wrong_Authentication_Error()
         {
             var fileStorage = new FileStorage();
