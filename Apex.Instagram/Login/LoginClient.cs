@@ -89,10 +89,9 @@ namespace Apex.Instagram.Login
                                                           .AddPost("guid", _account.AccountInfo.Uuid)
                                                           .AddPost("device_id", _account.AccountInfo.DeviceId)
                                                           .AddPost("password", _account.AccountInfo.Password)
-                                                          .AddPost("login_attempt_count", 0)
-                                                          .Build();
+                                                          .AddPost("login_attempt_count", 0);
 
-                response = await _account.ApiRequest<LoginResponse>(request)
+                response = await _account.ApiRequest<LoginResponse>(request.Build)
                                          .ConfigureAwait(false);
             }
             catch (RequestException e)

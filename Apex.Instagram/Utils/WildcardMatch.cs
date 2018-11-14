@@ -29,7 +29,7 @@ namespace Apex.Instagram.Utils
             //Set which case will be used (0 = no wildcards, 1 = only ?, 2 = only *, 3 = both ? and *
             for ( var i = 0; i < filter.Length; i++ )
             {
-                if ( filter[i] == '?' )
+                if ( i == '?' )
                 {
                     matchCase += 1;
 

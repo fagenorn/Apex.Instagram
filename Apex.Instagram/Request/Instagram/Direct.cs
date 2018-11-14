@@ -23,7 +23,7 @@ namespace Apex.Instagram.Request.Instagram
                     request.AddParam("query", query);
                 }
 
-                var a = await Account.ApiRequest<DirectRankedRecipientsResponse>(request.Build()).ConfigureAwait(false);
+                var a = await Account.ApiRequest<DirectRankedRecipientsResponse>(request.Build).ConfigureAwait(false);
                 return a;
             }
             catch (ThrottledException)
@@ -44,14 +44,14 @@ namespace Apex.Instagram.Request.Instagram
                 request.AddParam("cursor", cursorId);
             }
 
-            return await Account.ApiRequest<DirectInboxResponse>(request.Build()).ConfigureAwait(false);
+            return await Account.ApiRequest<DirectInboxResponse>(request.Build).ConfigureAwait(false);
         }
 
         public async Task<PresencesResponse> GetPresences()
         {
             var request = new RequestBuilder(Account).SetUrl("direct_v2/get_presence/");
 
-            return await Account.ApiRequest<PresencesResponse>(request.Build()).ConfigureAwait(false);
+            return await Account.ApiRequest<PresencesResponse>(request.Build).ConfigureAwait(false);
         }
     }
 }

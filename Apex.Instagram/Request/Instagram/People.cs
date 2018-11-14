@@ -16,7 +16,7 @@ namespace Apex.Instagram.Request.Instagram
         {
             var request = new RequestBuilder(Account).SetUrl("news/inbox/");
 
-            return await Account.ApiRequest<ActivityNewsResponse>(request.Build())
+            return await Account.ApiRequest<ActivityNewsResponse>(request.Build)
                                 .ConfigureAwait(false);
         }
 
@@ -36,7 +36,7 @@ namespace Apex.Instagram.Request.Instagram
                 var request = new RequestBuilder(Account).SetUrl("scores/bootstrap/users/")
                                                          .AddParam("surfaces", JsonSerializer.ToJsonString(surfaces));
 
-                return await Account.ApiRequest<BootstrapUsersResponse>(request.Build())
+                return await Account.ApiRequest<BootstrapUsersResponse>(request.Build)
                                     .ConfigureAwait(false);
             }
             catch (ThrottledException)
@@ -62,7 +62,7 @@ namespace Apex.Instagram.Request.Instagram
                                                      .AddPost("user_id", userId)
                                                      .AddPost("radio_type", "wifi-none");
 
-            return await Account.ApiRequest<FriendshipResponse>(request.Build())
+            return await Account.ApiRequest<FriendshipResponse>(request.Build)
                                 .ConfigureAwait(false);
         }
 
@@ -82,7 +82,7 @@ namespace Apex.Instagram.Request.Instagram
                                                      .AddPost("user_id", userId)
                                                      .AddPost("radio_type", "wifi-none");
 
-            return await Account.ApiRequest<FriendshipResponse>(request.Build())
+            return await Account.ApiRequest<FriendshipResponse>(request.Build)
                                 .ConfigureAwait(false);
         }
 
@@ -117,7 +117,7 @@ namespace Apex.Instagram.Request.Instagram
                 request.AddParam("from_module", module);
             }
 
-            return await Account.ApiRequest<UserInfoResponse>(request.Build())
+            return await Account.ApiRequest<UserInfoResponse>(request.Build)
                                 .ConfigureAwait(false);
         }
 
@@ -152,7 +152,7 @@ namespace Apex.Instagram.Request.Instagram
                 request.AddParam("from_module", module);
             }
 
-            return await Account.ApiRequest<UserInfoResponse>(request.Build())
+            return await Account.ApiRequest<UserInfoResponse>(request.Build)
                                 .ConfigureAwait(false);
         }
 
@@ -167,7 +167,7 @@ namespace Apex.Instagram.Request.Instagram
         {
             var request = new RequestBuilder(Account).SetUrl($"friendships/show/{userId}/");
 
-            return await Account.ApiRequest<FriendshipsShowResponse>(request.Build())
+            return await Account.ApiRequest<FriendshipsShowResponse>(request.Build)
                                 .ConfigureAwait(false);
         }
 
@@ -186,7 +186,7 @@ namespace Apex.Instagram.Request.Instagram
                                                      .AddPost("user_ids", string.Join(",", userIds))
                                                      .AddPost("_csrftoken", Account.LoginClient.CsrfToken);
 
-            return await Account.ApiRequest<FriendshipsShowManyResponse>(request.Build())
+            return await Account.ApiRequest<FriendshipsShowManyResponse>(request.Build)
                                 .ConfigureAwait(false);
         }
 
@@ -205,7 +205,7 @@ namespace Apex.Instagram.Request.Instagram
                 request.AddParam("max_id", maxId);
             }
 
-            return await Account.ApiRequest<FollowerAndFollowingResponse>(request.Build())
+            return await Account.ApiRequest<FollowerAndFollowingResponse>(request.Build)
                                 .ConfigureAwait(false);
         }
 
@@ -217,7 +217,7 @@ namespace Apex.Instagram.Request.Instagram
         /// <returns>
         ///     <see cref="IAutoPaginate&lt;FollowerAndFollowingResponse&gt;" />
         /// </returns>
-        public IAutoPaginate<FollowerAndFollowingResponse> GetFollowers(ulong userId, string searchQuery = null) { return new AutoPaginateWithRankToken<FollowerAndFollowingResponse>((maxId, rankToken) => GetFollowers(userId, rankToken, searchQuery, maxId)); }
+        public IAutoPaginate<FollowerAndFollowingResponse> GetFollowers(ulong userId, string searchQuery = null) { return new AutoPaginateWithRankToken<FollowerAndFollowingResponse>(parameters => GetFollowers(userId, parameters.rankToken, searchQuery, parameters.maxId)); }
 
         private async Task<FollowerAndFollowingResponse> GetFollowing(ulong userId, string rankToken, string searchQuery, string maxId)
         {
@@ -234,7 +234,7 @@ namespace Apex.Instagram.Request.Instagram
                 request.AddParam("max_id", maxId);
             }
 
-            return await Account.ApiRequest<FollowerAndFollowingResponse>(request.Build())
+            return await Account.ApiRequest<FollowerAndFollowingResponse>(request.Build)
                                 .ConfigureAwait(false);
         }
 
@@ -246,6 +246,6 @@ namespace Apex.Instagram.Request.Instagram
         /// <returns>
         ///     <see cref="IAutoPaginate&lt;FollowerAndFollowingResponse&gt;" />
         /// </returns>
-        public IAutoPaginate<FollowerAndFollowingResponse> GetFollowing(ulong userId, string searchQuery = null) { return new AutoPaginateWithRankToken<FollowerAndFollowingResponse>((maxId, rankToken) => GetFollowing(userId, rankToken, searchQuery, maxId)); }
+        public IAutoPaginate<FollowerAndFollowingResponse> GetFollowing(ulong userId, string searchQuery = null) { return new AutoPaginateWithRankToken<FollowerAndFollowingResponse>(parameters => GetFollowing(userId, parameters.rankToken, searchQuery, parameters.maxId)); }
     }
 }

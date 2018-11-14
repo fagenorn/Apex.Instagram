@@ -25,7 +25,7 @@ namespace Apex.Instagram
 
         internal string GetCookie(string key) { return HttpClient.GetCookie(key); }
 
-        internal async Task<T> ApiRequest<T>(HttpRequestMessage request) where T : Response.JsonMap.Response
+        internal async Task<T> ApiRequest<T>(Func<HttpRequestMessage> request) where T : Response.JsonMap.Response
         {
             if ( _cancellationTokenSource.IsCancellationRequested )
             {
@@ -144,7 +144,7 @@ namespace Apex.Instagram
                 await Storage.AccountInfo.SaveAsync(AccountInfo).ConfigureAwait(false);
             }
 
-            LoginClient = await LoginClient.CreateAsync(this).ConfigureAwait(false); // This needs to be created first so middlewares can be initialized correctly.
+            LoginClient = await LoginClient.CreateAsync(this).ConfigureAwait(false); // This needs to be created first so middleware can be initialized correctly.
             HttpClient  = await HttpClient.CreateAsync(this).ConfigureAwait(false);
 
             return this;
