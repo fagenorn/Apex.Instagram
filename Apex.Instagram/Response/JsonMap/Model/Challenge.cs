@@ -18,7 +18,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public dynamic Lock { get; set; }
 
         [DataMember(Name = "logout")]
-        public dynamic Logout { get; set; }
+        public bool? Logout { get; set; }
 
         [DataMember(Name = "native_flow")]
         public dynamic NativeFlow { get; set; }

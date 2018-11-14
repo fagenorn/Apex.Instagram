@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Apex.Instagram.Login.Challenge;
 using Apex.Instagram.Login.Exception;
 using Apex.Instagram.Model.Internal;
 using Apex.Instagram.Request;
@@ -33,8 +34,35 @@ namespace Apex.Instagram.Login
                 throw new LoginException("Password can't be empty.");
             }
 
-            return await InternalLogin()
-                       .ConfigureAwait(false);
+            try
+            {
+                return await InternalLogin()
+                           .ConfigureAwait(false);
+            }
+            catch (ChallengeRequiredException e)
+            {
+                await _account.Storage.ChallengeInfo.SaveAsync(e.Challenge)
+                              .ConfigureAwait(false);
+
+                throw;
+            }
+        }
+
+        public async Task<ChallengeClient> ChallengeLogin()
+        {
+            var client = await ChallengeClient.CreateAsync(_account);
+
+            if ( !client.HasChallenge )
+            {
+                throw new NoChallengeException();
+            }
+
+            if ( client.ChallengeInfo.LogOut )
+            {
+                // ToDo: log out
+            }
+
+            return client;
         }
 
         private async Task<LoginResponse> InternalLogin(bool forceLogin = false)
@@ -131,38 +159,74 @@ namespace Apex.Instagram.Login
             if ( justLoggedIn )
             {
                 _account.HttpClient.ZeroRatingMiddleware.Reset();
-                await _account.Internal.SendLauncherSync(false).ConfigureAwait(false);
-                await _account.Internal.SyncUserFeatures().ConfigureAwait(false);
+                await _account.Internal.SendLauncherSync(false)
+                              .ConfigureAwait(false);
+
+                await _account.Internal.SyncUserFeatures()
+                              .ConfigureAwait(false);
+
                 await _account.Timeline.GetTimelineFeed(null, new Dictionary<string, object>
                                                               {
                                                                   {
                                                                       "recovered_from_crash", true
                                                                   }
-                                                              }).ConfigureAwait(false);
+                                                              })
+                              .ConfigureAwait(false);
 
-                await _account.Story.GetReelsTrayFeed().ConfigureAwait(false);
-                await _account.Discover.GetSuggestedSearches("users").ConfigureAwait(false);
-                await _account.Discover.GetRecentSearches().ConfigureAwait(false);
-                await _account.Discover.GetSuggestedSearches("blended").ConfigureAwait(false);
-                await _account.Internal.FetchZeroRatingToken().ConfigureAwait(false);
-                await _account.Direct.GetRankedRecipients("reshare", true).ConfigureAwait(false);
-                await _account.Direct.GetRankedRecipients("raven", true).ConfigureAwait(false);
-                await _account.Direct.GetInbox().ConfigureAwait(false);
-                await _account.Direct.GetPresences().ConfigureAwait(false);
-                await _account.People.GetRecentActivityInbox().ConfigureAwait(false);
+                await _account.Story.GetReelsTrayFeed()
+                              .ConfigureAwait(false);
+
+                await _account.Discover.GetSuggestedSearches("users")
+                              .ConfigureAwait(false);
+
+                await _account.Discover.GetRecentSearches()
+                              .ConfigureAwait(false);
+
+                await _account.Discover.GetSuggestedSearches("blended")
+                              .ConfigureAwait(false);
+
+                await _account.Internal.FetchZeroRatingToken()
+                              .ConfigureAwait(false);
+
+                await _account.Direct.GetRankedRecipients("reshare", true)
+                              .ConfigureAwait(false);
+
+                await _account.Direct.GetRankedRecipients("raven", true)
+                              .ConfigureAwait(false);
+
+                await _account.Direct.GetInbox()
+                              .ConfigureAwait(false);
+
+                await _account.Direct.GetPresences()
+                              .ConfigureAwait(false);
+
+                await _account.People.GetRecentActivityInbox()
+                              .ConfigureAwait(false);
 
                 var cpuExp = int.TryParse(LoginInfo.GetExperimentParam("ig_android_loom_universe", "cpu_sampling_rate_ms", "0"), out var temp) ? temp : 0;
                 if ( cpuExp > 0 )
                 {
-                    await _account.Internal.GetLoomFetchConfig().ConfigureAwait(false);
+                    await _account.Internal.GetLoomFetchConfig()
+                                  .ConfigureAwait(false);
                 }
 
-                await _account.Internal.GetProfileNotice().ConfigureAwait(false);
-                await _account.Media.GetBlockedMedia().ConfigureAwait(false);
-                await _account.People.GetBootstrapUsers().ConfigureAwait(false);
-                await _account.Discover.GetExploreFeed(null, true).ConfigureAwait(false);
-                await _account.Internal.GetQpFetch().ConfigureAwait(false);
-                await _account.Internal.GetFacebookOta().ConfigureAwait(false);
+                await _account.Internal.GetProfileNotice()
+                              .ConfigureAwait(false);
+
+                await _account.Media.GetBlockedMedia()
+                              .ConfigureAwait(false);
+
+                await _account.People.GetBootstrapUsers()
+                              .ConfigureAwait(false);
+
+                await _account.Discover.GetExploreFeed(null, true)
+                              .ConfigureAwait(false);
+
+                await _account.Internal.GetQpFetch()
+                              .ConfigureAwait(false);
+
+                await _account.Internal.GetFacebookOta()
+                              .ConfigureAwait(false);
             }
             else
             {

@@ -8,6 +8,8 @@
 
         AccountInfo = 3,
 
-        LoginInfo = 4
+        LoginInfo = 4,
+
+        ChallengeInfo = 5
     }
 }

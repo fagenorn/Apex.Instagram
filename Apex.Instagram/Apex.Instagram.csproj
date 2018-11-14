@@ -91,7 +91,11 @@
     <Compile Include="Logger\ApexLogMessagePublishedEventArgs.cs" />
     <Compile Include="Logger\IApexLogger.cs" />
     <Compile Include="Logger\NullLogger.cs" />
+    <Compile Include="Login\Challenge\ChallengeClient.cs" />
+    <Compile Include="Login\Challenge\ChallengeInfo.cs" />
+    <Compile Include="Login\Exception\ChallengeException.cs" />
     <Compile Include="Login\Exception\LoginException.cs" />
+    <Compile Include="Login\Exception\NoChallengeException.cs" />
     <Compile Include="Login\LoginClient.cs" />
     <Compile Include="Login\LoginInfo.cs" />
     <Compile Include="Model\Account\AccountInfo.cs" />
