@@ -1,64 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace Apex.Instagram.Constants
 {
     internal class Request
     {
-        public Dictionary<string, string>[] SupportedCapabilities { get; } =
-        {
-            new Dictionary<string, string>
-            {
-                {
-                    "name", "SUPPORTED_SDK_VERSIONS"
-                },
-                {
-                    "value",
-                    "9.0,10.0,11.0,12.0,13.0,14.0,15.0,16.0,17.0,18.0,19.0,20.0,21.0,22.0,23.0,24.0,25.0,26.0,27.0,28.0,29.0,30.0,31.0,32.0,33.0,34.0,35.0,36.0,37.0,38.0,39.0,40.0,41.0,42.0,43.0"
-                }
-            },
-            new Dictionary<string, string>
-            {
-                {
-                    "name", "FACE_TRACKER_VERSION"
-                },
-                {
-                    "value", "10"
-                }
-            },
-            new Dictionary<string, string>
-            {
-                {
-                    "name", "segmentation"
-                },
-                {
-                    "value", "segmentation_enabled"
-                }
-            },
-            new Dictionary<string, string>
-            {
-                {
-                    "name", "WORLD_TRACKER"
-                },
-                {
-                    "value", "WORLD_TRACKER_ENABLED"
-                }
-            }
-        };
+        public ImmutableDictionary<string, string>[] SupportedCapabilities { get; }
 
-        public Dictionary<string, string> PermanentHeaders { get; }
+        public ImmutableDictionary<string, string> PermanentHeaders { get; }
 
         public int[] SurfaceParams { get; } =
-        {
-            4715,
-            5734
-        };
+            {
+                4715,
+                5734
+            };
 
         public Uri BaseUrl { get; } = new Uri("https://i.instagram.com/");
 
         public Uri[] CookieUrl { get; } // Urls of which cookies should be saved
 
-        public Dictionary<int, string> ApiUrl { get; }
+        public ImmutableDictionary<int, string> ApiUrl { get; }
 
         public TimeSpan Timeout { get; } = TimeSpan.FromSeconds(30);
 
@@ -84,30 +46,50 @@ namespace Apex.Instagram.Constants
 
         private Request()
         {
-            ApiUrl = new Dictionary<int, string>
-            {
-                {
-                    1, $"{BaseUrl}api/v1/"
-                },
-                {
-                    2, $"{BaseUrl}api/v2/"
-                }
-            };
+            SupportedCapabilities = new[]
+                                    {
+                                        ImmutableDictionary.CreateRange(new[]
+                                                                        {
+                                                                            new KeyValuePair<string, string>("name", "SUPPORTED_SDK_VERSIONS"),
+                                                                            new KeyValuePair<string, string>("value", "13.0,14.0,15.0,16.0,17.0,18.0,19.0,20.0,21.0,22.0,23.0,24.0,25.0,26.0,27.0,28.0,29.0,30.0,31.0,32.0,33.0,34.0,35.0,36.0,37.0,38.0,39.0,40.0,41.0,42.0,43.0,44.0,45.0,46.0,47.0,48.0,49.0,50.0")
+                                                                        }),
+                                        ImmutableDictionary.CreateRange(new[]
+                                                                        {
+                                                                            new KeyValuePair<string, string>("name", "FACE_TRACKER_VERSION"),
+                                                                            new KeyValuePair<string, string>("value", "12")
+                                                                        }),
+                                        ImmutableDictionary.CreateRange(new[]
+                                                                        {
+                                                                            new KeyValuePair<string, string>("name", "segmentation"),
+                                                                            new KeyValuePair<string, string>("value", "segmentation_enabled")
+                                                                        }),
+                                        ImmutableDictionary.CreateRange(new[]
+                                                                        {
+                                                                            new KeyValuePair<string, string>("name", "WORLD_TRACKER"),
+                                                                            new KeyValuePair<string, string>("value", "WORLD_TRACKER_ENABLED")
+                                                                        })
+                                    };
+
+            ApiUrl = ImmutableDictionary.CreateRange(new[]
+                                                     {
+                                                         new KeyValuePair<int, string>(1, $"{BaseUrl}api/v1/"),
+                                                         new KeyValuePair<int, string>(2, $"{BaseUrl}api/v2/")
+                                                     });
 
             CookieUrl = new[]
-            {
-                new Uri("https://httpbin.org"),
-                new Uri("http://ptsv2.com"),
-                BaseUrl
-            };
+                        {
+                            new Uri("https://httpbin.org"),
+                            new Uri("http://ptsv2.com"),
+                            BaseUrl
+                        };
 
-            PermanentHeaders = new Dictionary<string, string>
-            {
-                {"X-FB-HTTP-Engine", XFbHttpEngine},
-                {"Accept", "*/*"},
-                {"Accept-Encoding", HeaderAcceptEncoding},
-                {"Accept-Language", HeaderAcceptLanguage}
-            };
+            PermanentHeaders = ImmutableDictionary.CreateRange(new[]
+                                                               {
+                                                                   new KeyValuePair<string, string>("X-FB-HTTP-Engine", XFbHttpEngine),
+                                                                   new KeyValuePair<string, string>("Accept", "*/*"),
+                                                                   new KeyValuePair<string, string>("Accept-Encoding", HeaderAcceptEncoding),
+                                                                   new KeyValuePair<string, string>("Accept-Language", HeaderAcceptLanguage)
+                                                               });
         }
 
         public static Request Instance

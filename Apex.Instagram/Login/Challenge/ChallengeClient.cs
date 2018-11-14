@@ -6,6 +6,12 @@ namespace Apex.Instagram.Login.Challenge
 {
     public class ChallengeClient
     {
+        #region Fields
+
+        private readonly Account _account;
+
+        #endregion
+
         public void Reset()
         {
             if ( !HasChallenge )
@@ -16,11 +22,15 @@ namespace Apex.Instagram.Login.Challenge
             // _account.blabla.ResetChallenge(ChallengeInfo.ResetUrl);
         }
 
-        #region Fields
-
-        private readonly Account _account;
-
-        #endregion
+//        internal async Task<ChallengeResponse> ResetChallenge()
+//        {
+//            var request = new RequestBuilder(_account).SetNeedsAuth(false)
+//                                                      .SetUrl(ChallengeInfo.ResetUrl)
+//                                                      .AddPost("_csrftoken", _account.LoginClient.CsrfToken);
+//
+//            return await _account.ApiRequest<ChallengeResponse>(request.Build)
+//                                 .ConfigureAwait(false);
+//        }
 
         #region Properties
 

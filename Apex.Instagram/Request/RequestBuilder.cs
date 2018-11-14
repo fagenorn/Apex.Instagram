@@ -32,7 +32,9 @@ namespace Apex.Instagram.Request
             }
         }
 
-        public RequestBuilder SetUrl(string url)
+        public RequestBuilder SetUrl(string url) { return SetUrl(new Uri(url)); }
+
+        public RequestBuilder SetUrl(Uri url)
         {
             _url = url;
 
@@ -93,19 +95,9 @@ namespace Apex.Instagram.Request
             return this;
         }
 
-        public RequestBuilder AddParam(string name, bool value, bool sign = false)
-        {
-            _gets[name] = new Parameter(value ? "true" : "false", sign);
+        public RequestBuilder AddParam(string name, bool value, bool sign = false) { return AddParam(name, value ? "true" : "false", sign); }
 
-            return this;
-        }
-
-        public RequestBuilder AddParam(string name, int value, bool sign = false)
-        {
-            _gets[name] = new Parameter(value.ToString(), sign);
-
-            return this;
-        }
+        public RequestBuilder AddParam(string name, int value, bool sign = false) { return AddParam(name, value.ToString(), sign); }
 
         public RequestBuilder AddPost(string name, string value, bool sign = true)
         {
@@ -114,26 +106,11 @@ namespace Apex.Instagram.Request
             return this;
         }
 
-        public RequestBuilder AddPost(string name, bool value, bool sign = true)
-        {
-            _posts[name] = new Parameter(value ? "true" : "false", sign);
+        public RequestBuilder AddPost(string name, bool value, bool sign = true) { return AddPost(name, value ? "true" : "false", sign); }
 
-            return this;
-        }
+        public RequestBuilder AddPost(string name, int value, bool sign = true) { return AddPost(name, value.ToString(), sign); }
 
-        public RequestBuilder AddPost(string name, int value, bool sign = true)
-        {
-            _posts[name] = new Parameter(value.ToString(), sign);
-
-            return this;
-        }
-
-        public RequestBuilder AddPost(string name, ulong value, bool sign = true)
-        {
-            _posts[name] = new Parameter(value.ToString(), sign);
-
-            return this;
-        }
+        public RequestBuilder AddPost(string name, ulong value, bool sign = true) { return AddPost(name, value.ToString(), sign); }
 
         public RequestBuilder AddFile(string name, string path, string fileName = null, Dictionary<string, string> headers = null)
         {
@@ -171,7 +148,7 @@ namespace Apex.Instagram.Request
 
         public HttpRequestMessage Build()
         {
-            if ( string.IsNullOrWhiteSpace(_url) )
+            if ( _url == null )
             {
                 throw new RequestBuilderException("You need to have a url specified.");
             }
@@ -309,28 +286,31 @@ namespace Apex.Instagram.Request
 
         private Uri BuildUrl()
         {
-            var queryBuilder = new StringBuilder();
-            var first        = true;
-            foreach ( var item in _gets )
+            var uriBuilder = new UriBuilder(_url);
+
+            if ( _gets.Count > 0 )
             {
-                if ( first )
+                var queryBuilder = new StringBuilder();
+                foreach ( var item in _gets )
                 {
-                    queryBuilder.Append('?');
-                    first = false;
-                }
-                else
-                {
+                    queryBuilder.Append(item.Key);
+                    queryBuilder.Append('=');
+                    queryBuilder.Append(WebUtility.UrlEncode(item.Value.ToString()));
                     queryBuilder.Append('&');
                 }
 
-                queryBuilder.Append(item.Key);
-                queryBuilder.Append('=');
-                queryBuilder.Append(WebUtility.UrlEncode(item.Value.ToString()));
+                queryBuilder.Length--;
+                uriBuilder.Query = queryBuilder.ToString();
             }
 
-            _url = _url + queryBuilder;
+            if ( uriBuilder.Uri.IsAbsoluteUri )
+            {
+                return uriBuilder.Uri;
+            }
 
-            return Uri.IsWellFormedUriString(_url, UriKind.Absolute) ? new Uri(_url) : new Uri(Constants.Request.Instance.ApiUrl[_apiVersion] + _url);
+            uriBuilder.Host = Constants.Request.Instance.ApiUrl[_apiVersion];
+
+            return uriBuilder.Uri;
         }
 
         #endregion
@@ -359,7 +339,7 @@ namespace Apex.Instagram.Request
 
         private bool _signedPost = true;
 
-        private string _url;
+        private Uri _url;
 
         #endregion
     }

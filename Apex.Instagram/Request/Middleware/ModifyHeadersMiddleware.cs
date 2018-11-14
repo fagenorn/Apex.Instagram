@@ -8,29 +8,28 @@ namespace Apex.Instagram.Request.Middleware
 {
     internal class ModifyHeadersMiddleware : IMiddleware
     {
-        private readonly Dictionary<string, string> _headers;
+        private readonly Dictionary<string, string> _headers = new Dictionary<string, string>();
 
-        public ModifyHeadersMiddleware(Dictionary<string, string> headers) { _headers = headers; }
+        public ModifyHeadersMiddleware(IDictionary<string, string> headers)
+        {
+            foreach ( var header in headers )
+            {
+                _headers.Add(header.Key, header.Value);
+            }
+        }
 
         public async Task<HttpResponseMessage> Invoke(HttpRequestMessage request, Func<HttpRequestMessage, Task<HttpResponseMessage>> next)
         {
-            foreach (var header in _headers)
+            foreach ( var header in _headers )
             {
                 SetHeader(request.Headers, header.Key, header.Value);
             }
 
-            return await next(request).ConfigureAwait(false);
+            return await next(request)
+                       .ConfigureAwait(false);
         }
 
-        public void AddHeader(string key, string name)
-        {
-            if (_headers.ContainsKey(name))
-            {
-                _headers.Remove(name);
-            }
-
-            _headers.Add(key, name);
-        }
+        public void AddHeader(string key, string name) { _headers[key] = name; }
 
         private void SetHeader(HttpRequestHeaders headers, string name, string value)
         {
