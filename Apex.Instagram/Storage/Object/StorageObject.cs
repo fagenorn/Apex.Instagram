@@ -19,11 +19,22 @@ namespace Apex.Instagram.Storage.Object
             _lock       = new SemaphoreSlim(1);
         }
 
-        public void Dispose() { _lock?.Dispose(); }
+        public void Dispose()
+        {
+            _disposed = true;
+            _lock?.Dispose();
+        }
 
         public async Task<T> LoadAsync()
         {
-            await _lock.WaitAsync(_cancellationToken).ConfigureAwait(false);
+            if ( _disposed )
+            {
+                throw new ObjectDisposedException(nameof(StorageObject<T>));
+            }
+
+            await _lock.WaitAsync(_cancellationToken)
+                       .ConfigureAwait(false);
+
             try
             {
                 using (var stream = _storage.Load(_id, _key))
@@ -33,7 +44,8 @@ namespace Apex.Instagram.Storage.Object
                         return default;
                     }
 
-                    return await _serializer.DeserializeAsync<T>(stream).ConfigureAwait(false);
+                    return await _serializer.DeserializeAsync<T>(stream)
+                                            .ConfigureAwait(false);
                 }
             }
             finally
@@ -44,12 +56,21 @@ namespace Apex.Instagram.Storage.Object
 
         public async Task SaveAsync(T data)
         {
-            await _lock.WaitAsync(_cancellationToken).ConfigureAwait(false);
+            if ( _disposed )
+            {
+                throw new ObjectDisposedException(nameof(StorageObject<T>));
+            }
+
+            await _lock.WaitAsync(_cancellationToken)
+                       .ConfigureAwait(false);
+
             try
             {
-                using (var stream = await _serializer.SerializeAsync(data).ConfigureAwait(false))
+                using (var stream = await _serializer.SerializeAsync(data)
+                                                     .ConfigureAwait(false))
                 {
-                    await _storage.SaveAsync(_id, _key, stream, _cancellationToken).ConfigureAwait(false);
+                    await _storage.SaveAsync(_id, _key, stream, _cancellationToken)
+                                  .ConfigureAwait(false);
                 }
             }
             finally
@@ -71,6 +92,8 @@ namespace Apex.Instagram.Storage.Object
         private readonly IObjectSerializer _serializer;
 
         private readonly IStorage _storage;
+
+        private bool _disposed;
 
         #endregion
     }
