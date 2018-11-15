@@ -20,7 +20,7 @@ namespace Apex.Instagram.Constants
 
         public Uri[] CookieUrl { get; } // Urls of which cookies should be saved
 
-        public ImmutableDictionary<int, string> ApiUrl { get; }
+        public ImmutableDictionary<int, Uri> ApiUrl { get; }
 
         public TimeSpan Timeout { get; } = TimeSpan.FromSeconds(30);
 
@@ -72,8 +72,8 @@ namespace Apex.Instagram.Constants
 
             ApiUrl = ImmutableDictionary.CreateRange(new[]
                                                      {
-                                                         new KeyValuePair<int, string>(1, $"{BaseUrl}api/v1/"),
-                                                         new KeyValuePair<int, string>(2, $"{BaseUrl}api/v2/")
+                                                         new KeyValuePair<int, Uri>(1, new Uri(BaseUrl, "api/v1/")),
+                                                         new KeyValuePair<int, Uri>(2, new Uri(BaseUrl, "api/v2/"))
                                                      });
 
             CookieUrl = new[]

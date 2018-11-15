@@ -10,7 +10,7 @@ namespace Apex.Instagram.Storage.Serializer.MessagePackFormatter
     internal class CustomTypesResolver : IFormatterResolver
     {
         // Resolver should be singleton.
-        public static IFormatterResolver Instance = new CustomTypesResolver();
+        public static readonly IFormatterResolver Instance = new CustomTypesResolver();
 
         private CustomTypesResolver() { }
 

@@ -1,38 +1,105 @@
 ﻿using System.Threading.Tasks;
 
 using Apex.Instagram.Login.Exception;
+using Apex.Instagram.Request;
+using Apex.Instagram.Response.JsonMap;
 
 namespace Apex.Instagram.Login.Challenge
 {
     public class ChallengeClient
     {
+        public async Task Reset()
+        {
+            ThrowIfUnavailable();
+
+            await ResetChallenge()
+                .ConfigureAwait(false);
+        }
+
+        public StepInfo GetNextStep()
+        {
+            ThrowIfUnavailable();
+
+            if ( _challengeResponse == null )
+            {
+                throw new ChallengeException("No challenge response information available.");
+            }
+
+            switch ( _challengeResponse.StepName )
+            {
+                case "submit_phone":
+                    _stepInfo = new StepPhoneInfo(_account, _challengeResponse.StepData, ChallengeInfo);
+
+                    break;
+                case "verify_code":
+                    _stepInfo = new StepVerifySmsInfo(_account, _challengeResponse.StepData, ChallengeInfo);
+
+                    break;
+                default:
+
+                    throw new ChallengeException("Step name is unknown.");
+            }
+
+            return _stepInfo;
+        }
+
+        public async Task DoNextStep(string input)
+        {
+            ThrowIfUnavailable();
+
+            if ( _stepInfo == null )
+            {
+                throw new ChallengeException("No step information available.");
+            }
+
+            var response = await _stepInfo.Submit(input);
+            CheckIfCompleted(response);
+        }
+
+        private async Task ResetChallenge()
+        {
+            var request = new RequestBuilder(_account).SetNeedsAuth(false)
+                                                      .SetUrl(ChallengeInfo.ResetUrl)
+                                                      .AddPost("_csrftoken", _account.LoginClient.CsrfToken);
+
+            var response = await _account.ApiRequest<ChallengeResponse>(request.Build)
+                                         .ConfigureAwait(false);
+
+            CheckIfCompleted(response);
+        }
+
+        private void ThrowIfUnavailable()
+        {
+            if ( !HasChallenge )
+            {
+                throw new ChallengeException("No challenge available.");
+            }
+
+            if ( Completed )
+            {
+                throw new ChallengeException("Challenge has been completed.");
+            }
+        }
+
+        private void CheckIfCompleted(ChallengeResponse response)
+        {
+            _challengeResponse = response;
+            //TODO Completed = response.action != null && response.action == "close";
+        }
+
         #region Fields
 
         private readonly Account _account;
 
+        private ChallengeResponse _challengeResponse;
+
+        private StepInfo _stepInfo;
+
         #endregion
 
-        public void Reset()
-        {
-            if ( !HasChallenge )
-            {
-                throw new NoChallengeException();
-            }
-
-            // _account.blabla.ResetChallenge(ChallengeInfo.ResetUrl);
-        }
-
-//        internal async Task<ChallengeResponse> ResetChallenge()
-//        {
-//            var request = new RequestBuilder(_account).SetNeedsAuth(false)
-//                                                      .SetUrl(ChallengeInfo.ResetUrl)
-//                                                      .AddPost("_csrftoken", _account.LoginClient.CsrfToken);
-//
-//            return await _account.ApiRequest<ChallengeResponse>(request.Build)
-//                                 .ConfigureAwait(false);
-//        }
-
         #region Properties
+
+        public bool Completed { get; private set; }
 
         internal ChallengeInfo ChallengeInfo { get; private set; }
 

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-using Apex.Instagram.Response.JsonFormatter;
-
 using Utf8Json;
 
 namespace Apex.Instagram.Response.JsonMap.Model
@@ -46,7 +44,6 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string UserId { get; set; }
 
         [DataMember(Name = "pk")]
-        [JsonFormatter(typeof(DurableUlongFormatter))]
         public ulong? Pk { get; set; }
 
         [DataMember(Name = "id")]

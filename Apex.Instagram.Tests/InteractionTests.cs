@@ -39,7 +39,7 @@ namespace Apex.Instagram.Tests
                                                 .SetPassword("iMHh5GQ4")
                                                 .BuildAsync();
 
-            await _account.Login();
+            await _account.LoginClient.Login();
         }
 
         private static void LoggerOnLogMessagePublished(object sender, ApexLogMessagePublishedEventArgs e) { Debug.WriteLine(e.TraceMessage); }

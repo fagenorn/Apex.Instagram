@@ -77,6 +77,9 @@ namespace Apex.Instagram.Login
             }
         }
 
+        [Key(7)]
+        public bool HasChallenge { get; set; }
+
         private string[] ExperimentKeys { get; } =
             {
                 "ig_android_2fac",

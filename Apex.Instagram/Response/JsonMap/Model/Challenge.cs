@@ -9,7 +9,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public Uri Url { get; set; }
 
         [DataMember(Name = "api_path")]
-        public dynamic ApiPath { get; set; }
+        public string ApiPath { get; set; }
 
         [DataMember(Name = "hide_webview_header")]
         public dynamic HideWebviewHeader { get; set; }

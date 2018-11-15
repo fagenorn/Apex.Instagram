@@ -8,6 +8,6 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string Action { get; set; }
 
         [DataMember(Name = "vc_id")]
-        public string VcId { get; set; }
+        public ulong? VcId { get; set; }
     }
 }

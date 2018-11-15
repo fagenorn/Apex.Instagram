@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 
 using Apex.Instagram.Request.Exception;
 using Apex.Instagram.Request.Internal;
@@ -32,7 +31,7 @@ namespace Apex.Instagram.Request
             }
         }
 
-        public RequestBuilder SetUrl(string url) { return SetUrl(new Uri(url)); }
+        public RequestBuilder SetUrl(string url) { return SetUrl(new Uri(url, UriKind.RelativeOrAbsolute)); }
 
         public RequestBuilder SetUrl(Uri url)
         {
@@ -286,31 +285,13 @@ namespace Apex.Instagram.Request
 
         private Uri BuildUrl()
         {
-            var uriBuilder = new UriBuilder(_url);
-
-            if ( _gets.Count > 0 )
+            if ( !_url.IsAbsoluteUri )
             {
-                var queryBuilder = new StringBuilder();
-                foreach ( var item in _gets )
-                {
-                    queryBuilder.Append(item.Key);
-                    queryBuilder.Append('=');
-                    queryBuilder.Append(WebUtility.UrlEncode(item.Value.ToString()));
-                    queryBuilder.Append('&');
-                }
-
-                queryBuilder.Length--;
-                uriBuilder.Query = queryBuilder.ToString();
+                _url = new Uri(Constants.Request.Instance.ApiUrl[_apiVersion], _url);
             }
 
-            if ( uriBuilder.Uri.IsAbsoluteUri )
-            {
-                return uriBuilder.Uri;
-            }
-
-            uriBuilder.Host = Constants.Request.Instance.ApiUrl[_apiVersion];
-
-            return uriBuilder.Uri;
+            return new UrlBuilder(_url).AddQueryParams(_gets.ToDictionary(x => x.Key, x => x.Value.ToString()))
+                                       .Build();
         }
 
         #endregion

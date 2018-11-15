@@ -39,8 +39,8 @@
       <HintPath>..\packages\MessagePack.1.7.3.4\lib\net47\MessagePack.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Collections.Immutable, Version=1.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Collections.Immutable.1.3.0\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+    <Reference Include="System.Collections.Immutable, Version=1.2.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.4.0\lib\netstandard2.0\System.Collections.Immutable.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
@@ -64,6 +64,7 @@
     <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -71,6 +72,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="Utf8Json, Version=1.3.7.0, Culture=neutral, PublicKeyToken=8a73d3ba7e392e27, processorArchitecture=MSIL">
       <HintPath>..\packages\Utf8Json.1.3.7\lib\net47\Utf8Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Utf8Json.ImmutableCollection, Version=1.3.7.0, Culture=neutral, PublicKeyToken=8a73d3ba7e392e27, processorArchitecture=MSIL">
+      <HintPath>..\packages\Utf8Json.ImmutableCollection.1.3.7\lib\net47\Utf8Json.ImmutableCollection.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +89,7 @@
     <Compile Include="Exception\ApexException.cs" />
     <Compile Include="Exception\AccountBuilderException.cs" />
     <Compile Include="Exception\EndOfPageException.cs" />
+    <Compile Include="Initialization.cs" />
     <Compile Include="Logger\ApexLogger.cs" />
     <Compile Include="Logger\ApexLogLevel.cs" />
     <Compile Include="Logger\ApexLogMessage.cs" />
@@ -93,9 +98,12 @@
     <Compile Include="Logger\NullLogger.cs" />
     <Compile Include="Login\Challenge\ChallengeClient.cs" />
     <Compile Include="Login\Challenge\ChallengeInfo.cs" />
+    <Compile Include="Login\Challenge\StepInfo.cs" />
+    <Compile Include="Login\Challenge\StepPhoneInfo.cs" />
+    <Compile Include="Login\Challenge\StepVerifyInfo.cs" />
+    <Compile Include="Login\Challenge\StepVerifySmsInfo.cs" />
     <Compile Include="Login\Exception\ChallengeException.cs" />
     <Compile Include="Login\Exception\LoginException.cs" />
-    <Compile Include="Login\Exception\NoChallengeException.cs" />
     <Compile Include="Login\LoginClient.cs" />
     <Compile Include="Login\LoginInfo.cs" />
     <Compile Include="Model\Account\AccountInfo.cs" />
@@ -162,6 +170,7 @@
     <Compile Include="Response\JsonMap\ActivityNewsResponse.cs" />
     <Compile Include="Response\JsonMap\BlockedMediaResponse.cs" />
     <Compile Include="Response\JsonMap\BootstrapUsersResponse.cs" />
+    <Compile Include="Response\JsonMap\ChallengeResponse.cs" />
     <Compile Include="Response\JsonMap\DirectInboxResponse.cs" />
     <Compile Include="Response\JsonMap\DirectRankedRecipientsResponse.cs" />
     <Compile Include="Response\JsonMap\ExploreResponse.cs" />
@@ -262,6 +271,7 @@
     <Compile Include="Response\JsonMap\Model\ReelMention.cs" />
     <Compile Include="Response\JsonMap\Model\ReelShare.cs" />
     <Compile Include="Response\JsonMap\Model\RewriteRule.cs" />
+    <Compile Include="Response\JsonMap\Model\StepData.cs" />
     <Compile Include="Response\JsonMap\Model\Stories.cs" />
     <Compile Include="Response\JsonMap\Model\StoriesNetego.cs" />
     <Compile Include="Response\JsonMap\Model\Story.cs" />
@@ -302,10 +312,13 @@
     <Compile Include="Response\JsonMap\TimelineFeedResponse.cs" />
     <Compile Include="Response\JsonMap\TokenResultResponse.cs" />
     <Compile Include="Response\JsonMap\UserInfoResponse.cs" />
-    <Compile Include="Response\JsonFormatter\DurableUlongFormatter.cs" />
+    <Compile Include="Response\Serializer\DurableUlongFormatter.cs" />
     <Compile Include="Response\ResponseInfo.cs" />
     <Compile Include="Response\JsonMap\Model\Message.cs" />
     <Compile Include="Response\JsonMap\Response.cs" />
+    <Compile Include="Response\Serializer\CustomCompositeResolver.cs" />
+    <Compile Include="Response\Serializer\CustomTypesResolver.cs" />
+    <Compile Include="Response\Serializer\DurableStringFormatter.cs" />
     <Compile Include="Storage\Serializer\MessagePackFormatter\CookieFormatter.cs" />
     <Compile Include="Storage\Serializer\MessagePackFormatter\CustomCompositeResolver.cs" />
     <Compile Include="Storage\Serializer\MessagePackFormatter\CustomTypesResolver.cs" />
@@ -322,6 +335,7 @@
     <Compile Include="Utils\Instagram.cs" />
     <Compile Include="Utils\Randomizer.cs" />
     <Compile Include="Utils\Time.cs" />
+    <Compile Include="Utils\UrlBuilder.cs" />
     <Compile Include="Utils\WildcardMatch.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -41,7 +41,12 @@ namespace Apex.Instagram.Login
             }
             catch (ChallengeRequiredException e)
             {
+                LoginInfo.HasChallenge = true;
+
                 await _account.Storage.ChallengeInfo.SaveAsync(e.Challenge)
+                              .ConfigureAwait(false);
+
+                await _account.Storage.LoginInfo.SaveAsync(LoginInfo)
                               .ConfigureAwait(false);
 
                 throw;
@@ -54,7 +59,7 @@ namespace Apex.Instagram.Login
 
             if ( !client.HasChallenge )
             {
-                throw new NoChallengeException();
+                throw new ChallengeException("No challenge available.");
             }
 
             if ( client.ChallengeInfo.LogOut )
@@ -166,9 +171,7 @@ namespace Apex.Instagram.Login
 
                 await _account.Timeline.GetTimelineFeed(null, new Dictionary<string, object>
                                                               {
-                                                                  {
-                                                                      "recovered_from_crash", true
-                                                                  }
+                                                                  {"recovered_from_crash", true}
                                                               })
                               .ConfigureAwait(false);
 
@@ -244,9 +247,7 @@ namespace Apex.Instagram.Login
                 {
                     await _account.Timeline.GetTimelineFeed(null, new Dictionary<string, object>
                                                                   {
-                                                                      {
-                                                                          "is_pull_to_refresh", isPullToRefresh
-                                                                      }
+                                                                      {"is_pull_to_refresh", isPullToRefresh}
                                                                   })
                                   .ConfigureAwait(false);
                 }

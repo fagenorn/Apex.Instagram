@@ -38,12 +38,12 @@ namespace Apex.Instagram.Tests
                                                     .BuildAsync();
 
             var account1 = account;
-            await Assert.ThrowsExceptionAsync<IncorrectPasswordException>(async () => await account1.Login());
+            await Assert.ThrowsExceptionAsync<IncorrectPasswordException>(async () => await account1.LoginClient.Login());
 
             await account.UpdatePassword("new_password");
 
             var account2 = account;
-            await Assert.ThrowsExceptionAsync<IncorrectPasswordException>(async () => await account2.Login());
+            await Assert.ThrowsExceptionAsync<IncorrectPasswordException>(async () => await account2.LoginClient.Login());
 
             account.Dispose();
 
@@ -54,7 +54,7 @@ namespace Apex.Instagram.Tests
                                                 .SetPassword("wrong")
                                                 .BuildAsync();
 
-            await Assert.ThrowsExceptionAsync<IncorrectPasswordException>(async () => await account.Login());
+            await Assert.ThrowsExceptionAsync<IncorrectPasswordException>(async () => await account.LoginClient.Login());
         }
 
         [TestMethod]
@@ -68,7 +68,7 @@ namespace Apex.Instagram.Tests
                                                     .SetPassword("wrong")
                                                     .BuildAsync();
 
-            await Assert.ThrowsExceptionAsync<InvalidUserException>(async () => await account.Login());
+            await Assert.ThrowsExceptionAsync<InvalidUserException>(async () => await account.LoginClient.Login());
         }
 
         [TestMethod]
@@ -81,7 +81,7 @@ namespace Apex.Instagram.Tests
                                                     .SetUsername("bob")
                                                     .BuildAsync();
 
-            await Assert.ThrowsExceptionAsync<LoginException>(async () => await account.Login());
+            await Assert.ThrowsExceptionAsync<LoginException>(async () => await account.LoginClient.Login());
         }
 
         [TestMethod]
@@ -94,7 +94,7 @@ namespace Apex.Instagram.Tests
                                                     .SetPassword("bob")
                                                     .BuildAsync();
 
-            await Assert.ThrowsExceptionAsync<LoginException>(async () => await account.Login());
+            await Assert.ThrowsExceptionAsync<LoginException>(async () => await account.LoginClient.Login());
         }
 
         [TestMethod]
@@ -108,7 +108,41 @@ namespace Apex.Instagram.Tests
                                                     .SetPassword("w8EXjH1")
                                                     .BuildAsync();
 
-            await Assert.ThrowsExceptionAsync<ChallengeRequiredException>(async () => await account.Login());
+            Assert.IsFalse(account.LoginClient.LoginInfo.HasChallenge);
+            var account1 = account;
+            await Assert.ThrowsExceptionAsync<ChallengeException>(async () => await account1.LoginClient.ChallengeLogin());
+            var account2 = account;
+            await Assert.ThrowsExceptionAsync<ChallengeRequiredException>(async () => await account2.LoginClient.Login());
+            Assert.IsTrue(account.LoginClient.LoginInfo.HasChallenge);
+            var client = await account.LoginClient.ChallengeLogin();
+            await client.Reset();
+            Assert.IsNotNull(client.ChallengeInfo.Url);
+            var stepInfo = client.GetNextStep();
+            Assert.IsNotNull(stepInfo);
+            var client1 = client;
+            await Assert.ThrowsExceptionAsync<ChallengeException>(async () => await client1.DoNextStep("133123"));
+            Assert.IsNotNull(client.ChallengeInfo.Url);
+
+            account.Dispose();
+
+            account = await new AccountBuilder().SetId(0)
+                                                .SetStorage(fileStorage)
+                                                .SetLogger(Logger)
+                                                .SetUsername("RZ3YnN4")
+                                                .SetPassword("w8EXjH1")
+                                                .BuildAsync();
+
+            Assert.IsTrue(account.LoginClient.LoginInfo.HasChallenge);
+            client = await account.LoginClient.ChallengeLogin();
+            Assert.IsNotNull(client.ChallengeInfo.Url);
+            Assert.ThrowsException<ChallengeException>(() => client.GetNextStep());
+            await Assert.ThrowsExceptionAsync<ChallengeException>(async () => await client.DoNextStep("133123"));
+            await client.Reset();
+            client.GetNextStep();
+            Assert.AreEqual("Enter a valid phone number.\nCurrent phone number: None.", stepInfo.Description);
+            await client.DoNextStep("0489494882");
+            stepInfo = client.GetNextStep();
+            Assert.AreEqual("Enter the 6 digit code that was sent to your mobile: +32 489 49 48 82.", stepInfo.Description);
         }
 
         [TestMethod]
@@ -124,7 +158,7 @@ namespace Apex.Instagram.Tests
 
             Assert.AreEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);
             Assert.IsTrue(account.LoginClient.LoginInfo.LastLogin.Passed);
-            await account.Login();
+            await account.LoginClient.Login();
 
             var info = await account.Storage.LoginInfo.LoadAsync();
 
@@ -145,7 +179,7 @@ namespace Apex.Instagram.Tests
             Assert.IsFalse(account.LoginClient.LoginInfo.LastLogin.Passed);
             Assert.AreNotEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);
 
-            await account.Login();
+            await account.LoginClient.Login();
 
             info = await account.Storage.LoginInfo.LoadAsync();
 
@@ -168,7 +202,7 @@ namespace Apex.Instagram.Tests
             Assert.AreEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);
             Assert.AreEqual(TimeSpan.FromMinutes(30), account.LoginClient.LoginInfo.LastLogin.Limit);
 
-            await account.Login();
+            await account.LoginClient.Login();
             Assert.AreNotEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);
             Assert.IsFalse(account.LoginClient.LoginInfo.LastLogin.Passed);
         }

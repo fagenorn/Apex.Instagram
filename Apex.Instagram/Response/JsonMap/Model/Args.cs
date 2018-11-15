@@ -69,7 +69,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public ulong[] CommentIds { get; set; }
 
         [DataMember(Name = "second_profile_id")]
-        public string SecondProfileId { get; set; }
+        public ulong? SecondProfileId { get; set; }
 
         [DataMember(Name = "second_profile_image")]
         public dynamic SecondProfileImage { get; set; }

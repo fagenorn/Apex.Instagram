@@ -24,11 +24,14 @@ namespace Apex.Instagram.Request
 
         public async Task UpdateProxy(Proxy proxy)
         {
-            _proxy.Credentials = proxy == null
-                                     ? null
-                                     : proxy.HasCredentials
-                                         ? proxy.Credentials
-                                         : null;
+            if ( proxy == null )
+            {
+                _proxy.Credentials = null;
+            }
+            else
+            {
+                _proxy.Credentials = proxy.HasCredentials ? proxy.Credentials : null;
+            }
 
             _proxy.Address = proxy?.Uri;
             await _account.Storage.Proxy.SaveAsync(proxy)
