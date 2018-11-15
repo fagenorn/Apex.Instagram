@@ -1,8 +1,6 @@
 ﻿using MessagePack;
 
 using Utf8Json;
-using Utf8Json.Formatters;
-using Utf8Json.Resolvers;
 
 using JsonResolver = Apex.Instagram.Response.Serializer;
 using MessagePackResolver = Apex.Instagram.Storage.Serializer.MessagePackFormatter;
@@ -20,9 +18,7 @@ namespace Apex.Instagram
                 return;
             }
 
-            var customResolver = CompositeResolver.Create(new IJsonFormatter[] {new DynamicObjectTypeFallbackFormatter(JsonResolver.CustomCompositeResolver.Instance)}, new[] {JsonResolver.CustomCompositeResolver.Instance});
-
-            JsonSerializer.SetDefaultResolver(customResolver);
+            JsonSerializer.SetDefaultResolver(JsonResolver.CustomCompositeResolver.Instance);
             MessagePackSerializer.SetDefaultResolver(MessagePackResolver.CustomCompositeResolver.Instance);
 
             _done = true;

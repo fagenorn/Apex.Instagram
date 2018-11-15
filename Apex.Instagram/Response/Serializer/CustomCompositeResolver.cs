@@ -11,12 +11,8 @@ namespace Apex.Instagram.Response.Serializer
         private static readonly IJsonFormatterResolver[] Resolvers =
         {
             CustomTypesResolver.Instance,
-            BuiltinResolver.Instance,
             ImmutableCollectionResolver.Instance,
-            EnumResolver.Default,
-            DynamicGenericResolver.Instance,
-            AttributeFormatterResolver.Instance,
-            DynamicObjectResolver.Default
+            StandardResolver.Default
         };
 
         private CustomCompositeResolver() { }

@@ -128,8 +128,8 @@ namespace Apex.Instagram.Tests
 
             Assert.IsTrue(response.IsSuccessStatusCode);
             var headersResponse = JsonSerializer.Deserialize<HeadersJsonMap>(await response.Content.ReadAsStringAsync());
-            Assert.AreEqual("best", headersResponse.headers["Test"]);
-            Assert.IsFalse(headersResponse.headers.ContainsKey(defaultHeaderKey));
+            Assert.AreEqual("best", headersResponse.Headers["Test"]);
+            Assert.IsFalse(headersResponse.Headers.ContainsKey(defaultHeaderKey));
 
             request = new RequestBuilder(account).SetUrl("https://httpbin.org/headers")
                                                  .SetAddDefaultHeaders(false)
@@ -143,8 +143,8 @@ namespace Apex.Instagram.Tests
 
             Assert.IsTrue(response.IsSuccessStatusCode);
             headersResponse = JsonSerializer.Deserialize<HeadersJsonMap>(await response.Content.ReadAsStringAsync());
-            Assert.IsFalse(headersResponse.headers.ContainsKey("Test"));
-            Assert.IsFalse(headersResponse.headers.ContainsKey(defaultHeaderKey));
+            Assert.IsFalse(headersResponse.Headers.ContainsKey("Test"));
+            Assert.IsFalse(headersResponse.Headers.ContainsKey(defaultHeaderKey));
 
             request = new RequestBuilder(account).SetUrl("https://httpbin.org/headers")
                                                  .SetNeedsAuth(false)
@@ -157,8 +157,8 @@ namespace Apex.Instagram.Tests
 
             Assert.IsTrue(response.IsSuccessStatusCode);
             headersResponse = JsonSerializer.Deserialize<HeadersJsonMap>(await response.Content.ReadAsStringAsync());
-            Assert.IsFalse(headersResponse.headers.ContainsKey("Test"));
-            Assert.AreEqual(defaultHeaderValue, headersResponse.headers[defaultHeaderKey]);
+            Assert.IsFalse(headersResponse.Headers.ContainsKey("Test"));
+            Assert.AreEqual(defaultHeaderValue, headersResponse.Headers[defaultHeaderKey]);
         }
 
         [TestMethod]

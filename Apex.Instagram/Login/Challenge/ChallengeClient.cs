@@ -37,7 +37,7 @@ namespace Apex.Instagram.Login.Challenge
                     break;
                 default:
 
-                    throw new ChallengeException("Step name is unknown.");
+                    throw new ChallengeException("Step name {0} is unknown.", _challengeResponse.StepName);
             }
 
             return _stepInfo;
@@ -55,6 +55,8 @@ namespace Apex.Instagram.Login.Challenge
             var response = await _stepInfo.Submit(input);
             CheckIfCompleted(response);
         }
+
+        #region Private methods
 
         private async Task ResetChallenge()
         {
@@ -84,8 +86,10 @@ namespace Apex.Instagram.Login.Challenge
         private void CheckIfCompleted(ChallengeResponse response)
         {
             _challengeResponse = response;
-            //TODO Completed = response.action != null && response.action == "close";
+            Completed          = response.Action != null && response.Action == "close";
         }
+
+        #endregion
 
         #region Fields
 

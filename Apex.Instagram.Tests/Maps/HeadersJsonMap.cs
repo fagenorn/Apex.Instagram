@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 
 namespace Apex.Instagram.Tests.Maps
 {
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class HeadersJsonMap
     {
-        public HeadersJsonMap(Dictionary<string, string> headers) { this.headers = headers; }
-
-        public Dictionary<string, string> headers { get; }
+        [DataMember(Name = "headers")]
+        public Dictionary<string, string> Headers { get; set; }
     }
 }

@@ -1,11 +1,16 @@
 ﻿using System.Runtime.Serialization;
 
+using Apex.Instagram.Response.Serializer;
+
+using Utf8Json;
+
 namespace Apex.Instagram.Response.JsonMap.Model
 {
     public class StoryTray
     {
         [DataMember(Name = "id")]
-        public ulong? Id { get; set; }
+        [JsonFormatter(typeof(DurableStringFormatter))]
+        public string Id { get; set; }
 
         [DataMember(Name = "items")]
         public Item[] Items { get; set; }
@@ -75,7 +80,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string ReelType { get; set; }
 
         [DataMember(Name = "unique_integer_reel_id")]
-        public string UniqueIntegerReelId { get; set; }
+        public ulong? UniqueIntegerReelId { get; set; }
 
         [DataMember(Name = "cover_media")]
         public CoverMedia CoverMedia { get; set; }

@@ -17,5 +17,8 @@ namespace Apex.Instagram.Response.JsonMap
 
         [DataMember(Name = "nonce_code")]
         public string NonceCode { get; set; }
+
+        [DataMember(Name = "action")]
+        public string Action { get; set; }
     }
 }

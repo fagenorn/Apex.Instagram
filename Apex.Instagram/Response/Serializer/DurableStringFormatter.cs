@@ -1,11 +1,10 @@
 ﻿using System.Globalization;
 
 using Utf8Json;
-using Utf8Json.Resolvers;
 
 namespace Apex.Instagram.Response.Serializer
 {
-    internal class DurableStringFormatter : IJsonFormatter<string>
+    public class DurableStringFormatter : IJsonFormatter<string>
     {
         public string Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
@@ -27,36 +26,10 @@ namespace Apex.Instagram.Response.Serializer
                                  .ToString();
                 default:
 
-                    return BuiltinResolver.Instance.GetFormatterWithVerify<string>()
-                                          .Deserialize(ref reader, formatterResolver);
+                    throw new JsonParsingException($"Invalid JSON token. Token: {token}", reader.GetBufferUnsafe(), reader.GetCurrentOffsetUnsafe(), reader.GetCurrentOffsetUnsafe(), string.Empty);
             }
         }
 
-        public void Serialize(ref JsonWriter writer, string value, IJsonFormatterResolver formatterResolver)
-        {
-            BuiltinResolver.Instance.GetFormatterWithVerify<string>()
-                           .Serialize(ref writer, value, formatterResolver);
-        }
-
-        #region Singleton     
-
-        private static DurableStringFormatter _instance;
-
-        private static readonly object Lock = new object();
-
-        private DurableStringFormatter() { }
-
-        public static DurableStringFormatter Instance
-        {
-            get
-            {
-                lock (Lock)
-                {
-                    return _instance ?? (_instance = new DurableStringFormatter());
-                }
-            }
-        }
-
-        #endregion
+        public void Serialize(ref JsonWriter writer, string value, IJsonFormatterResolver formatterResolver) { writer.WriteString(value); }
     }
 }

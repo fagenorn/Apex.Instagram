@@ -26,8 +26,7 @@ namespace Apex.Instagram.Response.Serializer
             // If type is concrete type, use type-formatter map
             private static readonly Dictionary<Type, object> FormatterMap = new Dictionary<Type, object>
                                                                             {
-                                                                                {typeof(ulong?), DurableUlongFormatter.Instance},
-                                                                                {typeof(string), DurableStringFormatter.Instance}
+                                                                                {typeof(ulong?), DurableUlongFormatter.Instance}
                                                                             };
 
             internal static object GetFormatter(Type t)

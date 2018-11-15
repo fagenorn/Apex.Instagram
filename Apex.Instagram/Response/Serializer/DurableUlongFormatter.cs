@@ -1,15 +1,11 @@
 ﻿using Utf8Json;
-using Utf8Json.Resolvers;
+using Utf8Json.Formatters;
 
 namespace Apex.Instagram.Response.Serializer
 {
     public class DurableUlongFormatter : IJsonFormatter<ulong?>
     {
-        public void Serialize(ref JsonWriter writer, ulong? value, IJsonFormatterResolver formatterResolver)
-        {
-            BuiltinResolver.Instance.GetFormatterWithVerify<ulong?>()
-                           .Serialize(ref writer, value, formatterResolver);
-        }
+        public void Serialize(ref JsonWriter writer, ulong? value, IJsonFormatterResolver formatterResolver) { NullableUInt64Formatter.Default.Serialize(ref writer, value, formatterResolver); }
 
         public ulong? Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
@@ -24,12 +20,37 @@ namespace Apex.Instagram.Response.Serializer
                         return 0;
                     }
 
-                    return ulong.TryParse(value, out var result) ? result : 0;
+                    if ( !isDigits(value) )
+                    {
+                        throw new JsonParsingException("String can't be converted to a number.", reader.GetBufferUnsafe(), reader.GetCurrentOffsetUnsafe(), reader.GetCurrentOffsetUnsafe(), value);
+                    }
+
+                    return ulong.Parse(value);
+                case JsonToken.Number:
+
+                    return NullableUInt64Formatter.Default.Deserialize(ref reader, formatterResolver);
                 default:
 
-                    return BuiltinResolver.Instance.GetFormatterWithVerify<ulong?>()
-                                          .Deserialize(ref reader, formatterResolver);
+                    throw new JsonParsingException($"Invalid JSON token. Token: {token}", reader.GetBufferUnsafe(), reader.GetCurrentOffsetUnsafe(), reader.GetCurrentOffsetUnsafe(), string.Empty);
             }
+        }
+
+        private bool isDigits(string s)
+        {
+            if ( string.IsNullOrEmpty(s) )
+            {
+                return false;
+            }
+
+            for ( var i = 0; i < s.Length; i++ )
+            {
+                if ( (s[i] ^ '0') > 9 )
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         #region Singleton     
