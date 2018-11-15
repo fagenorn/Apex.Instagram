@@ -52,7 +52,9 @@ namespace Apex.Instagram.Login.Challenge
                 throw new ChallengeException("No step information available.");
             }
 
-            var response = await _stepInfo.Submit(input);
+            var response = await _stepInfo.Submit(input)
+                                          .ConfigureAwait(false);
+
             CheckIfCompleted(response);
         }
 

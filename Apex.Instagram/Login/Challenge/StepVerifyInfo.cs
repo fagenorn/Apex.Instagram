@@ -14,7 +14,7 @@ namespace Apex.Instagram.Login.Challenge
 
         public abstract override string Description { get; }
 
-        internal override async Task<ChallengeResponse> SubmitInternalAsync(string input)
+        protected override async Task<ChallengeResponse> SubmitInternalAsync(string input)
         {
             var request = new RequestBuilder(Account).SetNeedsAuth(false)
                                                      .SetUrl(ChallengeInfo.Url)

@@ -14,7 +14,7 @@ namespace Apex.Instagram.Login.Challenge
 
         public override string Description => $"Enter a valid phone number.\nCurrent phone number: {StepData.PhoneNumber}.";
 
-        internal override async Task<ChallengeResponse> SubmitInternalAsync(string input)
+        protected override async Task<ChallengeResponse> SubmitInternalAsync(string input)
         {
             var request = new RequestBuilder(Account).SetNeedsAuth(false)
                                                      .SetUrl(ChallengeInfo.Url)

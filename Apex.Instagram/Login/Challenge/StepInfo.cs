@@ -37,7 +37,9 @@ namespace Apex.Instagram.Login.Challenge
 
             try
             {
-                var result = await SubmitInternalAsync(input);
+                var result = await SubmitInternalAsync(input)
+                                 .ConfigureAwait(false);
+
                 _done = true;
 
                 return result;
@@ -50,6 +52,6 @@ namespace Apex.Instagram.Login.Challenge
             }
         }
 
-        internal abstract Task<ChallengeResponse> SubmitInternalAsync(string input);
+        protected abstract Task<ChallengeResponse> SubmitInternalAsync(string input);
     }
 }
