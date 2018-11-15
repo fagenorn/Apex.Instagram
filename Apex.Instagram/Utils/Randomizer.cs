@@ -1,22 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Apex.Instagram.Utils
 {
     internal class Randomizer
     {
-        private readonly Random _random;
+        private static readonly Random GlobalRandom = new Random();
 
-        public int Number(int max, int min = 0)
+        private readonly ThreadLocal<Random> _random;
+
+        private static Random NewRandom()
         {
-            max += 1;
-
-            return _random.Next(min, max);
+            lock (Lock)
+            {
+                return new Random(GlobalRandom.Next());
+            }
         }
+
+        public int Number(int exclusiveMax, int inclusiveMin = 0) { return _random.Value.Next(inclusiveMin, exclusiveMax); }
 
         public T Item<T>(IList<T> list)
         {
-            var amount = Number(list.Count - 1);
+            var amount = Number(list.Count);
 
             return list[amount];
         }
@@ -27,7 +33,7 @@ namespace Apex.Instagram.Utils
 
         private static readonly object Lock = new object();
 
-        private Randomizer() { _random = new Random(); }
+        private Randomizer() { _random = new ThreadLocal<Random>(NewRandom); }
 
         public static Randomizer Instance
         {

@@ -219,7 +219,7 @@ namespace Apex.Instagram.Request
             AddHeader("X-IG-App-ID", Constants.Request.Instance.HeaderFacebookAnalyticsApplicationId);
             AddHeader("X-IG-Capabilities", Version.Instance.HeaderCapabilities);
             AddHeader("X-IG-Connection-Type", Constants.Request.Instance.HeaderConnectionType);
-            AddHeader("X-IG-Connection-Speed", Randomizer.Instance.Number(3700, 1000) + "kbps");
+            AddHeader("X-IG-Connection-Speed", Randomizer.Instance.Number(3701, 1000) + "kbps");
             AddHeader("X-IG-Bandwidth-Speed-KBPS", "-1.000");
             AddHeader("X-IG-Bandwidth-TotalBytes-B", "0");
             AddHeader("X-IG-Bandwidth-TotalTime-MS", "0");

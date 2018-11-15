@@ -10,7 +10,7 @@ namespace Apex.Instagram.Utils
             const string chars  = "-_1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
             const int    length = 30;
             var          result = new StringBuilder();
-            var          max    = chars.Length - 1;
+            var          max    = chars.Length;
             for ( var i = 0; i < length; i++ )
             {
                 result.Append(chars[Randomizer.Instance.Number(max)]);

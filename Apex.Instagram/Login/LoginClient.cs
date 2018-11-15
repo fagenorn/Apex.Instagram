@@ -240,7 +240,7 @@ namespace Apex.Instagram.Login
                 }
                 else
                 {
-                    isPullToRefresh = Randomizer.Instance.Number(2) < 2;
+                    isPullToRefresh = Randomizer.Instance.Number(3) < 2;
                 }
 
                 try
