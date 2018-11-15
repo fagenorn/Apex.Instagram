@@ -11,17 +11,22 @@ namespace Apex.Instagram
     {
         private static bool _done;
 
+        private static readonly object Lock = new object();
+
         public static void Initialize()
         {
-            if ( _done )
+            lock (Lock)
             {
-                return;
+                if ( _done )
+                {
+                    return;
+                }
+
+                _done = true;
             }
 
             JsonSerializer.SetDefaultResolver(JsonResolver.CustomCompositeResolver.Instance);
             MessagePackSerializer.SetDefaultResolver(MessagePackResolver.CustomCompositeResolver.Instance);
-
-            _done = true;
         }
     }
 }
