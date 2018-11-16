@@ -134,6 +134,8 @@ namespace Apex.Instagram.Login
 
             LoginInfo.IsLoggedIn = true;
             LoginInfo.LastLogin.Update();
+            await _account.Storage.LoginInfo.SaveAsync(LoginInfo)
+                          .ConfigureAwait(false);
         }
 
         private async Task PreLoginFlow()
