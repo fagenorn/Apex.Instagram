@@ -7,7 +7,7 @@ namespace Apex.Instagram.Response.JsonMap
     public class ChallengeResponse : Response
     {
         [DataMember(Name = "user_id")]
-        public ulong UserId { get; set; }
+        public ulong? UserId { get; set; }
 
         [DataMember(Name = "step_name")]
         public string StepName { get; set; }
@@ -20,5 +20,8 @@ namespace Apex.Instagram.Response.JsonMap
 
         [DataMember(Name = "action")]
         public string Action { get; set; }
+
+        [DataMember(Name = "auto_login")]
+        public bool? AutoLogin { get; set; }
     }
 }
