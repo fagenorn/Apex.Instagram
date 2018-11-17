@@ -13,6 +13,6 @@ namespace Apex.Instagram.Request.Instagram.Paginate
         bool HasMore { get; }
 
         /// <summary>Next page of this instance.</summary>
-        Task<T> Next();
+        Task<T> NextAsync();
     }
 }

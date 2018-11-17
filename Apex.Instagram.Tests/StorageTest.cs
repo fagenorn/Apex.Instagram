@@ -33,7 +33,7 @@ namespace Apex.Instagram.Tests
                                                     .BuildAsync();
 
             Assert.AreEqual(string.Empty, account.GetProxy());
-            await account.UpdateProxy(new Proxy("https://111.222.333.444:1234/"));
+            await account.UpdateProxyAsync(new Proxy("https://111.222.333.444:1234/"));
             Assert.AreEqual("https://111.222.333.444:1234/", account.GetProxy());
 
             account.Dispose();
@@ -43,7 +43,7 @@ namespace Apex.Instagram.Tests
                                                 .BuildAsync();
 
             Assert.AreEqual("https://111.222.333.444:1234/", account.GetProxy());
-            await account.UpdateProxy(new Proxy("http://444.333.222.111:4321/"));
+            await account.UpdateProxyAsync(new Proxy("http://444.333.222.111:4321/"));
             Assert.AreEqual("http://444.333.222.111:4321/", account.GetProxy());
         }
 
@@ -60,7 +60,7 @@ namespace Apex.Instagram.Tests
             Assert.AreEqual("test_password123", account.AccountInfo.Password);
             Assert.AreEqual("test_password123", storageInfo.Password);
 
-            await account.UpdatePassword("new_password321");
+            await account.UpdatePasswordAsync("new_password321");
 
             storageInfo = await account.Storage.AccountInfo.LoadAsync();
             Assert.AreEqual("new_password321", account.AccountInfo.Password);
@@ -88,7 +88,7 @@ namespace Apex.Instagram.Tests
             Assert.AreEqual("test_username123", account.AccountInfo.Username);
             Assert.AreEqual("test_username123", storageInfo.Username);
 
-            await account.UpdateUsername("new_username321");
+            await account.UpdateUsernameAsync("new_username321");
 
             storageInfo = await account.Storage.AccountInfo.LoadAsync();
             Assert.AreEqual("new_username321", account.AccountInfo.Username);

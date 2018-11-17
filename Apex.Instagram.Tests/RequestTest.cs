@@ -475,7 +475,7 @@ namespace Apex.Instagram.Tests
             var postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
             Assert.AreEqual(@"104.236.122.201", (string) postResponse["origin"]);
 
-            await account.UpdateProxy(null);
+            await account.UpdateProxyAsync(null);
 
             request = new RequestBuilder(account).SetUrl("https://httpbin.org/ip")
                                                  .SetNeedsAuth(false)
@@ -489,7 +489,7 @@ namespace Apex.Instagram.Tests
             postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
             Assert.AreNotEqual(@"104.236.122.201", (string) postResponse["origin"]);
 
-            await account.UpdateProxy(new Proxy("http://104.236.122.201:3128", "kash", "gevel22jj3"));
+            await account.UpdateProxyAsync(new Proxy("http://104.236.122.201:3128", "kash", "gevel22jj3"));
 
             request = new RequestBuilder(account).SetUrl("https://httpbin.org/ip")
                                                  .SetNeedsAuth(false)
@@ -527,7 +527,7 @@ namespace Apex.Instagram.Tests
             var postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
             Assert.AreEqual(@"104.236.122.201", (string) postResponse["origin"]);
 
-            await account.UpdateProxy(null);
+            await account.UpdateProxyAsync(null);
 
             request = new RequestBuilder(account).SetUrl("https://httpbin.org/ip")
                                                  .SetNeedsAuth(false)
@@ -541,7 +541,7 @@ namespace Apex.Instagram.Tests
             postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
             Assert.AreNotEqual(@"104.236.122.201", (string) postResponse["origin"]);
 
-            await account.UpdateProxy(new Proxy("http://[2604:a880:800:10::a:9001]:3128", "kash", "gevel22jj3"));
+            await account.UpdateProxyAsync(new Proxy("http://[2604:a880:800:10::a:9001]:3128", "kash", "gevel22jj3"));
 
             request = new RequestBuilder(account).SetUrl("https://httpbin.org/ip")
                                                  .SetNeedsAuth(false)

@@ -64,7 +64,7 @@ namespace Apex.Instagram
         ///     Updates the proxy.
         /// </summary>
         /// <param name="proxy">The proxy.</param>
-        public async Task UpdateProxy(Proxy proxy)
+        public async Task UpdateProxyAsync(Proxy proxy)
         {
             await HttpClient.UpdateProxy(proxy)
                             .ConfigureAwait(false);
@@ -74,7 +74,7 @@ namespace Apex.Instagram
         ///     Updates the username.
         /// </summary>
         /// <param name="username">The username.</param>
-        public async Task UpdateUsername(string username)
+        public async Task UpdateUsernameAsync(string username)
         {
             AccountInfo.Username = username;
             await Storage.AccountInfo.SaveAsync(AccountInfo)
@@ -85,7 +85,7 @@ namespace Apex.Instagram
         ///     Updates the password.
         /// </summary>
         /// <param name="password">The password.</param>
-        public async Task UpdatePassword(string password)
+        public async Task UpdatePasswordAsync(string password)
         {
             AccountInfo.Password = password;
             await Storage.AccountInfo.SaveAsync(AccountInfo)
@@ -102,7 +102,7 @@ namespace Apex.Instagram
         /// <returns>
         ///     <see cref="LoginResponse" />
         /// </returns>
-        public async Task<LoginResponse> Login() { return await LoginClient.Login(); }
+        public async Task<LoginResponse> LoginAsync() { return await LoginClient.Login(); }
 
         /// <summary>
         ///     Gets the challenge client.
@@ -111,7 +111,7 @@ namespace Apex.Instagram
         /// <returns>
         ///     <see cref="ChallengeClient" />
         /// </returns>
-        public async Task<ChallengeClient> GetChallengeClient() { return await LoginClient.ChallengeLogin(); }
+        public async Task<ChallengeClient> GetChallengeClientAsync() { return await LoginClient.ChallengeLogin(); }
 
         #endregion
 

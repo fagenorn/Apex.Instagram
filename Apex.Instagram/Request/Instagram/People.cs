@@ -54,7 +54,7 @@ namespace Apex.Instagram.Request.Instagram
         /// <returns>
         ///     <see cref="FriendshipResponse" />
         /// </returns>
-        public async Task<FriendshipResponse> Follow(ulong userId)
+        public async Task<FriendshipResponse> FollowAsync(ulong userId)
         {
             var request = new RequestBuilder(Account).SetUrl($"friendships/create/{userId}/")
                                                      .AddPost("_uuid", Account.AccountInfo.Uuid)
@@ -74,7 +74,7 @@ namespace Apex.Instagram.Request.Instagram
         /// <returns>
         ///     <see cref="FriendshipResponse" />
         /// </returns>
-        public async Task<FriendshipResponse> Unfollow(ulong userId)
+        public async Task<FriendshipResponse> UnfollowAsync(ulong userId)
         {
             var request = new RequestBuilder(Account).SetUrl($"friendships/destroy/{userId}/")
                                                      .AddPost("_uuid", Account.AccountInfo.Uuid)
@@ -110,7 +110,7 @@ namespace Apex.Instagram.Request.Instagram
         /// <returns>
         ///     <see cref="UserInfoResponse" />
         /// </returns>
-        public async Task<UserInfoResponse> GetInfoByName(string username, string module = null)
+        public async Task<UserInfoResponse> GetInfoByNameAsync(string username, string module = null)
         {
             var request = new RequestBuilder(Account).SetUrl($"users/{username}/usernameinfo/");
             if ( module != null )
@@ -145,7 +145,7 @@ namespace Apex.Instagram.Request.Instagram
         /// <returns>
         ///     <see cref="UserInfoResponse" />
         /// </returns>
-        public async Task<UserInfoResponse> GetInfoById(ulong userId, string module = null)
+        public async Task<UserInfoResponse> GetInfoByIdAsync(ulong userId, string module = null)
         {
             var request = new RequestBuilder(Account).SetUrl($"users/{userId}/info/");
             if ( module != null )
@@ -164,7 +164,7 @@ namespace Apex.Instagram.Request.Instagram
         /// <returns>
         ///     <see cref="FriendshipsShowResponse" />
         /// </returns>
-        public async Task<FriendshipsShowResponse> GetFriendship(ulong userId)
+        public async Task<FriendshipsShowResponse> GetFriendshipAsync(ulong userId)
         {
             var request = new RequestBuilder(Account).SetUrl($"friendships/show/{userId}/");
 
@@ -179,7 +179,7 @@ namespace Apex.Instagram.Request.Instagram
         /// <returns>
         ///     <see cref="FriendshipsShowManyResponse" />
         /// </returns>
-        public async Task<FriendshipsShowManyResponse> GetFriendships(params ulong[] userIds)
+        public async Task<FriendshipsShowManyResponse> GetFriendshipsAsync(params ulong[] userIds)
         {
             var request = new RequestBuilder(Account).SetUrl($"friendships/show_many/")
                                                      .SetSignedPost(false)
@@ -218,7 +218,7 @@ namespace Apex.Instagram.Request.Instagram
         /// <returns>
         ///     <see cref="IAutoPaginate&lt;FollowerAndFollowingResponse&gt;" />
         /// </returns>
-        public IAutoPaginate<FollowerAndFollowingResponse> GetFollowers(ulong userId, string searchQuery = null) { return new AutoPaginateWithRankToken<FollowerAndFollowingResponse>(parameters => GetFollowers(userId, parameters.rankToken, searchQuery, parameters.maxId)); }
+        public IAutoPaginate<FollowerAndFollowingResponse> GetFollowersPaginator(ulong userId, string searchQuery = null) { return new AutoPaginateWithRankToken<FollowerAndFollowingResponse>(parameters => GetFollowers(userId, parameters.rankToken, searchQuery, parameters.maxId)); }
 
         private async Task<FollowerAndFollowingResponse> GetFollowing(ulong userId, string rankToken, string searchQuery, string maxId)
         {
@@ -247,6 +247,6 @@ namespace Apex.Instagram.Request.Instagram
         /// <returns>
         ///     <see cref="IAutoPaginate&lt;FollowerAndFollowingResponse&gt;" />
         /// </returns>
-        public IAutoPaginate<FollowerAndFollowingResponse> GetFollowing(ulong userId, string searchQuery = null) { return new AutoPaginateWithRankToken<FollowerAndFollowingResponse>(parameters => GetFollowing(userId, parameters.rankToken, searchQuery, parameters.maxId)); }
+        public IAutoPaginate<FollowerAndFollowingResponse> GetFollowingPaginator(ulong userId, string searchQuery = null) { return new AutoPaginateWithRankToken<FollowerAndFollowingResponse>(parameters => GetFollowing(userId, parameters.rankToken, searchQuery, parameters.maxId)); }
     }
 }

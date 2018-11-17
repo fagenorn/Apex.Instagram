@@ -17,7 +17,7 @@ namespace Apex.Instagram.Request.Instagram.Paginate
 
         public bool HasMore => !_end;
 
-        public async Task<T> Next()
+        public async Task<T> NextAsync()
         {
             if ( _end )
             {

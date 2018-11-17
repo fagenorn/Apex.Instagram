@@ -40,7 +40,7 @@ namespace Apex.Instagram.Tests
             var account1 = account;
             await Assert.ThrowsExceptionAsync<IncorrectPasswordException>(async () => await account1.LoginClient.Login());
 
-            await account.UpdatePassword("new_password");
+            await account.UpdatePasswordAsync("new_password");
 
             var account2 = account;
             await Assert.ThrowsExceptionAsync<IncorrectPasswordException>(async () => await account2.LoginClient.Login());

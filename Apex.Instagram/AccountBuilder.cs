@@ -121,19 +121,19 @@ namespace Apex.Instagram
 
             if ( _proxy != null )
             {
-                await account.UpdateProxy(_proxy)
+                await account.UpdateProxyAsync(_proxy)
                              .ConfigureAwait(false);
             }
 
             if ( !string.IsNullOrWhiteSpace(_username) )
             {
-                await account.UpdateUsername(_username)
+                await account.UpdateUsernameAsync(_username)
                              .ConfigureAwait(false);
             }
 
             if ( !string.IsNullOrWhiteSpace(_password) )
             {
-                await account.UpdatePassword(_password)
+                await account.UpdatePasswordAsync(_password)
                              .ConfigureAwait(false);
             }
 
