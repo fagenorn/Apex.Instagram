@@ -5,10 +5,13 @@ using System.Threading.Tasks;
 
 using Apex.Instagram.Logger;
 using Apex.Instagram.Login;
+using Apex.Instagram.Login.Challenge;
 using Apex.Instagram.Model.Account;
 using Apex.Instagram.Model.Account.Device;
 using Apex.Instagram.Model.Request;
+using Apex.Instagram.Request.Exception;
 using Apex.Instagram.Request.Instagram;
+using Apex.Instagram.Response.JsonMap;
 using Apex.Instagram.Storage;
 
 using HttpClient = Apex.Instagram.Request.HttpClient;
@@ -94,6 +97,21 @@ namespace Apex.Instagram
         /// </summary>
         /// <returns>The proxy string</returns>
         public string GetProxy() { return HttpClient.GetProxy(); }
+
+        /// <summary>Attempt to log into the account.</summary>
+        /// <returns>
+        ///     <see cref="LoginResponse" />
+        /// </returns>
+        public async Task<LoginResponse> Login() { return await LoginClient.Login(); }
+
+        /// <summary>
+        ///     Gets the challenge client.
+        ///     Should be called after <see cref="ChallengeRequiredException" />
+        /// </summary>
+        /// <returns>
+        ///     <see cref="ChallengeClient" />
+        /// </returns>
+        public async Task<ChallengeClient> GetChallengeClient() { return await LoginClient.ChallengeLogin(); }
 
         #endregion
 
