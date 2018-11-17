@@ -2,16 +2,17 @@
 
 namespace Apex.Instagram.Login.Exception
 {
+    /// <summary>Login exception</summary>
     public class LoginException : ApexException
     {
-        public LoginException() { }
+        internal LoginException() { }
 
-        public LoginException(string message) : base(message) { }
+        internal LoginException(string message) : base(message) { }
 
-        public LoginException(string format, params object[] args) : base(string.Format(format, args)) { }
+        internal LoginException(string format, params object[] args) : base(string.Format(format, args)) { }
 
-        public LoginException(string message, System.Exception innerException) : base(message, innerException) { }
+        internal LoginException(string message, System.Exception innerException) : base(message, innerException) { }
 
-        public LoginException(string format, System.Exception innerException, params object[] args) : base(string.Format(format, args), innerException) { }
+        internal LoginException(string format, System.Exception innerException, params object[] args) : base(string.Format(format, args), innerException) { }
     }
 }

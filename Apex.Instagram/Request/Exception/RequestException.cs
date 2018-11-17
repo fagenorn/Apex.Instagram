@@ -2,20 +2,22 @@
 
 namespace Apex.Instagram.Request.Exception
 {
+    /// <inheritdoc />
+    /// <summary>Request exception</summary>
     public class RequestException : ApexException
     {
-        public RequestException() { }
+        internal RequestException() { }
 
-        public RequestException(string message) : base(message) { }
+        internal RequestException(string message) : base(message) { }
 
-        public RequestException(string format, params object[] args) : base(string.Format(format, args)) { }
+        internal RequestException(string format, params object[] args) : base(string.Format(format, args)) { }
 
-        public RequestException(string message, System.Exception innerException) : base(message, innerException) { }
+        internal RequestException(string message, System.Exception innerException) : base(message, innerException) { }
 
-        public RequestException(string format, System.Exception innerException, params object[] args) : base(string.Format(format, args), innerException) { }
+        internal RequestException(string format, System.Exception innerException, params object[] args) : base(string.Format(format, args), innerException) { }
 
-        public virtual Response.JsonMap.Response Response { get; set; }
+        internal virtual Response.JsonMap.Response Response { get; set; }
 
-        public bool HasResponse => Response != null;
+        internal bool HasResponse => Response != null;
     }
 }

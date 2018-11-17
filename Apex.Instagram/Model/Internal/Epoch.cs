@@ -6,7 +6,7 @@ using MessagePack;
 namespace Apex.Instagram.Model.Internal
 {
     [MessagePackObject]
-    public class Epoch
+    internal class Epoch
     {
         public Epoch() { Value = Current; }
 

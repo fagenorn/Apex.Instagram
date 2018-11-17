@@ -1,15 +1,18 @@
 ﻿namespace Apex.Instagram.Exception
 {
+    /// <summary>
+    ///     Apex exception.
+    /// </summary>
     public class ApexException : System.Exception
     {
-        public ApexException() { }
+        internal ApexException() { }
 
-        public ApexException(string message) : base(message) { }
+        internal ApexException(string message) : base(message) { }
 
-        public ApexException(string format, params object[] args) : base(string.Format(format, args)) { }
+        internal ApexException(string format, params object[] args) : base(string.Format(format, args)) { }
 
-        public ApexException(string message, System.Exception innerException) : base(message, innerException) { }
+        internal ApexException(string message, System.Exception innerException) : base(message, innerException) { }
 
-        public ApexException(string format, System.Exception innerException, params object[] args) : base(string.Format(format, args), innerException) { }
+        internal ApexException(string format, System.Exception innerException, params object[] args) : base(string.Format(format, args), innerException) { }
     }
 }

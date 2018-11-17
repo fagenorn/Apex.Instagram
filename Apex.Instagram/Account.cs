@@ -15,7 +15,11 @@ using HttpClient = Apex.Instagram.Request.HttpClient;
 
 namespace Apex.Instagram
 {
-    public class Account : IDisposable
+    /// <summary>
+    ///     The Instagram account.
+    /// </summary>
+    /// <seealso cref="System.IDisposable" />
+    public sealed class Account : IDisposable
     {
         #region Fields
 
@@ -41,6 +45,9 @@ namespace Apex.Instagram
 
         #region Public Methods
 
+        /// <summary>
+        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
         public void Dispose()
         {
             _cancellationTokenSource?.Cancel();
@@ -50,12 +57,20 @@ namespace Apex.Instagram
             Storage?.Dispose();
         }
 
+        /// <summary>
+        ///     Updates the proxy.
+        /// </summary>
+        /// <param name="proxy">The proxy.</param>
         public async Task UpdateProxy(Proxy proxy)
         {
             await HttpClient.UpdateProxy(proxy)
                             .ConfigureAwait(false);
         }
 
+        /// <summary>
+        ///     Updates the username.
+        /// </summary>
+        /// <param name="username">The username.</param>
         public async Task UpdateUsername(string username)
         {
             AccountInfo.Username = username;
@@ -63,6 +78,10 @@ namespace Apex.Instagram
                          .ConfigureAwait(false);
         }
 
+        /// <summary>
+        ///     Updates the password.
+        /// </summary>
+        /// <param name="password">The password.</param>
         public async Task UpdatePassword(string password)
         {
             AccountInfo.Password = password;
@@ -70,6 +89,10 @@ namespace Apex.Instagram
                          .ConfigureAwait(false);
         }
 
+        /// <summary>
+        ///     Gets the proxy as an absolute uri. An empty string will be returned if no proxy is set.
+        /// </summary>
+        /// <returns>The proxy string</returns>
         public string GetProxy() { return HttpClient.GetProxy(); }
 
         #endregion
@@ -88,6 +111,7 @@ namespace Apex.Instagram
 
         internal Direct Direct { get; }
 
+        /// <inheritdoc cref="People" />
         public People People { get; }
 
         internal Media Media { get; }

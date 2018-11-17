@@ -1,15 +1,18 @@
 ﻿namespace Apex.Instagram.Exception
 {
+    /// <summary>
+    ///     <see cref="AccountBuilder" /> exception.
+    /// </summary>
     public class AccountBuilderException : ApexException
     {
-        public AccountBuilderException() { }
+        internal AccountBuilderException() { }
 
-        public AccountBuilderException(string message) : base(message) { }
+        internal AccountBuilderException(string message) : base(message) { }
 
-        public AccountBuilderException(string format, params object[] args) : base(string.Format(format, args)) { }
+        internal AccountBuilderException(string format, params object[] args) : base(string.Format(format, args)) { }
 
-        public AccountBuilderException(string message, System.Exception innerException) : base(message, innerException) { }
+        internal AccountBuilderException(string message, System.Exception innerException) : base(message, innerException) { }
 
-        public AccountBuilderException(string format, System.Exception innerException, params object[] args) : base(string.Format(format, args), innerException) { }
+        internal AccountBuilderException(string format, System.Exception innerException, params object[] args) : base(string.Format(format, args), innerException) { }
     }
 }

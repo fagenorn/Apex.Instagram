@@ -7,6 +7,7 @@ using Apex.Instagram.Response.JsonMap.Model;
 
 namespace Apex.Instagram.Login.Challenge
 {
+    /// <summary>Information regarding a challenge step.</summary>
     public abstract class StepInfo
     {
         internal readonly Account Account;
@@ -24,8 +25,12 @@ namespace Apex.Instagram.Login.Challenge
             ChallengeInfo = challengeInfo;
         }
 
+        /// <summary>Gets the title of the challenge step.</summary>
+        /// <value>The title.</value>
         public abstract string Title { get; }
 
+        /// <summary>Gets the description of the challenge step.</summary>
+        /// <value>The description.</value>
         public abstract string Description { get; }
 
         internal async Task<ChallengeResponse> Submit(string input)
@@ -52,6 +57,6 @@ namespace Apex.Instagram.Login.Challenge
             }
         }
 
-        protected abstract Task<ChallengeResponse> SubmitInternalAsync(string input);
+        private protected abstract Task<ChallengeResponse> SubmitInternalAsync(string input);
     }
 }

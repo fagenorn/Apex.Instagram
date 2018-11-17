@@ -6,15 +6,19 @@ using Apex.Instagram.Response.JsonMap.Model;
 
 namespace Apex.Instagram.Login.Challenge
 {
+    /// <inheritdoc />
+    /// <summary>Submit phone challenge step information.</summary>
     public sealed class StepPhoneInfo : StepInfo
     {
         internal StepPhoneInfo(Account account, StepData stepData, ChallengeInfo challengeInfo) : base(account, stepData, challengeInfo) { }
 
+        /// <inheritdoc />
         public override string Title => "Submit a phone number.";
 
+        /// <inheritdoc />
         public override string Description => $"Enter a valid phone number.\nCurrent phone number: {StepData.PhoneNumber}.";
 
-        protected override async Task<ChallengeResponse> SubmitInternalAsync(string input)
+        private protected override async Task<ChallengeResponse> SubmitInternalAsync(string input)
         {
             var request = new RequestBuilder(Account).SetNeedsAuth(false)
                                                      .SetUrl(ChallengeInfo.Url)

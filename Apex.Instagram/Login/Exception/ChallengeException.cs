@@ -2,16 +2,17 @@
 
 namespace Apex.Instagram.Login.Exception
 {
+    /// <summary>Challenge exception</summary>
     public class ChallengeException : ApexException
     {
-        public ChallengeException() { }
+        internal ChallengeException() { }
 
-        public ChallengeException(string message) : base(message) { }
+        internal ChallengeException(string message) : base(message) { }
 
-        public ChallengeException(string format, params object[] args) : base(string.Format(format, args)) { }
+        internal ChallengeException(string format, params object[] args) : base(string.Format(format, args)) { }
 
-        public ChallengeException(string message, System.Exception innerException) : base(message, innerException) { }
+        internal ChallengeException(string message, System.Exception innerException) : base(message, innerException) { }
 
-        public ChallengeException(string format, System.Exception innerException, params object[] args) : base(string.Format(format, args), innerException) { }
+        internal ChallengeException(string format, System.Exception innerException, params object[] args) : base(string.Format(format, args), innerException) { }
     }
 }

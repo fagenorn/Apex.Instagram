@@ -6,8 +6,10 @@ using Apex.Instagram.Response.JsonMap;
 
 namespace Apex.Instagram.Login.Challenge
 {
+    /// <summary>Client to view and solve Instagram challenges.</summary>
     public class ChallengeClient
     {
+        /// <summary>Resets the challenge.</summary>
         public async Task Reset()
         {
             ThrowIfUnavailable();
@@ -16,6 +18,12 @@ namespace Apex.Instagram.Login.Challenge
                 .ConfigureAwait(false);
         }
 
+        /// <summary>Gets the information regarding the next challenge step.</summary>
+        /// <returns>
+        ///     <see cref="StepInfo" />
+        /// </returns>
+        /// <exception cref="ChallengeException">No challenge response information available.</exception>
+        /// <exception cref="ChallengeException">Step name is unknown.</exception>
         public StepInfo GetNextStep()
         {
             ThrowIfUnavailable();
@@ -43,6 +51,9 @@ namespace Apex.Instagram.Login.Challenge
             return _stepInfo;
         }
 
+        /// <summary>  Performs the next challenge step with the provided input.</summary>
+        /// <param name="input">The challenge input.</param>
+        /// <exception cref="ChallengeException">No step information available.</exception>
         public async Task DoNextStep(string input)
         {
             ThrowIfUnavailable();
@@ -105,6 +116,10 @@ namespace Apex.Instagram.Login.Challenge
 
         #region Properties
 
+        /// <summary>Gets a value indicating whether this <see cref="ChallengeClient" /> is completed.</summary>
+        /// <value>
+        ///     <c>true</c> if completed; otherwise, <c>false</c>.
+        /// </value>
         public bool Completed { get; private set; }
 
         internal ChallengeInfo ChallengeInfo { get; private set; }

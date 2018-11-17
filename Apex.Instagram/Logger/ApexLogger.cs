@@ -12,20 +12,27 @@ using Utf8Json;
 
 namespace Apex.Instagram.Logger
 {
+    /// <inheritdoc />
+    /// <summary>Build in Apex logger.</summary>
     public class ApexLogger : IApexLogger
     {
         private readonly string _logId;
 
         private readonly ApexLogLevel _logLevel;
 
+        /// <summary>Initializes a new instance of the <see cref="ApexLogger" /> class.</summary>
+        /// <param name="logLevel">The log level.</param>
+        /// <param name="logId">The log identifier.</param>
         public ApexLogger(ApexLogLevel logLevel, string logId = null)
         {
             _logLevel = logLevel;
             _logId    = logId;
         }
 
+        /// <inheritdoc />
         public event EventHandler<ApexLogMessagePublishedEventArgs> LogMessagePublished;
 
+        /// <inheritdoc />
         public void Verbose<TSource>(string message, params object[] parameters)
         {
             if ( _logLevel < ApexLogLevel.Verbose )
@@ -39,6 +46,7 @@ namespace Apex.Instagram.Logger
             Publish<TSource>(ApexLogLevel.Verbose, null, logMessage.ToString(), parameters);
         }
 
+        /// <inheritdoc />
         public void Debug<TSource>(string message, params object[] parameters)
         {
             if ( _logLevel < ApexLogLevel.Debug )
@@ -52,6 +60,7 @@ namespace Apex.Instagram.Logger
             Publish<TSource>(ApexLogLevel.Debug, null, logMessage.ToString(), parameters);
         }
 
+        /// <inheritdoc />
         public void Debug<TSource>(HttpRequestMessage message)
         {
             if ( _logLevel < ApexLogLevel.Debug )
@@ -68,6 +77,7 @@ namespace Apex.Instagram.Logger
             Publish<TSource>(ApexLogLevel.Debug, null, logMessage.ToString(), null);
         }
 
+        /// <inheritdoc />
         public void Debug<TSource>(HttpResponseMessage message)
         {
             if ( _logLevel < ApexLogLevel.Debug )
@@ -82,6 +92,7 @@ namespace Apex.Instagram.Logger
             Publish<TSource>(ApexLogLevel.Debug, null, logMessage.ToString(), null);
         }
 
+        /// <inheritdoc />
         public void Info<TSource>(string message, params object[] parameters)
         {
             if ( _logLevel < ApexLogLevel.Info )
@@ -95,6 +106,7 @@ namespace Apex.Instagram.Logger
             Publish<TSource>(ApexLogLevel.Info, null, logMessage.ToString(), parameters);
         }
 
+        /// <inheritdoc />
         public void Warning<TSource>(ApexException exception, string message, params object[] parameters)
         {
             if ( _logLevel < ApexLogLevel.Warning )
@@ -108,6 +120,7 @@ namespace Apex.Instagram.Logger
             Publish<TSource>(ApexLogLevel.Warning, exception, logMessage.ToString(), parameters);
         }
 
+        /// <inheritdoc />
         public void Warning<TSource>(string message, params object[] parameters)
         {
             if ( _logLevel < ApexLogLevel.Warning )
@@ -121,6 +134,7 @@ namespace Apex.Instagram.Logger
             Publish<TSource>(ApexLogLevel.Warning, null, logMessage.ToString(), parameters);
         }
 
+        /// <inheritdoc />
         public void Error<TSource>(ApexException exception, string message, params object[] parameters)
         {
             if ( _logLevel < ApexLogLevel.Error )
@@ -134,6 +148,7 @@ namespace Apex.Instagram.Logger
             Publish<TSource>(ApexLogLevel.Error, exception, logMessage.ToString(), parameters);
         }
 
+        /// <inheritdoc />
         public void Error<TSource>(string message, params object[] parameters)
         {
             if ( _logLevel < ApexLogLevel.Error )
@@ -202,7 +217,9 @@ namespace Apex.Instagram.Logger
 
             sb.AppendLine();
             sb.AppendLine("Content:");
-            var raw = await content.ReadAsStringAsync().ConfigureAwait(false);
+            var raw = await content.ReadAsStringAsync()
+                                   .ConfigureAwait(false);
+
             raw = raw.Contains("<!DOCTYPE html>") ? "<HTML content>" : raw;
 
             try

@@ -8,6 +8,7 @@ using Utf8Json;
 
 namespace Apex.Instagram.Request.Instagram
 {
+    /// <summary>Request collection of all people related requests.</summary>
     public class People : RequestCollection
     {
         internal People(Account account) : base(account) { }

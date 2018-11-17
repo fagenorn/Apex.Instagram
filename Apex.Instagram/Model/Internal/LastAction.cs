@@ -5,7 +5,7 @@ using MessagePack;
 namespace Apex.Instagram.Model.Internal
 {
     [MessagePackObject]
-    public class LastAction
+    internal class LastAction
     {
         public LastAction(TimeSpan limit, Epoch initial = null)
         {
