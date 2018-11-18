@@ -18,6 +18,20 @@ namespace Apex.Instagram.Login.Challenge
                 .ConfigureAwait(false);
         }
 
+        /// <summary>Resend the verification code.</summary>
+        public async Task Replay()
+        {
+            ThrowIfUnavailable();
+
+            if ( !(_stepInfo is StepVerifyInfo) )
+            {
+                throw new ChallengeException("Replay challenge not allowed for the current challenge step.");
+            }
+
+            await ReplayChallenge()
+                .ConfigureAwait(false);
+        }
+
         /// <summary>Gets the information regarding the next challenge step.</summary>
         /// <returns>
         ///     <see cref="StepInfo" />
@@ -75,6 +89,18 @@ namespace Apex.Instagram.Login.Challenge
         {
             var request = new RequestBuilder(_account).SetNeedsAuth(false)
                                                       .SetUrl(ChallengeInfo.ResetUrl)
+                                                      .AddPost("_csrftoken", _account.LoginClient.CsrfToken);
+
+            var response = await _account.ApiRequest<ChallengeResponse>(request.Build)
+                                         .ConfigureAwait(false);
+
+            CheckIfCompleted(response);
+        }
+
+        private async Task ReplayChallenge()
+        {
+            var request = new RequestBuilder(_account).SetNeedsAuth(false)
+                                                      .SetUrl(ChallengeInfo.ReplayUrl)
                                                       .AddPost("_csrftoken", _account.LoginClient.CsrfToken);
 
             var response = await _account.ApiRequest<ChallengeResponse>(request.Build)

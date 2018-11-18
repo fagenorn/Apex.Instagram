@@ -140,8 +140,10 @@ namespace Apex.Instagram.Tests
             await client.Reset();
             client.GetNextStep();
             Assert.AreEqual("Enter a valid phone number.\nCurrent phone number: None.", stepInfo.Description);
+            await Assert.ThrowsExceptionAsync<ChallengeException>(async () => await client.Replay());
             await client.DoNextStep("0489494882");
             stepInfo = client.GetNextStep();
+            await client.Replay();
             Assert.AreEqual("Enter the 6 digit code that was sent to your mobile: +32 489 49 48 82.", stepInfo.Description);
         }
 

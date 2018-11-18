@@ -59,5 +59,22 @@ namespace Apex.Instagram.Login.Challenge
                 return builder.Build();
             }
         }
+
+        [IgnoreMember]
+        public Uri ReplayUrl
+        {
+            get
+            {
+                if ( Url == null )
+                {
+                    throw new ChallengeException("No url found.");
+                }
+
+                var builder = new UrlBuilder(Url);
+                builder.AddSegmentAfter(@"replay/", @"challenge/");
+
+                return builder.Build();
+            }
+        }
     }
 }
