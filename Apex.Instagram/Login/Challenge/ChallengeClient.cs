@@ -18,7 +18,8 @@ namespace Apex.Instagram.Login.Challenge
                 .ConfigureAwait(false);
         }
 
-        /// <summary>Resend the verification code.</summary>
+        /// <summary>Resend the verification code for the current instance.</summary>
+        /// <exception cref="ChallengeException">Replay challenge not allowed for the current challenge step.</exception>
         public async Task Replay()
         {
             ThrowIfUnavailable();
