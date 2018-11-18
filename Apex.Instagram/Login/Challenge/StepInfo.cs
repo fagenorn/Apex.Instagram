@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 using Apex.Instagram.Login.Exception;
 using Apex.Instagram.Request.Exception.EndpointException;
@@ -10,19 +11,21 @@ namespace Apex.Instagram.Login.Challenge
     /// <summary>Information regarding a challenge step.</summary>
     public abstract class StepInfo
     {
-        internal readonly Account Account;
+        private readonly ChallengeInfo _challengeInfo;
 
-        internal readonly ChallengeInfo ChallengeInfo;
+        internal readonly Account Account;
 
         internal readonly StepData StepData;
 
         private bool _done;
 
+        private string _replayInput;
+
         internal StepInfo(Account account, StepData stepData, ChallengeInfo challengeInfo)
         {
-            Account       = account;
-            StepData      = stepData;
-            ChallengeInfo = challengeInfo;
+            Account        = account;
+            StepData       = stepData;
+            _challengeInfo = challengeInfo;
         }
 
         /// <summary>Gets the title of the challenge step.</summary>
@@ -42,10 +45,11 @@ namespace Apex.Instagram.Login.Challenge
 
             try
             {
-                var result = await SubmitInternalAsync(input)
+                var result = await SubmitInternalAsync(_challengeInfo.Url, input)
                                  .ConfigureAwait(false);
 
-                _done = true;
+                _done        = true;
+                _replayInput = input;
 
                 return result;
             }
@@ -57,6 +61,28 @@ namespace Apex.Instagram.Login.Challenge
             }
         }
 
-        private protected abstract Task<ChallengeResponse> SubmitInternalAsync(string input);
+        internal async Task<ChallengeResponse> Replay()
+        {
+            if ( !_done )
+            {
+                throw new ChallengeException("Can't replay step that hasn't been completed yet.");
+            }
+
+            try
+            {
+                var result = await SubmitInternalAsync(_challengeInfo.ReplayUrl, _replayInput)
+                                 .ConfigureAwait(false);
+
+                return result;
+            }
+            catch (EndpointException e)
+            {
+                Account.Logger.Warning<StepInfo>(e, "Failed to perform challenge step. Step input: {0}", _replayInput);
+
+                throw new ChallengeException("Failed to perform challenge step.", e);
+            }
+        }
+
+        private protected abstract Task<ChallengeResponse> SubmitInternalAsync(Uri url, string input);
     }
 }

@@ -29,8 +29,10 @@ namespace Apex.Instagram.Login.Challenge
                 throw new ChallengeException("Replay challenge not allowed for the current challenge step.");
             }
 
-            await ReplayChallenge()
-                .ConfigureAwait(false);
+            var response = await _previousStepInfo.Replay()
+                                                  .ConfigureAwait(false);
+
+            CheckIfCompleted(response);
         }
 
         /// <summary>Gets the information regarding the next challenge step.</summary>
@@ -48,13 +50,15 @@ namespace Apex.Instagram.Login.Challenge
                 throw new ChallengeException("No challenge response information available.");
             }
 
+            _previousStepInfo = _stepInfo;
+
             switch ( _challengeResponse.StepName )
             {
-                case "submit_phone":
+                case @"submit_phone":
                     _stepInfo = new StepPhoneInfo(_account, _challengeResponse.StepData, ChallengeInfo);
 
                     break;
-                case "verify_code":
+                case @"verify_code":
                     _stepInfo = new StepVerifySmsInfo(_account, _challengeResponse.StepData, ChallengeInfo);
 
                     break;
@@ -98,18 +102,6 @@ namespace Apex.Instagram.Login.Challenge
             CheckIfCompleted(response);
         }
 
-        private async Task ReplayChallenge()
-        {
-            var request = new RequestBuilder(_account).SetNeedsAuth(false)
-                                                      .SetUrl(ChallengeInfo.ReplayUrl)
-                                                      .AddPost("_csrftoken", _account.LoginClient.CsrfToken);
-
-            var response = await _account.ApiRequest<ChallengeResponse>(request.Build)
-                                         .ConfigureAwait(false);
-
-            CheckIfCompleted(response);
-        }
-
         private void ThrowIfUnavailable()
         {
             if ( !HasChallenge )
@@ -136,6 +128,8 @@ namespace Apex.Instagram.Login.Challenge
         private readonly Account _account;
 
         private ChallengeResponse _challengeResponse;
+
+        private StepInfo _previousStepInfo;
 
         private StepInfo _stepInfo;
 

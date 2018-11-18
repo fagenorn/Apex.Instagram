@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 using Apex.Instagram.Request;
 using Apex.Instagram.Response.JsonMap;
@@ -18,10 +19,10 @@ namespace Apex.Instagram.Login.Challenge
         /// <inheritdoc />
         public override string Description => $"Enter a valid phone number.\nCurrent phone number: {StepData.PhoneNumber}.";
 
-        private protected override async Task<ChallengeResponse> SubmitInternalAsync(string input)
+        private protected override async Task<ChallengeResponse> SubmitInternalAsync(Uri url, string input)
         {
             var request = new RequestBuilder(Account).SetNeedsAuth(false)
-                                                     .SetUrl(ChallengeInfo.Url)
+                                                     .SetUrl(url)
                                                      .AddPost("_csrftoken", Account.LoginClient.CsrfToken)
                                                      .AddPost("phone_number", input);
 
