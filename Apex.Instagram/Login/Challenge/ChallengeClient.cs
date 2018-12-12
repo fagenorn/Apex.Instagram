@@ -24,7 +24,7 @@ namespace Apex.Instagram.Login.Challenge
         {
             ThrowIfUnavailable();
 
-            if ( !(_stepInfo is StepVerifyInfo) )
+            if ( !(_stepInfo is StepVerifyInfo) || _previousStepInfo == null )
             {
                 throw new ChallengeException("Replay challenge not allowed for the current challenge step.");
             }
