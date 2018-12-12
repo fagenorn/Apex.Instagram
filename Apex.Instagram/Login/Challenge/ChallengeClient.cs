@@ -62,6 +62,10 @@ namespace Apex.Instagram.Login.Challenge
                     _stepInfo = new StepVerifySmsInfo(_account, _challengeResponse.StepData, ChallengeInfo);
 
                     break;
+                case @"select_verify_method":
+                    _stepInfo = new StepSelectVerifyMethodInfo(_account, _challengeResponse.StepData, ChallengeInfo);
+
+                    break;
                 default:
 
                     throw new ChallengeException("Step name {0} is unknown.", _challengeResponse.StepName);

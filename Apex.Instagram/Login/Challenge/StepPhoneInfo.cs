@@ -9,7 +9,7 @@ namespace Apex.Instagram.Login.Challenge
 {
     /// <inheritdoc />
     /// <summary>Submit phone challenge step information.</summary>
-    public sealed class StepPhoneInfo : StepInfo
+    internal sealed class StepPhoneInfo : StepInfo
     {
         internal StepPhoneInfo(Account account, StepData stepData, ChallengeInfo challengeInfo) : base(account, stepData, challengeInfo) { }
 

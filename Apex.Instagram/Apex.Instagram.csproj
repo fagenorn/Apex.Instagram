@@ -104,6 +104,8 @@
     <Compile Include="Login\Challenge\ChallengeInfo.cs" />
     <Compile Include="Login\Challenge\StepInfo.cs" />
     <Compile Include="Login\Challenge\StepPhoneInfo.cs" />
+    <Compile Include="Login\Challenge\StepSelectInfo.cs" />
+    <Compile Include="Login\Challenge\StepSelectVerifyMethodInfo.cs" />
     <Compile Include="Login\Challenge\StepVerifyInfo.cs" />
     <Compile Include="Login\Challenge\StepVerifySmsInfo.cs" />
     <Compile Include="Login\Exception\ChallengeException.cs" />

@@ -7,9 +7,9 @@ using Apex.Instagram.Response.JsonMap.Model;
 
 namespace Apex.Instagram.Login.Challenge
 {
-    internal abstract class StepVerifyInfo : StepInfo
+    internal abstract class StepSelectInfo : StepInfo
     {
-        internal StepVerifyInfo(Account account, StepData stepData, ChallengeInfo challengeInfo) : base(account, stepData, challengeInfo) { }
+        public StepSelectInfo(Account account, StepData stepData, ChallengeInfo challengeInfo) : base(account, stepData, challengeInfo) { }
 
         public abstract override string Title { get; }
 
@@ -20,7 +20,7 @@ namespace Apex.Instagram.Login.Challenge
             var request = new RequestBuilder(Account).SetNeedsAuth(false)
                                                      .SetUrl(url)
                                                      .AddPost("_csrftoken", Account.LoginClient.CsrfToken)
-                                                     .AddPost("security_code", input);
+                                                     .AddPost("choice", input);
 
             return await Account.ApiRequest<ChallengeResponse>(request.Build)
                                 .ConfigureAwait(false);
