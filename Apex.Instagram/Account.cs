@@ -102,7 +102,11 @@ namespace Apex.Instagram
         /// <returns>
         ///     <see cref="LoginResponse" />
         /// </returns>
-        public async Task<LoginResponse> LoginAsync() { return await LoginClient.Login().ConfigureAwait(false); }
+        public async Task<LoginResponse> LoginAsync()
+        {
+            return await LoginClient.Login()
+                                    .ConfigureAwait(false);
+        }
 
         /// <summary>
         ///     Gets the challenge client.
@@ -111,7 +115,11 @@ namespace Apex.Instagram
         /// <returns>
         ///     <see cref="ChallengeClient" />
         /// </returns>
-        public async Task<ChallengeClient> GetChallengeClientAsync() { return await LoginClient.ChallengeLogin().ConfigureAwait(false); }
+        public async Task<ChallengeClient> GetChallengeClientAsync()
+        {
+            return await LoginClient.ChallengeLogin()
+                                    .ConfigureAwait(false);
+        }
 
         #endregion
 
