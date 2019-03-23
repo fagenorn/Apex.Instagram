@@ -8,6 +8,6 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public ChainingInfo ChainingInfo { get; set; }
 
         [DataMember(Name = "profile_chaining_secondary_label")]
-        public dynamic ProfileChainingSecondaryLabel { get; set; }
+        public string ProfileChainingSecondaryLabel { get; set; }
     }
 }

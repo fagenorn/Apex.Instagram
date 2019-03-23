@@ -39,5 +39,8 @@ namespace Apex.Instagram.Response.JsonMap.Model
 
         [DataMember(Name = "uuid")]
         public string Uuid { get; set; }
+
+        [DataMember(Name = "followed_by")]
+        public bool? FollowedBy { get; set; }
     }
 }

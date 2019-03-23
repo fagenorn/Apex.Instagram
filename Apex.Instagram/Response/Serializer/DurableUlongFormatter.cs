@@ -20,13 +20,14 @@ namespace Apex.Instagram.Response.Serializer
                         return 0;
                     }
 
-                    if ( !isDigits(value) )
+                    if ( !IsDigits(value) )
                     {
                         throw new JsonParsingException("String can't be converted to a number.", reader.GetBufferUnsafe(), reader.GetCurrentOffsetUnsafe(), reader.GetCurrentOffsetUnsafe(), value);
                     }
 
                     return ulong.Parse(value);
                 case JsonToken.Number:
+                case JsonToken.Null:
 
                     return NullableUInt64Formatter.Default.Deserialize(ref reader, formatterResolver);
                 default:
@@ -35,7 +36,7 @@ namespace Apex.Instagram.Response.Serializer
             }
         }
 
-        private bool isDigits(string s)
+        private bool IsDigits(string s)
         {
             if ( string.IsNullOrEmpty(s) )
             {

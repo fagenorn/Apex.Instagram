@@ -31,8 +31,8 @@ namespace Apex.Instagram.Request.Instagram
                                                      .AddPost("phone_id", Account.AccountInfo.PhoneId)
                                                      .AddPost("device_id", Account.AccountInfo.Uuid)
                                                      .AddPost("client_session_id", Account.AccountInfo.SessionId)
-                                                     .AddPost("battery_level", "100")
-                                                     .AddPost("is_charging", "1")
+                                                     .AddPost("battery_level", Randomizer.Instance.Number(100, 25))
+                                                     .AddPost("is_charging", "0")
                                                      .AddPost("will_sound_on", "1")
                                                      .AddPost("is_on_screen", "true")
                                                      .AddPost("timezone_offset", Time.Instance.GetTimezoneOffset())
@@ -122,7 +122,8 @@ namespace Apex.Instagram.Request.Instagram
                 request.AddPost("recovered_from_crash", "1");
             }
 
-            return await Account.ApiRequest<TimelineFeedResponse>(request.Build).ConfigureAwait(false);
+            return await Account.ApiRequest<TimelineFeedResponse>(request.Build)
+                                .ConfigureAwait(false);
 
             bool ExistsOption(string name) { return options != null && options.ContainsKey(name); }
 

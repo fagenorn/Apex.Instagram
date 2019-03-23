@@ -74,6 +74,9 @@ namespace Apex.Instagram.Response.JsonMap.Model
         [DataMember(Name = "user")]
         public User User { get; set; }
 
+        [DataMember(Name = "can_see_insights_as_brand")]
+        public bool? CanSeeInsightsAsBrand { get; set; }
+
         [DataMember(Name = "caption")]
         public Caption Caption { get; set; }
 
@@ -113,11 +116,17 @@ namespace Apex.Instagram.Response.JsonMap.Model
         [DataMember(Name = "number_of_qualities")]
         public int? NumberOfQualities { get; set; }
 
+        [DataMember(Name = "video_codec")]
+        public string VideoCodec { get; set; }
+
         [DataMember(Name = "thumbnails")]
         public Thumbnail Thumbnails { get; set; }
 
         [DataMember(Name = "can_reshare")]
         public bool? CanReshare { get; set; }
+
+        [DataMember(Name = "can_reply")]
+        public bool? CanReply { get; set; }
 
         [DataMember(Name = "can_viewer_reshare")]
         public bool? CanViewerReshare { get; set; }
@@ -475,6 +484,9 @@ namespace Apex.Instagram.Response.JsonMap.Model
 
         [DataMember(Name = "inline_composer_display_condition")]
         public string InlineComposerDisplayCondition { get; set; }
+
+        [DataMember(Name = "inline_composer_imp_trigger_time")]
+        public int? InlineComposerImpTriggerTime { get; set; }
 
         [DataMember(Name = "highlight_reel_ids")]
         public string[] HighlightReelIds { get; set; }

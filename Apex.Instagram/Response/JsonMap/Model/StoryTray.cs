@@ -25,7 +25,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public dynamic ExpiringAt { get; set; }
 
         [DataMember(Name = "seen_ranked_position")]
-        public dynamic SeenRankedPosition { get; set; }
+        public int? SeenRankedPosition { get; set; }
 
         /// <summary>
         ///     The "taken_at" timestamp of the last story media you have seen for
@@ -41,7 +41,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public ulong? LatestReelMedia { get; set; }
 
         [DataMember(Name = "ranked_position")]
-        public dynamic RankedPosition { get; set; }
+        public int? RankedPosition { get; set; }
 
         [DataMember(Name = "is_nux")]
         public dynamic IsNux { get; set; }
@@ -53,7 +53,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public dynamic Muted { get; set; }
 
         [DataMember(Name = "prefetch_count")]
-        public dynamic PrefetchCount { get; set; }
+        public int? PrefetchCount { get; set; }
 
         [DataMember(Name = "location")]
         public Location Location { get; set; }
@@ -87,5 +87,8 @@ namespace Apex.Instagram.Response.JsonMap.Model
 
         [DataMember(Name = "title")]
         public string Title { get; set; }
+
+        [DataMember(Name = "media_count")]
+        public int? MediaCount { get; set; }
     }
 }

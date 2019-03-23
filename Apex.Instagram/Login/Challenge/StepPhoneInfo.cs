@@ -17,7 +17,7 @@ namespace Apex.Instagram.Login.Challenge
         public override string Title => "Submit a phone number.";
 
         /// <inheritdoc />
-        public override string Description => $"Enter a valid phone number.\nCurrent phone number: {StepData.PhoneNumber}.";
+        public override string Description => $"Enter a valid phone number.\r\nCurrent phone number: {StepData.PhoneNumber}.\r\n";
 
         private protected override async Task<ChallengeResponse> SubmitInternalAsync(Uri url, string input)
         {

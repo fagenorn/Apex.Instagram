@@ -104,8 +104,8 @@ namespace Apex.Instagram.Tests
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(fileStorage)
                                                     .SetLogger(Logger)
-                                                    .SetUsername("RZ3YnN4")
-                                                    .SetPassword("w8EXjH1")
+                                                    .SetUsername("elytroposisLQw2")
+                                                    .SetPassword("46tn2DE02")
                                                     .BuildAsync();
 
             Assert.IsFalse(account.LoginClient.LoginInfo.HasChallenge);
@@ -128,8 +128,8 @@ namespace Apex.Instagram.Tests
             account = await new AccountBuilder().SetId(0)
                                                 .SetStorage(fileStorage)
                                                 .SetLogger(Logger)
-                                                .SetUsername("RZ3YnN4")
-                                                .SetPassword("w8EXjH1")
+                                                .SetUsername("elytroposisLQw2")
+                                                .SetPassword("46tn2DE02")
                                                 .BuildAsync();
 
             Assert.IsTrue(account.LoginClient.LoginInfo.HasChallenge);
@@ -139,7 +139,11 @@ namespace Apex.Instagram.Tests
             await Assert.ThrowsExceptionAsync<ChallengeException>(async () => await client.DoNextStep("133123"));
             await client.Reset();
             client.GetNextStep();
-            Assert.AreEqual("Enter a valid phone number.\nCurrent phone number: None.", stepInfo.Description);
+            Assert.AreEqual("Select verification method option:\r\n0: Phone (+7 *** ***-**-17)\r\n", stepInfo.Description);
+            await Assert.ThrowsExceptionAsync<ChallengeException>(async () => await client.Replay());
+            await Assert.ThrowsExceptionAsync<ChallengeException>(async () => await client.DoNextStep("1"));
+            await client.DoNextStep("0");
+            Assert.AreEqual("Enter a valid phone number.\r\nCurrent phone number: None.\r\n", stepInfo.Description);
             await Assert.ThrowsExceptionAsync<ChallengeException>(async () => await client.Replay());
             await client.DoNextStep("0489494882");
             stepInfo = client.GetNextStep();

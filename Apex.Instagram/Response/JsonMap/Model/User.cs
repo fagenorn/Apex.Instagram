@@ -25,6 +25,9 @@ namespace Apex.Instagram.Response.JsonMap.Model
         [DataMember(Name = "is_favorite_for_highlights")]
         public bool? IsFavoriteForHighlights { get; set; }
 
+        [DataMember(Name = "is_interest_account")]
+        public bool? IsInterestAccount { get; set; }
+
         [DataMember(Name = "can_be_reported_as_fraud")]
         public bool? CanBeReportedAsFraud { get; set; }
 
@@ -130,6 +133,9 @@ namespace Apex.Instagram.Response.JsonMap.Model
         [DataMember(Name = "has_chaining")]
         public bool? HasChaining { get; set; }
 
+        [DataMember(Name = "has_recommend_accounts")]
+        public bool? HasRecommendAccounts { get; set; }
+
         [DataMember(Name = "chaining_suggestions")]
         public ChainingSuggestion[] ChainingSuggestions { get; set; }
 
@@ -175,6 +181,12 @@ namespace Apex.Instagram.Response.JsonMap.Model
         [DataMember(Name = "has_biography_translation")]
         public bool? HasBiographyTranslation { get; set; }
 
+        [DataMember(Name = "total_igtv_videos")]
+        public int? TotalIgtvVideos { get; set; }
+
+        [DataMember(Name = "total_ar_effects")]
+        public int? TotalArEffects { get; set; }
+
         [DataMember(Name = "can_link_entities_in_bio")]
         public bool? CanLinkEntitiesInBio { get; set; }
 
@@ -186,6 +198,9 @@ namespace Apex.Instagram.Response.JsonMap.Model
 
         [DataMember(Name = "business_contact_method")]
         public string BusinessContactMethod { get; set; }
+
+        [DataMember(Name = "highlight_reshare_disabled")]
+        public bool? HighlightReshareDisabled { get; set; }
 
         [DataMember(Name = "category")]
         public string Category { get; set; }
@@ -201,6 +216,9 @@ namespace Apex.Instagram.Response.JsonMap.Model
 
         [DataMember(Name = "is_call_to_action_enabled")]
         public bool? IsCallToActionEnabled { get; set; }
+
+        [DataMember(Name = "account_type")]
+        public int? AccountType { get; set; }
 
         [DataMember(Name = "public_phone_country_code")]
         public string PublicPhoneCountryCode { get; set; }
@@ -298,6 +316,9 @@ namespace Apex.Instagram.Response.JsonMap.Model
         [DataMember(Name = "show_shoppable_feed")]
         public bool? ShowShoppableFeed { get; set; }
 
+        [DataMember(Name = "show_account_transparency_details")]
+        public bool? ShowAccountTransparencyDetails { get; set; }
+
         [DataMember(Name = "latest_reel_media")]
         public ulong? LatestReelMedia { get; set; }
 
@@ -342,6 +363,9 @@ namespace Apex.Instagram.Response.JsonMap.Model
 
         [DataMember(Name = "is_bestie")]
         public bool? IsBestie { get; set; }
+
+        [DataMember(Name = "live_subscription_status")]
+        public string LiveSubscriptionStatus { get; set; }
 
         public override string ToString() { return JsonSerializer.PrettyPrint(JsonSerializer.Serialize(this)); }
     }

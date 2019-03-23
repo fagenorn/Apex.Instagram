@@ -10,6 +10,12 @@ namespace Apex.Instagram.Response.JsonMap
         [DataMember(Name = "users")]
         public User[] Users { get; set; }
 
+        [DataMember(Name = "suggested_users")]
+        public SuggestedUsers SuggestedUsers { get; set; }
+
+        [DataMember(Name = "truncate_follow_requests_at_index")]
+        public int? TruncateFollowRequestsAtIndex { get; set; }
+
         [DataMember(Name = "next_max_id")]
         public string NextMaxId { get; set; }
 
