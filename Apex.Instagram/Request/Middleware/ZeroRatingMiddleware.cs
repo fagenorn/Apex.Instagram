@@ -55,7 +55,7 @@ namespace Apex.Instagram.Request.Middleware
                     continue;
                 }
 
-                _rules[regex] = rule.Value;
+                _rules[regex] = rule.Value.Replace("\\.", ".");
             }
         }
 

@@ -83,7 +83,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string SearchSubtitle { get; set; }
 
         [DataMember(Name = "social_context")]
-        public string SocialContext { get; set; }
+        public dynamic SocialContext { get; set; }
 
         [DataMember(Name = "media_count")]
         public int? MediaCount { get; set; }

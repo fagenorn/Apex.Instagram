@@ -473,7 +473,7 @@ namespace Apex.Instagram.Tests
 
             Assert.IsTrue(response.IsSuccessStatusCode);
             var postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
-            Assert.AreEqual(@"104.236.122.201", (string) postResponse["origin"]);
+            Assert.AreEqual(@"104.236.122.201, 104.236.122.201", (string) postResponse["origin"]);
 
             await account.UpdateProxyAsync(null);
 
@@ -487,7 +487,7 @@ namespace Apex.Instagram.Tests
             request.Dispose();
             Assert.IsTrue(response.IsSuccessStatusCode);
             postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
-            Assert.AreNotEqual(@"104.236.122.201", (string) postResponse["origin"]);
+            Assert.AreNotEqual(@"104.236.122.201, 104.236.122.201", (string) postResponse["origin"]);
 
             await account.UpdateProxyAsync(new Proxy("http://104.236.122.201:3128", "kash", "gevel22jj3"));
 
@@ -501,9 +501,10 @@ namespace Apex.Instagram.Tests
             request.Dispose();
             Assert.IsTrue(response.IsSuccessStatusCode);
             postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
-            Assert.AreEqual(@"104.236.122.201", (string) postResponse["origin"]);
+            Assert.AreEqual(@"104.236.122.201, 104.236.122.201", (string) postResponse["origin"]);
         }
 
+        [Ignore]
         [TestMethod]
         public async Task Generic_Api_Request_With_IPv6_Proxy_Using_Authentication_Status_Ok()
         {
