@@ -6,11 +6,11 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Apex.Instagram.Constants;
-using Apex.Instagram.Model.Internal;
 using Apex.Instagram.Model.Request;
 using Apex.Instagram.Request.Exception;
 using Apex.Instagram.Request.Middleware;
 using Apex.Instagram.Response;
+using Apex.Shared.Model;
 
 namespace Apex.Instagram.Request
 {

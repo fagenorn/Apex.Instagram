@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-using Apex.Instagram.Model.Internal;
+using Apex.Shared.Model;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 
 using Apex.Instagram.Login.Challenge;
 using Apex.Instagram.Login.Exception;
-using Apex.Instagram.Model.Internal;
 using Apex.Instagram.Request;
 using Apex.Instagram.Request.Exception;
 using Apex.Instagram.Response.JsonMap;
 using Apex.Instagram.Utils;
+using Apex.Shared.Model;
 
 namespace Apex.Instagram.Login
 {

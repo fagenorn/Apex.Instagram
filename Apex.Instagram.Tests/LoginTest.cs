@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 using Apex.Instagram.Logger;
 using Apex.Instagram.Login.Exception;
-using Apex.Instagram.Model.Internal;
 using Apex.Instagram.Request.Exception;
+using Apex.Shared.Model;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -115,9 +115,8 @@ namespace Apex.Instagram.Tests
             await Assert.ThrowsExceptionAsync<ChallengeRequiredException>(async () => await account2.LoginClient.Login());
             Assert.IsTrue(account.LoginClient.LoginInfo.HasChallenge);
             var client = await account.LoginClient.ChallengeLogin();
-            await client.Reset();
+            var stepInfo = await client.Reset();
             Assert.IsNotNull(client.ChallengeInfo.Url);
-            var stepInfo = client.GetNextStep();
             Assert.IsNotNull(stepInfo);
             var client1 = client;
             await Assert.ThrowsExceptionAsync<ChallengeException>(async () => await client1.DoNextStep("133123"));
@@ -135,21 +134,17 @@ namespace Apex.Instagram.Tests
             Assert.IsTrue(account.LoginClient.LoginInfo.HasChallenge);
             client = await account.LoginClient.ChallengeLogin();
             Assert.IsNotNull(client.ChallengeInfo.Url);
-            Assert.ThrowsException<ChallengeException>(() => client.GetNextStep());
             await Assert.ThrowsExceptionAsync<ChallengeException>(async () => await client.DoNextStep("133123"));
             await client.Reset();
-            client.GetNextStep();
             Assert.AreEqual("Select verification method option:\r\n0: Phone (+7 *** ***-**-17)\r\n", stepInfo.Description);
             await Assert.ThrowsExceptionAsync<ChallengeException>(async () => await client.Replay());
             await Assert.ThrowsExceptionAsync<ChallengeException>(async () => await client.DoNextStep("1"));
-            await client.DoNextStep("0");
-            Assert.AreEqual("Enter a valid phone number.\r\nCurrent phone number: None.\r\n", stepInfo.Description);
-            await Assert.ThrowsExceptionAsync<ChallengeException>(async () => await client.Replay());
-            await client.DoNextStep("0489494882");
-            stepInfo = client.GetNextStep();
+            await Task.Delay(3000);
+            stepInfo = await client.DoNextStep("0");
+            Assert.AreEqual("Enter the 6 digit code that was sent to your mobile: +7 *** ***-26-17.\r\n", stepInfo.Description);
             await Task.Delay(3000);
             await client.Replay();
-            Assert.AreEqual("Enter the 6 digit code that was sent to your mobile: +32 489 49 48 82.", stepInfo.Description);
+            Assert.AreEqual("Enter the 6 digit code that was sent to your mobile: +7 *** ***-26-17.\r\n", stepInfo.Description);
         }
 
         [TestMethod]

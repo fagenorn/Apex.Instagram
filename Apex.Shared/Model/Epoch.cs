@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Globalization;
+using System.Runtime.Serialization;
 
-using MessagePack;
-
-namespace Apex.Instagram.Model.Internal
+namespace Apex.Shared.Model
 {
-    [MessagePackObject]
-    internal class Epoch
+    [DataContract]
+    public class Epoch
     {
-        public Epoch() { Value = Current; }
-
-        [SerializationConstructor]
-        public Epoch(double initial) { Value = initial; }
+        public Epoch(double initial = double.NaN) { Value = double.IsNaN(initial) ? Current : initial; }
 
         #region Properties
 
-        [Key(0)]
+        [DataMember(Order = 0)]
         public double Value { get; private set; }
 
         #endregion

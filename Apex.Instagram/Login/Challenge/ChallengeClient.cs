@@ -9,13 +9,19 @@ namespace Apex.Instagram.Login.Challenge
     /// <summary>Client to view and solve Instagram challenges.</summary>
     public class ChallengeClient
     {
-        /// <summary>Resets the challenge.</summary>
-        public async Task Reset()
+        /// <summary>Resets the challenge and gets the information regarding the next challenge step.</summary>
+        /// <returns>
+        ///     <see cref="StepInfo" />
+        /// </returns>
+        /// <exception cref="ChallengeException">No challenge response information available.</exception>
+        public async Task<StepInfo> Reset()
         {
             ThrowIfUnavailable();
 
             await ResetChallenge()
                 .ConfigureAwait(false);
+
+            return Completed ? null : GetNextStep();
         }
 
         /// <summary>Resend the verification code for the current instance.</summary>
@@ -35,24 +41,44 @@ namespace Apex.Instagram.Login.Challenge
             CheckIfCompleted(response);
         }
 
-        /// <summary>Gets the information regarding the next challenge step.</summary>
+        /// <summary>  Performs the next challenge step with the provided input and gets the information regarding the next challenge step.</summary>
+        /// <param name="input">The challenge input.</param>
         /// <returns>
         ///     <see cref="StepInfo" />
         /// </returns>
+        /// <exception cref="ChallengeException">No step information available.</exception>
         /// <exception cref="ChallengeException">No challenge response information available.</exception>
-        /// <exception cref="ChallengeException">Step name is unknown.</exception>
-        public StepInfo GetNextStep()
+        public async Task<StepInfo> DoNextStep(string input)
         {
             ThrowIfUnavailable();
 
-            if ( _challengeResponse == null )
+            if ( _stepInfo == null )
+            {
+                throw new ChallengeException("No step information available.");
+            }
+
+            var response = await _stepInfo.Submit(input)
+                                          .ConfigureAwait(false);
+
+            CheckIfCompleted(response);
+
+            return Completed ? null : GetNextStep();
+        }
+
+        #region Private methods
+
+        private StepInfo GetNextStep()
+        {
+            ThrowIfUnavailable();
+
+            if (_challengeResponse == null)
             {
                 throw new ChallengeException("No challenge response information available.");
             }
 
             _previousStepInfo = _stepInfo;
 
-            switch ( _challengeResponse.StepName )
+            switch (_challengeResponse.StepName)
             {
                 case @"submit_phone":
                     _stepInfo = new StepPhoneInfo(_account, _challengeResponse.StepData, ChallengeInfo);
@@ -73,26 +99,6 @@ namespace Apex.Instagram.Login.Challenge
 
             return _stepInfo;
         }
-
-        /// <summary>  Performs the next challenge step with the provided input.</summary>
-        /// <param name="input">The challenge input.</param>
-        /// <exception cref="ChallengeException">No step information available.</exception>
-        public async Task DoNextStep(string input)
-        {
-            ThrowIfUnavailable();
-
-            if ( _stepInfo == null )
-            {
-                throw new ChallengeException("No step information available.");
-            }
-
-            var response = await _stepInfo.Submit(input)
-                                          .ConfigureAwait(false);
-
-            CheckIfCompleted(response);
-        }
-
-        #region Private methods
 
         private async Task ResetChallenge()
         {

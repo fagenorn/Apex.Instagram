@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-using Apex.Instagram.Model.Internal;
+using Apex.Shared.Model;
 
 namespace Apex.Instagram.Response.JsonMap.Model
 {

@@ -186,7 +186,7 @@ namespace Apex.Instagram.Tests
             Assert.IsTrue(response.IsSuccessStatusCode);
             var postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
             Assert.AreEqual(@"4", (string) postResponse["form"]["ig_sig_key_version"]);
-            Assert.AreEqual(@"a50cbc3219ec82fb34a3e6ddeb52467a9324853ed6071c40aaaa2987bfdb6bd1.{""test"":""best"",""test2"":""best2""}", (string) postResponse["form"]["signed_body"]);
+            Assert.AreEqual(@"797cedc7eb98618f785d780ad4dfd4fd081da7da085156a87e7568db2f146176.{""test"":""best"",""test2"":""best2""}", (string) postResponse["form"]["signed_body"]);
             Assert.AreEqual(@"best3", (string) postResponse["form"]["test3"]);
         }
 
@@ -266,7 +266,7 @@ namespace Apex.Instagram.Tests
             Assert.IsTrue(response.IsSuccessStatusCode);
             var postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
             Assert.AreEqual(@"4", (string) postResponse["args"]["ig_sig_key_version"]);
-            Assert.AreEqual(@"a50cbc3219ec82fb34a3e6ddeb52467a9324853ed6071c40aaaa2987bfdb6bd1.{""test"":""best"",""test2"":""best2""}", (string) postResponse["args"]["signed_body"]);
+            Assert.AreEqual(@"797cedc7eb98618f785d780ad4dfd4fd081da7da085156a87e7568db2f146176.{""test"":""best"",""test2"":""best2""}", (string) postResponse["args"]["signed_body"]);
             Assert.AreEqual(@"best3", (string) postResponse["args"]["test3"]);
         }
 

@@ -4,9 +4,9 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 
-using Apex.Instagram.Model.Internal;
 using Apex.Instagram.Model.Request;
 using Apex.Instagram.Storage.Object;
+using Apex.Shared.Model;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

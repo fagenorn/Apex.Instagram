@@ -2,7 +2,7 @@
 using System.Linq;
 
 using Apex.Instagram.Constants;
-using Apex.Instagram.Model.Internal;
+using Apex.Shared.Model;
 
 using MessagePack;
 

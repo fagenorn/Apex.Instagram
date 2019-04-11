@@ -1,11 +1,10 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
-using MessagePack;
-
-namespace Apex.Instagram.Model.Internal
+namespace Apex.Shared.Model
 {
-    [MessagePackObject]
-    internal class LastAction
+    [DataContract]
+    public class LastAction
     {
         public LastAction(TimeSpan limit, Epoch initial = null)
         {
@@ -17,13 +16,13 @@ namespace Apex.Instagram.Model.Internal
 
         #region Properties
 
-        [Key(0)]
-        public TimeSpan Limit { get; internal set; }
+        [DataMember(Order = 0)]
+        public TimeSpan Limit { get; set; }
 
-        [Key(1)]
+        [DataMember(Order = 1)]
         public Epoch Last { get; }
 
-        [IgnoreMember]
+        [IgnoreDataMember]
         public bool Passed => new Epoch() - Last > Limit;
 
         #endregion

@@ -126,8 +126,6 @@
     <Compile Include="Model\Account\Device\DeviceGenerator.cs" />
     <Compile Include="Model\Account\Device\DeviceInfo.cs" />
     <Compile Include="Model\Account\Device\UserAgent.cs" />
-    <Compile Include="Model\Internal\Epoch.cs" />
-    <Compile Include="Model\Internal\LastAction.cs" />
     <Compile Include="Model\Request\Proxy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Request\Exception\AccountDisabledException.cs" />
@@ -363,6 +361,11 @@
   <ItemGroup>
     <Analyzer Include="..\packages\MessagePackAnalyzer.1.6.0\analyzers\dotnet\cs\MessagePackAnalyzer.dll" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Apex.Shared\Apex.Shared.csproj">
+      <Project>{4b179053-4c96-44d9-a299-86e5bc24df7b}</Project>
+      <Name>Apex.Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

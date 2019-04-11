@@ -93,6 +93,10 @@
       <Project>{f6028b03-854e-40b6-a8c1-cb4ca7018665}</Project>
       <Name>Apex.Instagram</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Apex.Shared\Apex.Shared.csproj">
+      <Project>{4b179053-4c96-44d9-a299-86e5bc24df7b}</Project>
+      <Name>Apex.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
