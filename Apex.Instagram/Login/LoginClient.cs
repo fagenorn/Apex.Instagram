@@ -87,6 +87,7 @@ namespace Apex.Instagram.Login
             {
                 var request = new RequestBuilder(_account).SetNeedsAuth(false)
                                                           .SetUrl("accounts/login/")
+                                                          .AddPost("country_codes", "[{\"country_code\":\"1\",\"source\":[\"default\",\"sim\"]}]")
                                                           .AddPost("phone_id", _account.AccountInfo.PhoneId)
                                                           .AddPost("_csrftoken", CsrfToken)
                                                           .AddPost("username", _account.AccountInfo.Username)
@@ -94,6 +95,7 @@ namespace Apex.Instagram.Login
                                                           .AddPost("guid", _account.AccountInfo.Uuid)
                                                           .AddPost("device_id", _account.AccountInfo.DeviceId)
                                                           .AddPost("password", _account.AccountInfo.Password)
+                                                          .AddPost("google_tokens", "[]")
                                                           .AddPost("login_attempt_count", 0);
 
                 response = await _account.ApiRequest<LoginResponse>(request.Build)
