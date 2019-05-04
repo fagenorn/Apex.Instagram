@@ -14,6 +14,6 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string Emoji { get; set; }
 
         [DataMember(Name = "selfie_sticker")]
-        public string SelfieSticker { get; set; }
+        public int? SelfieSticker { get; set; }
     }
 }

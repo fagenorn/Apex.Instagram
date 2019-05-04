@@ -32,6 +32,9 @@ namespace Apex.Instagram.Response.JsonMap.Model
         [DataMember(Name = "media_type")]
         public int? MediaType { get; set; }
 
+        [DataMember(Name = "dynamic_item_id")]
+        public string DynamicItemId { get; set; }
+
         [DataMember(Name = "code")]
         public string Code { get; set; }
 
@@ -441,7 +444,13 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public dynamic StoryProductItems { get; set; }
 
         [DataMember(Name = "story_questions")]
-        public dynamic StoryQuestions { get; set; }
+        public StoryQuestion[] StoryQuestions { get; set; }
+
+        [DataMember(Name = "story_question_responder_infos")]
+        public StoryQuestionResponderInfo[] StoryQuestionResponderInfos { get; set; }
+
+        [DataMember(Name = "story_countdowns")]
+        public StoryCountdown[] StoryCountdowns { get; set; }
 
         [DataMember(Name = "story_music_stickers")]
         public dynamic StoryMusicStickers { get; set; }

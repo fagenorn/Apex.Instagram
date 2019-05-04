@@ -4,11 +4,11 @@
     {
         public string SigningKeyVersion { get; } = "4";
 
-        public string InstagramVersion { get; } = "76.0.0.15.395";
+        public string InstagramVersion { get; } = "85.0.0.21.100";
 
-        public string VersionCode { get; } = "138226743";
+        public string VersionCode { get; } = "146536611";
 
-        public string SigningKey { get; } = "19ce5f445dbfd9d29c59dc2a78c616a7fc090a8e018b9267bc4240a30244c53b";
+        public string SigningKey { get; } = "937463b5272b5d60e9d20f0f8d7d192193dd95095a3ad43725d494300a5ea5fc";
 
         public string HeaderCapabilities { get; } = "3brTvw==";
 
