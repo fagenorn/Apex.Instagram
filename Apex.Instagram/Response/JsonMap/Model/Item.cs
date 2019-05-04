@@ -9,7 +9,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
 
         public const int Video = 2;
 
-        public const int Album = 8;
+        public const int Carousel = 8;
 
         public string GetItemUrl() { return $"https://www.instagram.com/p/{Code}/"; }
 
