@@ -15,13 +15,15 @@ namespace Apex.Instagram.Request.Instagram
 
         public async Task<TimelineFeedResponse> GetTimelineFeed(string maxId = null, Dictionary<string, object> options = null)
         {
-            var asyncAds              = Account.LoginClient.LoginInfo.IsExperimentEnabled("ig_android_ad_async_ads_universe", "is_enabled");
+            var asyncAds = Account.LoginClient.LoginInfo.IsExperimentEnabled("ig_android_ad_async_ads_universe", "is_enabled");
+            var asyncAdsInHeadloadEnabled = Account.LoginClient.LoginInfo.IsExperimentEnabled("ig_android_ad_async_ads_universe", "is_async_ads_in_headload_enabled");
             var asyncAdsDoubleRequest = Account.LoginClient.LoginInfo.IsExperimentEnabled("ig_android_ad_async_ads_universe", "is_double_request_enabled");
             var asyncAdsRti           = Account.LoginClient.LoginInfo.IsExperimentEnabled("ig_android_ad_async_ads_universe", "is_rti_enabled");
             var rtiDeliveryBackend    = Account.LoginClient.LoginInfo.IsExperimentEnabled("ig_android_ad_async_ads_universe", "rti_delivery_backend");
 
             var request = new RequestBuilder(Account).SetUrl("feed/timeline/")
                                                      .SetSignedPost(false)
+                                                     .SetIsBodyCompressed(true)
                                                      .AddHeader("X-Ads-Opt-Out", "0")
                                                      .AddHeader("X-Google-AD-ID", Account.AccountInfo.AdvertisingId)
                                                      .AddHeader("X-DEVICE-ID", Account.AccountInfo.Uuid)
@@ -36,9 +38,9 @@ namespace Apex.Instagram.Request.Instagram
                                                      .AddPost("will_sound_on", "1")
                                                      .AddPost("is_on_screen", "true")
                                                      .AddPost("timezone_offset", Time.Instance.GetTimezoneOffset())
-                                                     .AddPost("is_async_ads", (asyncAds ? 1 : 0).ToString())
-                                                     .AddPost("is_async_ads_double_request", (asyncAdsDoubleRequest ? 1 : 0).ToString())
-                                                     .AddPost("is_async_ads_rti", (asyncAdsRti ? 1 : 0).ToString())
+                                                     .AddPost("is_async_ads_in_headload_enabled", (asyncAds && asyncAdsInHeadloadEnabled ? 1 : 0).ToString())
+                                                     .AddPost("is_async_ads_double_request", (asyncAds && asyncAdsDoubleRequest ? 1 : 0).ToString())
+                                                     .AddPost("is_async_ads_rti", (asyncAds && asyncAdsRti ? 1 : 0).ToString())
                                                      .AddPost("rti_delivery_backend", (rtiDeliveryBackend ? 1 : 0).ToString());
 
             if ( ExistsOption("latest_story_pk") )
@@ -67,6 +69,24 @@ namespace Apex.Instagram.Request.Instagram
             {
                 request.AddPost("reason", "cold_start_fetch")
                        .AddPost("is_pull_to_refresh", "0");
+            }
+
+            if (ExistsOption("seen_posts"))
+            {
+                Debug.Assert(options != null, nameof(options) + " != null");
+                var value = options["seen_posts"];
+                if (value is string[] array)
+                {
+                    request.AddPost("seen_posts", string.Join(",", array));
+                }
+                else
+                {
+                    request.AddPost("seen_posts", (string)value);
+                }
+            }
+            else if (maxId == null)
+            {
+                request.AddPost("seen_posts", string.Empty);
             }
 
             if ( ExistsOption("unseen_posts") )
