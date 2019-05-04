@@ -13,10 +13,11 @@ namespace Apex.Instagram.Request.Instagram
             var request = new RequestBuilder(Account).SetUrl("accounts/contact_point_prefill/")
                                                      .SetNeedsAuth(false)
                                                      .AddPost("phone_id", Account.AccountInfo.PhoneId)
-                                                     .AddPost("usage", usage)
-                                                     .AddPost("_csrftoken", Account.LoginClient.CsrfToken);
+                                                     .AddPost("_csrftoken", Account.LoginClient.CsrfToken)
+                                                     .AddPost("usage", usage);
 
-            return await Account.ApiRequest<GenericResponse>(request).ConfigureAwait(false);
+            return await Account.ApiRequest<GenericResponse>(request)
+                                .ConfigureAwait(false);
         }
     }
 }

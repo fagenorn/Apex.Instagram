@@ -15,8 +15,9 @@ namespace Apex.Instagram.Request.Instagram
             var request = new RequestBuilder(Account).SetUrl("feed/reels_tray/")
                                                      .SetSignedPost(false)
                                                      .AddPost("supported_capabilities_new", JsonSerializer.ToJsonString(Constants.Request.Instance.SupportedCapabilities))
-                                                     .AddPost("_uuid", Account.AccountInfo.Uuid)
-                                                     .AddPost("_csrftoken", Account.LoginClient.CsrfToken);
+                                                     .AddPost("reason", "pull_to_refresh")
+                                                     .AddPost("_csrftoken", Account.LoginClient.CsrfToken)
+                                                     .AddPost("_uuid", Account.AccountInfo.Uuid);
 
             return await Account.ApiRequest<ReelsTrayFeedResponse>(request)
                                 .ConfigureAwait(false);

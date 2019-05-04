@@ -205,6 +205,9 @@
     <Compile Include="Response\JsonMap\Model\Ad4ad.cs" />
     <Compile Include="Response\JsonMap\Model\AdMetadata.cs" />
     <Compile Include="Response\JsonMap\Model\AndroidLinks.cs" />
+    <Compile Include="Response\JsonMap\Model\AnimatedMedia.cs" />
+    <Compile Include="Response\JsonMap\Model\AnimatedMediaImage.cs" />
+    <Compile Include="Response\JsonMap\Model\AnimatedMediaImageFixedHeigth.cs" />
     <Compile Include="Response\JsonMap\Model\Args.cs" />
     <Compile Include="Response\JsonMap\Model\Attribution.cs" />
     <Compile Include="Response\JsonMap\Model\Aymf.cs" />
@@ -244,6 +247,7 @@
     <Compile Include="Response\JsonMap\Model\ExploreItemInfo.cs" />
     <Compile Include="Response\JsonMap\Model\FeedAysf.cs" />
     <Compile Include="Response\JsonMap\Model\FeedItem.cs" />
+    <Compile Include="Response\JsonMap\Model\FelixShare.cs" />
     <Compile Include="Response\JsonMap\Model\FriendshipStatus.cs" />
     <Compile Include="Response\JsonMap\Model\Gating.cs" />
     <Compile Include="Response\JsonMap\Model\GenericMegaphone.cs" />

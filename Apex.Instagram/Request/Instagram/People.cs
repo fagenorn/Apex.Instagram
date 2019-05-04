@@ -223,6 +223,7 @@ namespace Apex.Instagram.Request.Instagram
         private async Task<FollowerAndFollowingResponse> GetFollowing(ulong userId, string rankToken, string searchQuery, string maxId)
         {
             var request = new RequestBuilder(Account).SetUrl($"friendships/{userId}/following/")
+                                                     .AddParam("includes_hashtags", true)
                                                      .AddParam("rank_token", rankToken);
 
             if ( searchQuery != null )

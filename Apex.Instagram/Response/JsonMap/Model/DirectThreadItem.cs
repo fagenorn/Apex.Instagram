@@ -84,5 +84,11 @@ namespace Apex.Instagram.Response.JsonMap.Model
 
         [DataMember(Name = "product_share")]
         public ProductShare ProductShare { get; set; }
+
+        [DataMember(Name = "animated_media")]
+        public AnimatedMedia AnimatedMedia { get; set; }
+
+        [DataMember(Name = "felix_share")]
+        public FelixShare FelixShare { get; set; }
     }
 }
