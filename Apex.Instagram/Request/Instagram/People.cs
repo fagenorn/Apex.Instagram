@@ -17,7 +17,7 @@ namespace Apex.Instagram.Request.Instagram
         {
             var request = new RequestBuilder(Account).SetUrl("news/inbox/");
 
-            return await Account.ApiRequest<ActivityNewsResponse>(request.Build)
+            return await Account.ApiRequest<ActivityNewsResponse>(request)
                                 .ConfigureAwait(false);
         }
 
@@ -37,7 +37,7 @@ namespace Apex.Instagram.Request.Instagram
                 var request = new RequestBuilder(Account).SetUrl("scores/bootstrap/users/")
                                                          .AddParam("surfaces", JsonSerializer.ToJsonString(surfaces));
 
-                return await Account.ApiRequest<BootstrapUsersResponse>(request.Build)
+                return await Account.ApiRequest<BootstrapUsersResponse>(request)
                                     .ConfigureAwait(false);
             }
             catch (ThrottledException)
@@ -63,7 +63,7 @@ namespace Apex.Instagram.Request.Instagram
                                                      .AddPost("user_id", userId)
                                                      .AddPost("radio_type", "wifi-none");
 
-            return await Account.ApiRequest<FriendshipResponse>(request.Build)
+            return await Account.ApiRequest<FriendshipResponse>(request)
                                 .ConfigureAwait(false);
         }
 
@@ -83,7 +83,7 @@ namespace Apex.Instagram.Request.Instagram
                                                      .AddPost("user_id", userId)
                                                      .AddPost("radio_type", "wifi-none");
 
-            return await Account.ApiRequest<FriendshipResponse>(request.Build)
+            return await Account.ApiRequest<FriendshipResponse>(request)
                                 .ConfigureAwait(false);
         }
 
@@ -118,7 +118,7 @@ namespace Apex.Instagram.Request.Instagram
                 request.AddParam("from_module", module);
             }
 
-            return await Account.ApiRequest<UserInfoResponse>(request.Build)
+            return await Account.ApiRequest<UserInfoResponse>(request)
                                 .ConfigureAwait(false);
         }
 
@@ -153,7 +153,7 @@ namespace Apex.Instagram.Request.Instagram
                 request.AddParam("from_module", module);
             }
 
-            return await Account.ApiRequest<UserInfoResponse>(request.Build)
+            return await Account.ApiRequest<UserInfoResponse>(request)
                                 .ConfigureAwait(false);
         }
 
@@ -168,7 +168,7 @@ namespace Apex.Instagram.Request.Instagram
         {
             var request = new RequestBuilder(Account).SetUrl($"friendships/show/{userId}/");
 
-            return await Account.ApiRequest<FriendshipsShowResponse>(request.Build)
+            return await Account.ApiRequest<FriendshipsShowResponse>(request)
                                 .ConfigureAwait(false);
         }
 
@@ -187,7 +187,7 @@ namespace Apex.Instagram.Request.Instagram
                                                      .AddPost("user_ids", string.Join(",", userIds))
                                                      .AddPost("_csrftoken", Account.LoginClient.CsrfToken);
 
-            return await Account.ApiRequest<FriendshipsShowManyResponse>(request.Build)
+            return await Account.ApiRequest<FriendshipsShowManyResponse>(request)
                                 .ConfigureAwait(false);
         }
 
@@ -206,7 +206,7 @@ namespace Apex.Instagram.Request.Instagram
                 request.AddParam("max_id", maxId);
             }
 
-            return await Account.ApiRequest<FollowerAndFollowingResponse>(request.Build)
+            return await Account.ApiRequest<FollowerAndFollowingResponse>(request)
                                 .ConfigureAwait(false);
         }
 
@@ -235,7 +235,7 @@ namespace Apex.Instagram.Request.Instagram
                 request.AddParam("max_id", maxId);
             }
 
-            return await Account.ApiRequest<FollowerAndFollowingResponse>(request.Build)
+            return await Account.ApiRequest<FollowerAndFollowingResponse>(request)
                                 .ConfigureAwait(false);
         }
 

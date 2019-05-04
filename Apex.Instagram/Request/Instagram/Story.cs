@@ -18,7 +18,7 @@ namespace Apex.Instagram.Request.Instagram
                                                      .AddPost("_uuid", Account.AccountInfo.Uuid)
                                                      .AddPost("_csrftoken", Account.LoginClient.CsrfToken);
 
-            return await Account.ApiRequest<ReelsTrayFeedResponse>(request.Build)
+            return await Account.ApiRequest<ReelsTrayFeedResponse>(request)
                                 .ConfigureAwait(false);
         }
     }

@@ -42,17 +42,17 @@ namespace Apex.Instagram.Request
         ///     Makes a request using the open connection.
         ///     IMPORTANT: Dispose reponse.
         /// </summary>
-        /// <param name="request">The request object. Will be disposed after request has been made.</param>
+        /// <param name="builder">The request builder. Will be disposed after request has been made.</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>Make sure to dispose <see cref="HttpResponseMessage" /> or a memory leak can occur.</returns>
-        public async Task<ResponseInfo<T>> GetResponseAsync<T>(Func<HttpRequestMessage> request, CancellationToken ct = default) where T : Response.JsonMap.Response
+        public async Task<ResponseInfo<T>> GetResponseAsync<T>(RequestBuilder builder, CancellationToken ct = default) where T : Response.JsonMap.Response
         {
             await _lock.WaitAsync(ct)
                        .ConfigureAwait(false);
 
             try
             {
-                return await GetResponseAsyncInternal<T>(request, ct)
+                return await GetResponseAsyncInternal<T>(builder, ct)
                            .ConfigureAwait(false);
             }
             catch (RequestException e)
@@ -75,10 +75,10 @@ namespace Apex.Instagram.Request
             }
         }
 
-        private async Task<ResponseInfo<T>> GetResponseAsyncInternal<T>(Func<HttpRequestMessage> requestFunc, CancellationToken ct, int depth = 1) where T : Response.JsonMap.Response
+        private async Task<ResponseInfo<T>> GetResponseAsyncInternal<T>(RequestBuilder builder, CancellationToken ct, int depth = 1) where T : Response.JsonMap.Response
         {
             HttpResponseMessage result;
-            var                 request = requestFunc();
+            var                 request = builder.Build();
             _account.Logger.Debug<HttpClient>(request);
 
             try
@@ -100,7 +100,7 @@ namespace Apex.Instagram.Request
 
                         await Task.Delay(1500, ct);
 
-                        return await GetResponseAsyncInternal<T>(requestFunc, ct, depth + 1)
+                        return await GetResponseAsyncInternal<T>(builder, ct, depth + 1)
                                    .ConfigureAwait(false);
                     default:
 
@@ -118,6 +118,7 @@ namespace Apex.Instagram.Request
             finally
             {
                 request.Dispose();
+                builder.Dispose();
             }
 
             return await ResponseInfo<T>.CreateAsync<T>(result)

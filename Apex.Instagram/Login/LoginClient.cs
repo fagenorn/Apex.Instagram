@@ -98,7 +98,7 @@ namespace Apex.Instagram.Login
                                                           .AddPost("google_tokens", "[]")
                                                           .AddPost("login_attempt_count", 0);
 
-                response = await _account.ApiRequest<LoginResponse>(request.Build)
+                response = await _account.ApiRequest<LoginResponse>(request)
                                          .ConfigureAwait(false);
             }
             catch (RequestException e)

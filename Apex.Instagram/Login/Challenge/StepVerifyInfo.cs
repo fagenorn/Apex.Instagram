@@ -22,7 +22,7 @@ namespace Apex.Instagram.Login.Challenge
                                                      .AddPost("_csrftoken", Account.LoginClient.CsrfToken)
                                                      .AddPost("security_code", input);
 
-            return await Account.ApiRequest<ChallengeResponse>(request.Build)
+            return await Account.ApiRequest<ChallengeResponse>(request)
                                 .ConfigureAwait(false);
         }
     }

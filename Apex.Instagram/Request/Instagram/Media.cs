@@ -12,7 +12,7 @@ namespace Apex.Instagram.Request.Instagram
         {
             var request = new RequestBuilder(Account).SetUrl("media/blocked/");
 
-            return await Account.ApiRequest<BlockedMediaResponse>(request.Build).ConfigureAwait(false);
+            return await Account.ApiRequest<BlockedMediaResponse>(request).ConfigureAwait(false);
         }
     }
 }

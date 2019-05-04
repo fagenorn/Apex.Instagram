@@ -52,7 +52,7 @@ namespace Apex.Instagram.Tests
                                                      .SetNeedsAuth(false);
 
             var request1 = request;
-            await Assert.ThrowsExceptionAsync<EndpointException>(async () => await account.ApiRequest<GenericResponse>(request1.Build));
+            await Assert.ThrowsExceptionAsync<EndpointException>(async () => await account.ApiRequest<GenericResponse>(request1));
 
             Assert.AreEqual(0, (await account.Storage.Cookie.LoadAsync()).Cookies.Count);
             Assert.IsNull(account.GetCookie("freeform"));
@@ -63,7 +63,7 @@ namespace Apex.Instagram.Tests
                                                  .AddParam("freeform", "test");
 
             var request2 = request;
-            await Assert.ThrowsExceptionAsync<EndpointException>(async () => await account.ApiRequest<GenericResponse>(request2.Build));
+            await Assert.ThrowsExceptionAsync<EndpointException>(async () => await account.ApiRequest<GenericResponse>(request2));
 
             Assert.AreEqual("test", account.GetCookie("freeform"));
 
@@ -72,7 +72,7 @@ namespace Apex.Instagram.Tests
                                                  .SetNeedsAuth(false);
 
             var request3 = request;
-            await Assert.ThrowsExceptionAsync<EndpointException>(async () => await account.ApiRequest<GenericResponse>(request3.Build));
+            await Assert.ThrowsExceptionAsync<EndpointException>(async () => await account.ApiRequest<GenericResponse>(request3));
 
             Assert.AreEqual("test", account.GetCookie("freeform"));
         }
@@ -94,7 +94,7 @@ namespace Apex.Instagram.Tests
             Assert.IsNull(await account.Storage.Cookie.LoadAsync());
             var account1 = account;
             var request1 = request;
-            await Assert.ThrowsExceptionAsync<EndpointException>(async () => await account1.ApiRequest<GenericResponse>(request1.Build));
+            await Assert.ThrowsExceptionAsync<EndpointException>(async () => await account1.ApiRequest<GenericResponse>(request1));
 
             Assert.AreEqual("test", account.GetCookie("freeform"));
             Assert.AreEqual(1, (await account.Storage.Cookie.LoadAsync()).Cookies.Count);
@@ -289,7 +289,7 @@ namespace Apex.Instagram.Tests
             var request = new RequestBuilder(account).SetUrl("https://httpbin.org/status/400")
                                                      .SetNeedsAuth(false);
 
-            await Assert.ThrowsExceptionAsync<BadRequestException>(async () => await account.ApiRequest<GenericResponse>(request.Build));
+            await Assert.ThrowsExceptionAsync<BadRequestException>(async () => await account.ApiRequest<GenericResponse>(request));
         }
 
         [TestMethod]
@@ -304,7 +304,7 @@ namespace Apex.Instagram.Tests
             var request = new RequestBuilder(account).SetUrl("https://httpbin.org/status/407")
                                                      .SetNeedsAuth(false);
 
-            await Assert.ThrowsExceptionAsync<ProxyAuthenticationRequiredException>(async () => await account.ApiRequest<GenericResponse>(request.Build));
+            await Assert.ThrowsExceptionAsync<ProxyAuthenticationRequiredException>(async () => await account.ApiRequest<GenericResponse>(request));
         }
 
         [TestMethod]
@@ -319,7 +319,7 @@ namespace Apex.Instagram.Tests
             var request = new RequestBuilder(account).SetUrl("http://httpbin.org/delay/3")
                                                      .SetNeedsAuth(false);
 
-            var taskResult = account.ApiRequest<GenericResponse>(request.Build);
+            var taskResult = account.ApiRequest<GenericResponse>(request);
 
             account.Dispose();
             var ex = await Assert.ThrowsExceptionAsync<RequestException>(async () => await taskResult);
@@ -338,7 +338,7 @@ namespace Apex.Instagram.Tests
             var request = new RequestBuilder(account).SetUrl("http://httpbin.org/delay/1")
                                                      .SetNeedsAuth(false);
 
-            var taskResult = account.ApiRequest<GenericResponse>(request.Build);
+            var taskResult = account.ApiRequest<GenericResponse>(request);
 
             account.Dispose();
             var ex = await Assert.ThrowsExceptionAsync<RequestException>(async () => await taskResult);
@@ -347,7 +347,7 @@ namespace Apex.Instagram.Tests
             request = new RequestBuilder(account).SetUrl("http://httpbin.org/delay/1")
                                                  .SetNeedsAuth(false);
 
-            await Assert.ThrowsExceptionAsync<ObjectDisposedException>(async () => await account.ApiRequest<GenericResponse>(request.Build));
+            await Assert.ThrowsExceptionAsync<ObjectDisposedException>(async () => await account.ApiRequest<GenericResponse>(request));
         }
 
         [TestMethod]
@@ -363,7 +363,7 @@ namespace Apex.Instagram.Tests
             var request = new RequestBuilder(account).SetUrl("https://httpbin.org/status/429")
                                                      .SetNeedsAuth(false);
 
-            await account.ApiRequest<GenericResponse>(request.Build);
+            await account.ApiRequest<GenericResponse>(request);
         }
 
         [TestMethod]
@@ -379,7 +379,7 @@ namespace Apex.Instagram.Tests
             var request = new RequestBuilder(account).SetUrl("https://httpbin.org/status/431")
                                                      .SetNeedsAuth(false);
 
-            await account.ApiRequest<GenericResponse>(request.Build);
+            await account.ApiRequest<GenericResponse>(request);
         }
 
         [TestMethod]
@@ -396,13 +396,13 @@ namespace Apex.Instagram.Tests
             var request = new RequestBuilder(account).SetUrl("http://httpbin.org/delay/2")
                                                      .SetNeedsAuth(false);
 
-            var taskResult = account.ApiRequest<GenericResponse>(request.Build)
+            var taskResult = account.ApiRequest<GenericResponse>(request)
                                     .ContinueWith(x => lastFinished = 1);
 
             var request2 = new RequestBuilder(account).SetUrl("http://httpbin.org/get")
                                                       .SetNeedsAuth(false);
 
-            var taskResult2 = account.ApiRequest<GenericResponse>(request2.Build)
+            var taskResult2 = account.ApiRequest<GenericResponse>(request2)
                                      .ContinueWith(x => lastFinished = 2);
 
             await taskResult2;
@@ -424,7 +424,7 @@ namespace Apex.Instagram.Tests
             var request = new RequestBuilder(account).SetUrl("https://non-existent-website-123-host-dns.org/")
                                                      .SetNeedsAuth(false);
 
-            await Assert.ThrowsExceptionAsync<RequestException>(async () => await account.ApiRequest<GenericResponse>(request.Build));
+            await Assert.ThrowsExceptionAsync<RequestException>(async () => await account.ApiRequest<GenericResponse>(request));
         }
 
         [TestMethod]
@@ -440,7 +440,7 @@ namespace Apex.Instagram.Tests
             var request = new RequestBuilder(account).SetUrl("https://httpbin.org/ip")
                                                      .SetNeedsAuth(false);
 
-            await Assert.ThrowsExceptionAsync<ProxyAuthenticationRequiredException>(async () => await account.ApiRequest<GenericResponse>(request.Build));
+            await Assert.ThrowsExceptionAsync<ProxyAuthenticationRequiredException>(async () => await account.ApiRequest<GenericResponse>(request));
         }
 
         [TestMethod]
@@ -456,7 +456,7 @@ namespace Apex.Instagram.Tests
             var request = new RequestBuilder(account).SetUrl("https://httpbin.org/ip")
                                                      .SetNeedsAuth(false);
 
-            await Assert.ThrowsExceptionAsync<ProxyAuthenticationRequiredException>(async () => await account.ApiRequest<GenericResponse>(request.Build));
+            await Assert.ThrowsExceptionAsync<ProxyAuthenticationRequiredException>(async () => await account.ApiRequest<GenericResponse>(request));
         }
 
         [TestMethod]
@@ -576,7 +576,7 @@ namespace Apex.Instagram.Tests
             var request = new RequestBuilder(account).SetUrl("http://ptsv2.com/t/3e37m-1532618200/post")
                                                      .SetNeedsAuth(false);
 
-            var result = await account.ApiRequest<GenericResponse>(request.Build);
+            var result = await account.ApiRequest<GenericResponse>(request);
             Assert.AreEqual("ok", result.Status);
         }
 
@@ -592,7 +592,7 @@ namespace Apex.Instagram.Tests
             var request = new RequestBuilder(account).SetUrl("http://ptsv2.com/t/a1boc-1532620880/post")
                                                      .SetNeedsAuth(false);
 
-            var exception = await Assert.ThrowsExceptionAsync<EndpointException>(async () => await account.ApiRequest<GenericResponse>(request.Build));
+            var exception = await Assert.ThrowsExceptionAsync<EndpointException>(async () => await account.ApiRequest<GenericResponse>(request));
             Assert.AreEqual("Some random message", exception.Message);
         }
 
@@ -608,7 +608,7 @@ namespace Apex.Instagram.Tests
             var request = new RequestBuilder(account).SetUrl("http://ptsv2.com/t/1ikd3-1532626976/post")
                                                      .SetNeedsAuth(false);
 
-            var exception = await Assert.ThrowsExceptionAsync<EndpointException>(async () => await account.ApiRequest<GenericResponse>(request.Build));
+            var exception = await Assert.ThrowsExceptionAsync<EndpointException>(async () => await account.ApiRequest<GenericResponse>(request));
             Assert.AreEqual("Select a valid choice. 0 is not one of the available choices.", exception.Message);
         }
 
@@ -624,7 +624,7 @@ namespace Apex.Instagram.Tests
             var request = new RequestBuilder(account).SetUrl("http://ptsv2.com/t/j4y3y-1532627784/post")
                                                      .SetNeedsAuth(false);
 
-            await Assert.ThrowsExceptionAsync<ForcedPasswordResetException>(async () => await account.ApiRequest<GenericResponse>(request.Build));
+            await Assert.ThrowsExceptionAsync<ForcedPasswordResetException>(async () => await account.ApiRequest<GenericResponse>(request));
         }
 
         [TestMethod]
@@ -639,7 +639,7 @@ namespace Apex.Instagram.Tests
             var request = new RequestBuilder(account).SetUrl("http://ptsv2.com/t/2x2zs-1532628038/post")
                                                      .SetNeedsAuth(false);
 
-            await Assert.ThrowsExceptionAsync<ThrottledException>(async () => await account.ApiRequest<GenericResponse>(request.Build));
+            await Assert.ThrowsExceptionAsync<ThrottledException>(async () => await account.ApiRequest<GenericResponse>(request));
         }
 
         [TestMethod]
@@ -730,37 +730,6 @@ namespace Apex.Instagram.Tests
             build.Dispose();
             File.Delete(temp);
         }
-
-        //        [TestMethod]
-        //        public async Task Get_Requests_Signed_Non_Singed_Parameters()
-        //        {
-        //            var fileStorage = new FileStorage();
-        //            var account = await new AccountBuilder().SetId(0)
-        //                                                    .SetStorage(fileStorage)
-        //                                                    .SetLogger(Logger)
-        //                                                    .BuildAsync();
-        //
-        //            var request = new RequestBuilder(account).SetUrl("https://httpbin.org/get")
-        //                                                     .SetNeedsAuth(false)
-        //                                                     .AddParam("test", "best", true)
-        //                                                     .AddParam("test2", "best2", true)
-        //                                                     .AddParam("test3", "best3")
-        //                                                     .SetSignedGet(true)
-        //                                                     .Build();
-        //
-        //            var response = await GetClient(account)
-        //                               .SendAsync(request);
-        //
-        //            request.Dispose();
-        //
-        //            Assert.IsTrue(response.IsSuccessStatusCode);
-        //            var postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
-        //            var hash         = Hashing.Instance.ByteToString(Hashing.Instance.Sha256(@"{""test"":""best"",""test2"":""best2""}", Encoding.UTF8.GetBytes(Constants.Version.Instance.SigningKey)));
-        //
-        //            Assert.AreEqual(@"4", (string)postResponse["args"]["ig_sig_key_version"]);
-        //            Assert.AreEqual($"{hash}.{{\"test\":\"best\",\"test2\":\"best2\"}}", (string)postResponse["args"]["signed_body"]);
-        //            Assert.AreEqual(@"best3", (string)postResponse["args"]["test3"]);
-        //        }
 
         #region Additional test attributes
 

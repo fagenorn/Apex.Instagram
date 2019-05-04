@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,12 +8,11 @@ using Apex.Instagram.Login.Challenge;
 using Apex.Instagram.Model.Account;
 using Apex.Instagram.Model.Account.Device;
 using Apex.Instagram.Model.Request;
+using Apex.Instagram.Request;
 using Apex.Instagram.Request.Exception;
 using Apex.Instagram.Request.Instagram;
 using Apex.Instagram.Response.JsonMap;
 using Apex.Instagram.Storage;
-
-using HttpClient = Apex.Instagram.Request.HttpClient;
 
 namespace Apex.Instagram
 {
@@ -32,14 +30,14 @@ namespace Apex.Instagram
 
         internal string GetCookie(string key) { return HttpClient.GetCookie(key); }
 
-        internal async Task<T> ApiRequest<T>(Func<HttpRequestMessage> request) where T : Response.JsonMap.Response
+        internal async Task<T> ApiRequest<T>(RequestBuilder builder) where T : Response.JsonMap.Response
         {
             if ( _cancellationTokenSource.IsCancellationRequested )
             {
                 throw new ObjectDisposedException(nameof(Account));
             }
 
-            using (var result = await HttpClient.GetResponseAsync<T>(request, _cancellationTokenSource.Token)
+            using (var result = await HttpClient.GetResponseAsync<T>(builder, _cancellationTokenSource.Token)
                                                 .ConfigureAwait(false))
             {
                 return result.Response;

@@ -19,9 +19,6 @@ namespace Apex.Instagram.Request
     {
         public RequestBuilder(Account account) { _account = account; }
 
-        /// <summary>
-        ///     Should only be called if the request isn't build.
-        /// </summary>
         public void Dispose()
         {
             _content?.Dispose();
@@ -184,7 +181,7 @@ namespace Apex.Instagram.Request
             }
             else
             {
-                if (_isBodyCompressed)
+                if ( _isBodyCompressed )
                 {
                     _content = new CompressedContent(_content, CompressionType.Gzip);
                 }

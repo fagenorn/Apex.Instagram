@@ -106,7 +106,7 @@ namespace Apex.Instagram.Login.Challenge
                                                       .SetUrl(ChallengeInfo.ResetUrl)
                                                       .AddPost("_csrftoken", _account.LoginClient.CsrfToken);
 
-            var response = await _account.ApiRequest<ChallengeResponse>(request.Build)
+            var response = await _account.ApiRequest<ChallengeResponse>(request)
                                          .ConfigureAwait(false);
 
             CheckIfCompleted(response);

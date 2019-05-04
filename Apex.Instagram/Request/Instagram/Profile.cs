@@ -16,7 +16,7 @@ namespace Apex.Instagram.Request.Instagram
                                                      .AddPost("usage", usage)
                                                      .AddPost("_csrftoken", Account.LoginClient.CsrfToken);
 
-            return await Account.ApiRequest<GenericResponse>(request.Build).ConfigureAwait(false);
+            return await Account.ApiRequest<GenericResponse>(request).ConfigureAwait(false);
         }
     }
 }
