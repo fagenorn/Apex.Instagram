@@ -8,12 +8,12 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public int? Mode { get; set; }
 
         [DataMember(Name = "gradient")]
-        public int? Gradient { get; set; }
+        public string Gradient { get; set; }
 
         [DataMember(Name = "emoji")]
         public string Emoji { get; set; }
 
         [DataMember(Name = "selfie_sticker")]
-        public int? SelfieSticker { get; set; }
+        public string SelfieSticker { get; set; }
     }
 }

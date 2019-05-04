@@ -82,10 +82,10 @@ namespace Apex.Instagram.Tests
         [TestMethod]
         public async Task Follow_Unfollow_User()
         {
-            var celebInfo = await _account.People.GetInfoByNameAsync("celeb_syles");
+            var celebInfo = await _account.People.GetInfoByNameAsync("goofball_9");
             Assert.IsNotNull(celebInfo.User.Pk);
-            Assert.AreEqual(3549147650u, celebInfo.User.Pk);
-            Assert.AreEqual("celeb_syles", celebInfo.User.Username);
+            Assert.AreEqual(3232737714u, celebInfo.User.Pk);
+            Assert.AreEqual("goofball_9", celebInfo.User.Username);
 
             var unfollow = await _account.People.UnfollowAsync(celebInfo.User.Pk.Value);
             Assert.IsNotNull(unfollow.FriendshipStatus.Following);
@@ -102,10 +102,10 @@ namespace Apex.Instagram.Tests
             var friendships = await _account.People.GetFriendshipsAsync(celebInfo.User.Pk.Value);
             Assert.IsNotNull(friendships.FriendshipStatuses);
             Assert.AreEqual(1, friendships.FriendshipStatuses.Count);
-            Assert.IsNotNull(friendships.FriendshipStatuses["3549147650"]
+            Assert.IsNotNull(friendships.FriendshipStatuses["3232737714"]
                                         .Following);
 
-            Assert.IsTrue(friendships.FriendshipStatuses["3549147650"]
+            Assert.IsTrue(friendships.FriendshipStatuses["3232737714"]
                                      .Following.Value);
 
             unfollow = await _account.People.UnfollowAsync(celebInfo.User.Pk.Value);
