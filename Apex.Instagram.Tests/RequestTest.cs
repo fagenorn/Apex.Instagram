@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,12 +13,14 @@ using Apex.Instagram.Request.Exception;
 using Apex.Instagram.Request.Exception.EndpointException;
 using Apex.Instagram.Response.JsonMap;
 using Apex.Instagram.Tests.Maps;
+using Apex.Instagram.Utils;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Utf8Json;
 
 using HttpClient = System.Net.Http.HttpClient;
+using Version = Apex.Instagram.Constants.Version;
 
 namespace Apex.Instagram.Tests
 {
@@ -185,8 +188,10 @@ namespace Apex.Instagram.Tests
 
             Assert.IsTrue(response.IsSuccessStatusCode);
             var postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
+            var hash         = Hashing.Instance.ByteToString(Hashing.Instance.Sha256(@"{""test"":""best"",""test2"":""best2""}", Encoding.UTF8.GetBytes(Version.Instance.SigningKey)));
+
             Assert.AreEqual(@"4", (string) postResponse["form"]["ig_sig_key_version"]);
-            Assert.AreEqual(@"797cedc7eb98618f785d780ad4dfd4fd081da7da085156a87e7568db2f146176.{""test"":""best"",""test2"":""best2""}", (string) postResponse["form"]["signed_body"]);
+            Assert.AreEqual($"{hash}.{{\"test\":\"best\",\"test2\":\"best2\"}}", (string) postResponse["form"]["signed_body"]);
             Assert.AreEqual(@"best3", (string) postResponse["form"]["test3"]);
         }
 
@@ -265,8 +270,10 @@ namespace Apex.Instagram.Tests
 
             Assert.IsTrue(response.IsSuccessStatusCode);
             var postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
+            var hash         = Hashing.Instance.ByteToString(Hashing.Instance.Sha256(@"{""test"":""best"",""test2"":""best2""}", Encoding.UTF8.GetBytes(Version.Instance.SigningKey)));
+
             Assert.AreEqual(@"4", (string) postResponse["args"]["ig_sig_key_version"]);
-            Assert.AreEqual(@"797cedc7eb98618f785d780ad4dfd4fd081da7da085156a87e7568db2f146176.{""test"":""best"",""test2"":""best2""}", (string) postResponse["args"]["signed_body"]);
+            Assert.AreEqual($"{hash}.{{\"test\":\"best\",\"test2\":\"best2\"}}", (string) postResponse["args"]["signed_body"]);
             Assert.AreEqual(@"best3", (string) postResponse["args"]["test3"]);
         }
 
@@ -634,6 +641,126 @@ namespace Apex.Instagram.Tests
 
             await Assert.ThrowsExceptionAsync<ThrottledException>(async () => await account.ApiRequest<GenericResponse>(request.Build));
         }
+
+        [TestMethod]
+        public async Task Gzip_Request_content()
+        {
+            var fileStorage = new FileStorage();
+            var account = await new AccountBuilder().SetId(0)
+                                                    .SetStorage(fileStorage)
+                                                    .SetLogger(Logger)
+                                                    .BuildAsync();
+
+            var request = new RequestBuilder(account).SetUrl("https://httpbin.org/anything")
+                                                     .SetBody(new StringContent("hello"))
+                                                     .SetNeedsAuth(false)
+                                                     .Build();
+
+            var response = await GetClient(account)
+                               .SendAsync(request);
+
+            var postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
+            Assert.IsFalse(postResponse["headers"]
+                               .ContainsKey("Content-Encoding"));
+
+            Assert.AreEqual(@"hello", (string) postResponse["data"]);
+
+            request.Dispose();
+
+            request = new RequestBuilder(account).SetUrl("https://httpbin.org/anything")
+                                                 .SetBody(new StringContent("hello", Encoding.UTF8))
+                                                 .SetIsBodyCompressed(true)
+                                                 .SetNeedsAuth(false)
+                                                 .Build();
+
+            response = await GetClient(account)
+                           .SendAsync(request);
+
+            postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
+
+            Assert.IsTrue(postResponse["headers"]
+                              .ContainsKey("Content-Encoding"));
+
+            Assert.AreEqual(@"gzip", (string) postResponse["headers"]["Content-Encoding"]);
+            Assert.AreEqual(@"data:application/octet-stream;base64,H4sIAAAAAAAEAMtIzcnJBwCGphA2BQAAAA==", (string) postResponse["data"]);
+
+            request.Dispose();
+
+            request = new RequestBuilder(account).SetUrl("https://httpbin.org/anything")
+                                                 .AddPost("hello", "hi")
+                                                 .SetIsBodyCompressed(true)
+                                                 .SetSignedPost(false)
+                                                 .SetNeedsAuth(false)
+                                                 .Build();
+
+            response = await GetClient(account)
+                           .SendAsync(request);
+
+            postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
+
+            Assert.IsTrue(postResponse["headers"]
+                              .ContainsKey("Content-Encoding"));
+
+            Assert.AreEqual(@"gzip", (string) postResponse["headers"]["Content-Encoding"]);
+            Assert.AreEqual(@"H4sIAAAAAAAEAMtIzcnJt83IBACN++pKCAAAAA==", Convert.ToBase64String(await request.Content.ReadAsByteArrayAsync()));
+
+            request.Dispose();
+
+            var temp = Path.GetTempFileName();
+
+            File.WriteAllText(temp, "superduperbigsecret");
+
+            var build = new RequestBuilder(account).SetUrl("https://httpbin.org/anything")
+                                                 .AddFile("test", temp, "test")
+                                                 .SetIsBodyCompressed(true)
+                                                 .SetSignedPost(false)
+                                                 .SetNeedsAuth(false);
+
+            response = await GetClient(account)
+                           .SendAsync(build.Build());
+
+            postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
+
+            Assert.IsTrue(postResponse["headers"]
+                              .ContainsKey("Content-Encoding"));
+
+            Assert.AreEqual(@"gzip", (string) postResponse["headers"]["Content-Encoding"]);
+
+            request.Dispose();
+            build.Dispose();
+            File.Delete(temp);
+        }
+
+        //        [TestMethod]
+        //        public async Task Get_Requests_Signed_Non_Singed_Parameters()
+        //        {
+        //            var fileStorage = new FileStorage();
+        //            var account = await new AccountBuilder().SetId(0)
+        //                                                    .SetStorage(fileStorage)
+        //                                                    .SetLogger(Logger)
+        //                                                    .BuildAsync();
+        //
+        //            var request = new RequestBuilder(account).SetUrl("https://httpbin.org/get")
+        //                                                     .SetNeedsAuth(false)
+        //                                                     .AddParam("test", "best", true)
+        //                                                     .AddParam("test2", "best2", true)
+        //                                                     .AddParam("test3", "best3")
+        //                                                     .SetSignedGet(true)
+        //                                                     .Build();
+        //
+        //            var response = await GetClient(account)
+        //                               .SendAsync(request);
+        //
+        //            request.Dispose();
+        //
+        //            Assert.IsTrue(response.IsSuccessStatusCode);
+        //            var postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
+        //            var hash         = Hashing.Instance.ByteToString(Hashing.Instance.Sha256(@"{""test"":""best"",""test2"":""best2""}", Encoding.UTF8.GetBytes(Constants.Version.Instance.SigningKey)));
+        //
+        //            Assert.AreEqual(@"4", (string)postResponse["args"]["ig_sig_key_version"]);
+        //            Assert.AreEqual($"{hash}.{{\"test\":\"best\",\"test2\":\"best2\"}}", (string)postResponse["args"]["signed_body"]);
+        //            Assert.AreEqual(@"best3", (string)postResponse["args"]["test3"]);
+        //        }
 
         #region Additional test attributes
 

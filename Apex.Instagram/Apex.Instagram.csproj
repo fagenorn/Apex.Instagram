@@ -174,6 +174,7 @@
     <Compile Include="Request\Instagram\Story.cs" />
     <Compile Include="Request\Instagram\Timeline.cs" />
     <Compile Include="Request\Internal\BetterFormUrlEncodedContent.cs" />
+    <Compile Include="Request\Internal\CompressedContent.cs" />
     <Compile Include="Request\Middleware\HttpClientMiddlewareHandler.cs" />
     <Compile Include="Request\Middleware\IMiddleware.cs" />
     <Compile Include="Request\Middleware\ModifyHeadersMiddleware.cs" />

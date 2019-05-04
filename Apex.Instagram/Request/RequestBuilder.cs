@@ -80,6 +80,13 @@ namespace Apex.Instagram.Request
             return this;
         }
 
+        public RequestBuilder SetIsBodyCompressed(bool flag)
+        {
+            _isBodyCompressed = flag;
+
+            return this;
+        }
+
         public RequestBuilder SetBody(HttpContent body)
         {
             _content = body;
@@ -177,6 +184,11 @@ namespace Apex.Instagram.Request
             }
             else
             {
+                if (_isBodyCompressed)
+                {
+                    _content = new CompressedContent(_content, CompressionType.Gzip);
+                }
+
                 var temp = new HttpRequestMessage(HttpMethod.Post, BuildUrl())
                            {
                                Content = _content
@@ -319,6 +331,8 @@ namespace Apex.Instagram.Request
         private bool _signedGet;
 
         private bool _signedPost = true;
+
+        private bool _isBodyCompressed;
 
         private Uri _url;
 
