@@ -5,7 +5,7 @@ namespace Apex.Instagram.Response.JsonMap.Model
     public class QuestionSticker
     {
         [DataMember(Name = "question_id")]
-        public string QuestionId { get; set; }
+        public ulong? QuestionId { get; set; }
 
         [DataMember(Name = "question")]
         public string Question { get; set; }
