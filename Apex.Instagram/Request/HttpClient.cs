@@ -10,6 +10,7 @@ using Apex.Instagram.Model.Request;
 using Apex.Instagram.Request.Exception;
 using Apex.Instagram.Request.Middleware;
 using Apex.Instagram.Response;
+using Apex.Instagram.Utils;
 using Apex.Shared.Model;
 
 namespace Apex.Instagram.Request
@@ -21,6 +22,14 @@ namespace Apex.Instagram.Request
             _request?.Dispose();
             _handler?.Dispose();
         }
+
+        public void StartEmulatingBatch()
+        {
+            _pidgeonBatch     = true;
+            _pidgeonTimestamp = Epoch.Current;
+        }
+
+        public void StopEmulatingBatch() { _pidgeonBatch = false; }
 
         public async Task UpdateProxy(Proxy proxy)
         {
@@ -157,6 +166,8 @@ namespace Apex.Instagram.Request
             ZeroRatingMiddleware    = new ZeroRatingMiddleware();
             ModifyHeadersMiddleware = new ModifyHeadersMiddleware(Constants.Request.Instance.PermanentHeaders);
 
+            ModifyHeadersMiddleware.AddHeader("X-Pigeon-Session-Id", _pidgeonSession);
+            ModifyHeadersMiddleware.AddHeader("X-Pigeon-Rawclienttime", GetPidgeonRawClientTime);
             ModifyHeadersMiddleware.AddHeader("User-Agent", _account.AccountInfo.DeviceInfo.UserAgent);
         }
 
@@ -177,6 +188,8 @@ namespace Apex.Instagram.Request
                                                : null,
                          Address = proxy?.Uri
                      };
+
+            _pidgeonSession = Utils.Instagram.Instance.GenerateUuid();
 
             _handler = new HttpClientHandler
                        {
@@ -209,6 +222,22 @@ namespace Apex.Instagram.Request
             handler.Push(ZeroRatingMiddleware, ModifyHeadersMiddleware);
         }
 
+        private string GetPidgeonRawClientTime()
+        {
+            double result;
+            if ( _pidgeonBatch )
+            {
+                result            =  _pidgeonTimestamp;
+                _pidgeonTimestamp += Randomizer.Instance.Number(101) / 1000.0;
+            }
+            else
+            {
+                result = Epoch.Current;
+            }
+
+            return result.ToString("F3");
+        }
+
         internal static Task<HttpClient> CreateAsync(Account account)
         {
             var ret = new HttpClient(account);
@@ -231,6 +260,12 @@ namespace Apex.Instagram.Request
         private System.Net.Http.HttpClient _request;
 
         private readonly SemaphoreSlim _lock;
+
+        private bool _pidgeonBatch;
+
+        private double _pidgeonTimestamp;
+
+        private string _pidgeonSession;
 
         #endregion
     }
