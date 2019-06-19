@@ -21,10 +21,13 @@ namespace Apex.Instagram.Utils
 
         public string GenerateUuid(bool keepDashes = true)
         {
-            var guid = Guid.NewGuid()
-                           .ToString();
+            var uuidSplit = Guid.NewGuid()
+                                .ToString()
+                                .Split('-');
 
-            return keepDashes ? guid : guid.Replace('-', '\0');
+            uuidSplit[1] = uuidSplit[1][0] + "663";
+
+            return string.Join(keepDashes ? "-" : string.Empty, uuidSplit);
         }
 
         public string GenerateDeviceId()
