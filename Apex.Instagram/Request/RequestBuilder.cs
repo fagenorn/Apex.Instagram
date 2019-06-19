@@ -149,6 +149,11 @@ namespace Apex.Instagram.Request
             return this;
         }
 
+        public RequestBuilder AddHeader(string name, bool value)
+        {
+            return AddHeader(name, value ? "true" : "false");
+        }
+
         public HttpRequestMessage Build()
         {
             if ( _url == null )
@@ -229,6 +234,9 @@ namespace Apex.Instagram.Request
             AddHeader("X-IG-Capabilities", Version.Instance.HeaderCapabilities);
             AddHeader("X-IG-Connection-Type", Constants.Request.Instance.HeaderConnectionType);
             AddHeader("X-IG-Connection-Speed", Randomizer.Instance.Number(3701, 1000) + "kbps");
+            AddHeader("X-IG-EU-DC-ENABLED", Constants.Request.Instance.HeaderXIgEuDcEnabled);
+            AddHeader("X-IG-VP9-Capable", Constants.Request.Instance.HeaderXIgVp9Capable);
+
             AddHeader("X-IG-Bandwidth-Speed-KBPS", "-1.000");
             AddHeader("X-IG-Bandwidth-TotalBytes-B", "0");
             AddHeader("X-IG-Bandwidth-TotalTime-MS", "0");
