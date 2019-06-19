@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
+
+using Apex.Shared.Model;
 
 namespace Apex.Instagram.Utils
 {
@@ -32,8 +35,16 @@ namespace Apex.Instagram.Utils
 
         public string GenerateDeviceId()
         {
-            return "android-" + Hashing.Instance.ByteToString(Hashing.Instance.Md5(GenerateUuid()))
-                                       .Substring(0, 16);
+            string[] securityIds = {"9774d56d682e549c", "9d1d1f0dfa440886", "fc067667235b8f19"};
+
+            string hash;
+            do
+            {
+                hash = Hashing.Instance.ByteToString(Hashing.Instance.Md5(Epoch.Current.ToString("F7")
+                                                                               .Replace('.', '\n')));
+            } while ( securityIds.Contains(hash) );
+
+            return "android-" + hash.Substring(0, 16);
         }
 
         #region Singleton     
