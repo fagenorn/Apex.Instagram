@@ -25,11 +25,11 @@ namespace Apex.Instagram.Request.Instagram
         {
             var surfaces = new[]
                            {
-                               "coefficient_direct_closed_friends_ranking",
-                               "coefficient_direct_recipients_ranking_variant_2",
+                               "autocomplete_user_list",
+                               "coefficient_besties_list_ranking",
                                "coefficient_rank_recipient_user_suggestion",
                                "coefficient_ios_section_test_bootstrap_ranking",
-                               "autocomplete_user_list"
+                               "coefficient_direct_recipients_ranking_variant_2"
                            };
 
             try
@@ -42,7 +42,6 @@ namespace Apex.Instagram.Request.Instagram
             }
             catch (ThrottledException)
             {
-                // Throttling is so common that we'll simply return NULL in that case.
                 return null;
             }
         }
@@ -249,5 +248,28 @@ namespace Apex.Instagram.Request.Instagram
         ///     <see cref="IAutoPaginate&lt;FollowerAndFollowingResponse&gt;" />
         /// </returns>
         public IAutoPaginate<FollowerAndFollowingResponse> GetFollowingPaginator(ulong userId, string searchQuery = null) { return new AutoPaginateWithRankToken<FollowerAndFollowingResponse>(parameters => GetFollowing(userId, parameters.rankToken, searchQuery, parameters.maxId)); }
+
+        /// <summary>Gets a list of ranked users to disaply in Android's share UI.</summary>
+        /// <returns>
+        ///     <see cref="SharePrefillResponse" />
+        /// </returns>
+        public async Task<SharePrefillResponse> GetSharePrefill()
+        {
+            var request = new RequestBuilder(Account).SetUrl("banyan/banyan/")
+                                                     .AddParam("views", "[\"story_share_sheet\",\"threads_people_picker\",\"reshare_share_sheet\"]");
+
+            return await Account.ApiRequest<SharePrefillResponse>(request)
+                                .ConfigureAwait(false);
+        }
+
+        /// <summary>Get user details about your own account.</summary>
+        /// <returns>
+        ///     <see cref="UserInfoResponse" />
+        /// </returns>
+        public async Task<UserInfoResponse> GetSelfInfo()
+        {
+            return await GetInfoByIdAsync(Account.AccountInfo.AccountId)
+                       .ConfigureAwait(false);
+        }
     }
 }

@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 using Apex.Instagram.Response.JsonMap;
 using Apex.Instagram.Utils;
 
-using Utf8Json;
-
 namespace Apex.Instagram.Request.Instagram
 {
     internal class Discover : RequestCollection
@@ -39,14 +37,15 @@ namespace Apex.Instagram.Request.Instagram
 
         public async Task<ExploreResponse> GetExploreFeed(string maxId = null, bool isPrefetch = false)
         {
-            var request = new RequestBuilder(Account).SetUrl("discover/explore/")
+            var request = new RequestBuilder(Account).SetUrl("discover/topical_explore/")
                                                      .AddParam("is_prefetch", isPrefetch)
-                                                     .AddParam("is_from_promote", false)
+                                                     .AddParam("omit_cover_media", true)
+                                                     .AddParam("use_sectional_payload", true)
                                                      .AddParam("timezone_offset", Time.Instance.GetTimezoneOffset())
                                                      .AddParam("session_id", Account.AccountInfo.SessionId)
-                                                     .AddParam("supported_capabilities_new", JsonSerializer.ToJsonString(Constants.Request.Instance.SupportedCapabilities));
+                                                     .AddParam("include_fixed_destinations", true);
 
-            if ( isPrefetch )
+            if ( !isPrefetch )
             {
                 if ( maxId != null )
                 {

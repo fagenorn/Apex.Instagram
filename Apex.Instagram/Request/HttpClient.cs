@@ -166,7 +166,7 @@ namespace Apex.Instagram.Request
             ZeroRatingMiddleware    = new ZeroRatingMiddleware();
             ModifyHeadersMiddleware = new ModifyHeadersMiddleware(Constants.Request.Instance.PermanentHeaders);
 
-            ModifyHeadersMiddleware.AddHeader("X-Pigeon-Session-Id", _pidgeonSession);
+            ModifyHeadersMiddleware.AddHeader("X-Pigeon-Session-Id", Utils.Instagram.Instance.GenerateUuid());
             ModifyHeadersMiddleware.AddHeader("X-Pigeon-Rawclienttime", GetPidgeonRawClientTime);
             ModifyHeadersMiddleware.AddHeader("User-Agent", _account.AccountInfo.DeviceInfo.UserAgent);
         }
@@ -188,8 +188,6 @@ namespace Apex.Instagram.Request
                                                : null,
                          Address = proxy?.Uri
                      };
-
-            _pidgeonSession = Utils.Instagram.Instance.GenerateUuid();
 
             _handler = new HttpClientHandler
                        {
@@ -264,8 +262,6 @@ namespace Apex.Instagram.Request
         private bool _pidgeonBatch;
 
         private double _pidgeonTimestamp;
-
-        private string _pidgeonSession;
 
         #endregion
     }

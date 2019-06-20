@@ -62,6 +62,16 @@ namespace Apex.Instagram.Request.Instagram
                                 .ConfigureAwait(false);
         }
 
+        public async Task<CapabilitiesDecisionsResponse> GetDeviceCapabilitiesDecisions()
+        {
+            var request = new RequestBuilder(Account).SetUrl("device_capabilities/decisions/")
+                                                     .AddParam("signed_body", Signer.GenerateSignature("{}.{}"))
+                                                     .AddParam("ig_sig_key_version", Version.Instance.SigningKeyVersion);
+
+            return await Account.ApiRequest<CapabilitiesDecisionsResponse>(request)
+                                .ConfigureAwait(false);
+        }
+
         public async Task<LoomFetchConfigResponse> GetLoomFetchConfig()
         {
             var request = new RequestBuilder(Account).SetUrl("loom/fetch_config/");
@@ -94,8 +104,7 @@ namespace Apex.Instagram.Request.Instagram
             try
             {
                 var request = new RequestBuilder(Account).SetUrl("launcher/sync/")
-                                                         .AddPost("_csrftoken", Account.LoginClient.CsrfToken)
-                                                         .AddPost("configs", "ig_android_felix_release_players,ig_user_mismatch_soft_error,ig_android_os_version_blocking_config,ig_android_carrier_signals_killswitch,fizz_ig_android,ig_mi_block_expired_events,ig_android_killswitch_perm_direct_ssim,ig_fbns_blocked");
+                                                         .AddPost("configs", Constants.Version.Instance.LauncherConfigs);
 
                 if ( preLogin )
                 {
@@ -106,7 +115,8 @@ namespace Apex.Instagram.Request.Instagram
                 {
                     request.AddPost("id", Account.AccountInfo.AccountId)
                            .AddPost("_uuid", Account.AccountInfo.Uuid)
-                           .AddPost("_uid", Account.AccountInfo.AccountId);
+                           .AddPost("_uid", Account.AccountInfo.AccountId)
+                           .AddPost("_csrftoken", Account.LoginClient.CsrfToken);
                 }
 
                 return await Account.ApiRequest<LauncherSyncResponse>(request)
@@ -245,6 +255,54 @@ namespace Apex.Instagram.Request.Instagram
                                                      .AddParam("custom_device_id", Account.AccountInfo.Uuid);
 
             return await Account.ApiRequest<FacebookOtaResponse>(request)
+                                .ConfigureAwait(false);
+        }
+
+        public async Task<GenericResponse> LogResurrectAttribution()
+        {
+            var request = new RequestBuilder(Account).SetUrl("attribution/log_resurrect_attribution/")
+                                                     .AddPost("_uuid", Account.AccountInfo.Uuid)
+                                                     .AddPost("_uid", Account.AccountInfo.AccountId)
+                                                     .AddPost("_csrftoken", Account.LoginClient.CsrfToken);
+
+            try
+            {
+                return await Account.ApiRequest<GenericResponse>(request)
+                                    .ConfigureAwait(false);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public async Task<QpCooldownsResponse> GetQpCooldowns()
+        {
+            var request = new RequestBuilder(Account).SetUrl("qp/get_cooldowns/")
+                                                     .AddParam("signed_body", Signer.GenerateSignature("{}.{}"))
+                                                     .AddParam("ig_sig_key_version", Version.Instance.SigningKeyVersion);
+
+            return await Account.ApiRequest<QpCooldownsResponse>(request)
+                                .ConfigureAwait(false);
+        }
+
+        public async Task<ArlinkDownloadInfoResponse> GetArlinkDownloadInfo()
+        {
+            var request = new RequestBuilder(Account).SetUrl("users/arlink_download_info/")
+                                                     .AddParam("version_override", "2.2.1");
+
+            return await Account.ApiRequest<ArlinkDownloadInfoResponse>(request)
+                                .ConfigureAwait(false);
+        }
+
+        public async Task<MsisdnHeaderResponse> BootstrapMsisdnHeader(string usage = "ig_select_app")
+        {
+            var request = new RequestBuilder(Account).SetUrl("accounts/msisdn_header_bootstrap/")
+                                                     .SetNeedsAuth(false)
+                                                     .AddPost("mobile_subno_usage", usage)
+                                                     .AddPost("device_id", Account.AccountInfo.Uuid);
+
+            return await Account.ApiRequest<MsisdnHeaderResponse>(request)
                                 .ConfigureAwait(false);
         }
     }

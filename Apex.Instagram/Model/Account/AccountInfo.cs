@@ -32,6 +32,6 @@ namespace Apex.Instagram.Model.Account
         public DeviceInfo DeviceInfo { get; set; }
 
         [Key(8)]
-        public string AccountId { get; set; }
+        public ulong AccountId { get; set; }
     }
 }

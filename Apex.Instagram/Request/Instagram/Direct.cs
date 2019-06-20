@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 using Apex.Instagram.Request.Exception;
 using Apex.Instagram.Response.JsonMap;
@@ -23,7 +24,8 @@ namespace Apex.Instagram.Request.Instagram
                     request.AddParam("query", query);
                 }
 
-                return await Account.ApiRequest<DirectRankedRecipientsResponse>(request).ConfigureAwait(false);
+                return await Account.ApiRequest<DirectRankedRecipientsResponse>(request)
+                                    .ConfigureAwait(false);
             }
             catch (ThrottledException)
             {
@@ -32,25 +34,33 @@ namespace Apex.Instagram.Request.Instagram
             }
         }
 
-        public async Task<DirectInboxResponse> GetInbox(string cursorId = null)
+        public async Task<DirectInboxResponse> GetInbox(string cursorId = null, int limit = 0)
         {
+            if ( limit < 0 || limit > 20 )
+            {
+                throw new ArgumentException("Invalid value provided to limit.");
+            }
+
             var request = new RequestBuilder(Account).SetUrl("direct_v2/inbox/")
                                                      .AddParam("persistentBadging", true)
-                                                     .AddParam("use_unified_inbox", true);
+                                                     .AddParam("visual_message_return_type", "unseen")
+                                                     .AddParam("limit", limit);
 
             if ( cursorId != null )
             {
                 request.AddParam("cursor", cursorId);
             }
 
-            return await Account.ApiRequest<DirectInboxResponse>(request).ConfigureAwait(false);
+            return await Account.ApiRequest<DirectInboxResponse>(request)
+                                .ConfigureAwait(false);
         }
 
         public async Task<PresencesResponse> GetPresences()
         {
             var request = new RequestBuilder(Account).SetUrl("direct_v2/get_presence/");
 
-            return await Account.ApiRequest<PresencesResponse>(request).ConfigureAwait(false);
+            return await Account.ApiRequest<PresencesResponse>(request)
+                                .ConfigureAwait(false);
         }
     }
 }

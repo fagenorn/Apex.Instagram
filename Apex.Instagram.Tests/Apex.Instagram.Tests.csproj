@@ -72,6 +72,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.cs" />
     <Compile Include="FileStorage.cs" />
     <Compile Include="InteractionTests.cs" />
     <Compile Include="LoginTest.cs" />

@@ -102,6 +102,8 @@ namespace Apex.Instagram.Request
 
         public RequestBuilder AddParam(string name, int value, bool sign = false) { return AddParam(name, value.ToString(), sign); }
 
+        public RequestBuilder AddParam(string name, ulong value, bool sign = false) { return AddParam(name, value.ToString(), sign); }
+
         public RequestBuilder AddPost(string name, string value, bool sign = true)
         {
             _posts[name] = new Parameter(value, sign);
@@ -149,10 +151,7 @@ namespace Apex.Instagram.Request
             return this;
         }
 
-        public RequestBuilder AddHeader(string name, bool value)
-        {
-            return AddHeader(name, value ? "true" : "false");
-        }
+        public RequestBuilder AddHeader(string name, bool value) { return AddHeader(name, value ? "true" : "false"); }
 
         public HttpRequestMessage Build()
         {

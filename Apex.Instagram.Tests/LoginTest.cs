@@ -114,7 +114,7 @@ namespace Apex.Instagram.Tests
             var account2 = account;
             await Assert.ThrowsExceptionAsync<ChallengeRequiredException>(async () => await account2.LoginClient.Login());
             Assert.IsTrue(account.LoginClient.LoginInfo.HasChallenge);
-            var client = await account.LoginClient.ChallengeLogin();
+            var client   = await account.LoginClient.ChallengeLogin();
             var stepInfo = await client.Reset();
             Assert.IsNotNull(client.ChallengeInfo.Url);
             Assert.IsNotNull(stepInfo);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 using Apex.Instagram.Login.Challenge;
@@ -130,7 +131,8 @@ namespace Apex.Instagram.Login
                 throw new LoginException("Invalid login response provided.");
             }
 
-            _account.AccountInfo.AccountId = response.LoggedInUser.Pk.ToString();
+            Debug.Assert(response.LoggedInUser.Pk != null, "response.LoggedInUser.Pk != null");
+            _account.AccountInfo.AccountId = response.LoggedInUser.Pk.Value;
             await _account.Storage.AccountInfo.SaveAsync(_account.AccountInfo)
                           .ConfigureAwait(false);
 
@@ -143,20 +145,36 @@ namespace Apex.Instagram.Login
         private async Task PreLoginFlow()
         {
             _account.HttpClient.ZeroRatingMiddleware.Reset();
-            await _account.Internal.ReadMsisdnHeader("ig_select_app")
-                          .ConfigureAwait(false);
 
-            await _account.Internal.SyncDeviceFeatures(true)
-                          .ConfigureAwait(false);
+            _account.HttpClient.StartEmulatingBatch();
 
-            await _account.Internal.SendLauncherSync(true)
-                          .ConfigureAwait(false);
+            try
+            {
+                await _account.Internal.ReadMsisdnHeader("default")
+                              .ConfigureAwait(false);
 
-            await _account.Internal.LogAttribution()
-                          .ConfigureAwait(false);
+                await _account.Internal.BootstrapMsisdnHeader()
+                              .ConfigureAwait(false);
 
-            await _account.Internal.FetchZeroRatingToken()
-                          .ConfigureAwait(false);
+                await _account.Internal.SyncDeviceFeatures(true)
+                              .ConfigureAwait(false);
+
+                await _account.Internal.SendLauncherSync(true)
+                              .ConfigureAwait(false);
+
+                await _account.Profile.GetPrefillCandidates()
+                              .ConfigureAwait(false);
+
+                await _account.Internal.FetchZeroRatingToken()
+                              .ConfigureAwait(false);
+
+                await _account.Internal.LogAttribution()
+                              .ConfigureAwait(false);
+            }
+            finally
+            {
+                _account.HttpClient.StopEmulatingBatch();
+            }
 
             await _account.Profile.SetContactPointPrefill("prefill")
                           .ConfigureAwait(false);
@@ -167,19 +185,35 @@ namespace Apex.Instagram.Login
             if ( justLoggedIn )
             {
                 _account.HttpClient.ZeroRatingMiddleware.Reset();
-                await _account.Internal.SendLauncherSync(false)
+
+                _account.HttpClient.StartEmulatingBatch();
+
+                try
+                {
+                    await _account.Profile.GetAccountFamily()
+                                  .ConfigureAwait(false);
+
+                    await _account.Internal.SendLauncherSync(false)
+                                  .ConfigureAwait(false);
+
+                    await _account.Internal.SyncUserFeatures()
+                                  .ConfigureAwait(false);
+                }
+                finally
+                {
+                    _account.HttpClient.StopEmulatingBatch();
+                }
+
+                await _account.Story.GetReelsTrayFeed()
                               .ConfigureAwait(false);
 
-                await _account.Internal.SyncUserFeatures()
+                await _account.Tv.GetTvGuide()
                               .ConfigureAwait(false);
 
                 await _account.Timeline.GetTimelineFeed(null, new Dictionary<string, object>
                                                               {
                                                                   {"recovered_from_crash", true}
                                                               })
-                              .ConfigureAwait(false);
-
-                await _account.Story.GetReelsTrayFeed()
                               .ConfigureAwait(false);
 
                 await _account.Discover.GetSuggestedSearches("users")
@@ -203,6 +237,9 @@ namespace Apex.Instagram.Login
                 await _account.Direct.GetInbox()
                               .ConfigureAwait(false);
 
+                await _account.Internal.LogResurrectAttribution()
+                              .ConfigureAwait(false);
+
                 await _account.Direct.GetPresences()
                               .ConfigureAwait(false);
 
@@ -216,19 +253,40 @@ namespace Apex.Instagram.Login
                                   .ConfigureAwait(false);
                 }
 
-                await _account.Internal.GetProfileNotice()
+                await _account.People.GetBootstrapUsers()
+                              .ConfigureAwait(false);
+
+                await _account.Profile.GetFacebookId()
+                              .ConfigureAwait(false);
+
+                await _account.Internal.GetDeviceCapabilitiesDecisions()
                               .ConfigureAwait(false);
 
                 await _account.Media.GetBlockedMedia()
                               .ConfigureAwait(false);
 
-                await _account.People.GetBootstrapUsers()
+                await _account.Creative.SendSupportedCapabilities()
+                              .ConfigureAwait(false);
+
+                await _account.Profile.GetLinkageStatus()
+                              .ConfigureAwait(false);
+
+                await _account.Internal.GetQpCooldowns()
+                              .ConfigureAwait(false);
+
+                await _account.Internal.GetArlinkDownloadInfo()
                               .ConfigureAwait(false);
 
                 await _account.Discover.GetExploreFeed(null, true)
                               .ConfigureAwait(false);
 
+                await _account.Profile.GetProcessContactPointSignals()
+                              .ConfigureAwait(false);
+
                 await _account.Internal.GetQpFetch()
+                              .ConfigureAwait(false);
+
+                await _account.People.GetSharePrefill()
                               .ConfigureAwait(false);
 
                 await _account.Internal.GetFacebookOta()
@@ -247,18 +305,30 @@ namespace Apex.Instagram.Login
                     isPullToRefresh = Randomizer.Instance.Number(3) < 2;
                 }
 
+                _account.HttpClient.StartEmulatingBatch();
+
                 try
                 {
-                    await _account.Timeline.GetTimelineFeed(null, new Dictionary<string, object>
-                                                                  {
-                                                                      {"is_pull_to_refresh", isPullToRefresh}
-                                                                  })
+                    try
+                    {
+                        await _account.Timeline.GetTimelineFeed(null, new Dictionary<string, object>
+                                                                      {
+                                                                          {"is_pull_to_refresh", isPullToRefresh}
+                                                                      })
+                                      .ConfigureAwait(false);
+                    }
+                    catch (LoginRequiredException)
+                    {
+                        return await InternalLogin(true)
+                                   .ConfigureAwait(false);
+                    }
+
+                    await _account.Story.GetReelsTrayFeed()
                                   .ConfigureAwait(false);
                 }
-                catch (LoginRequiredException)
+                finally
                 {
-                    return await InternalLogin(true)
-                               .ConfigureAwait(false);
+                    _account.HttpClient.StopEmulatingBatch();
                 }
 
                 if ( sessionExpired )
@@ -271,41 +341,56 @@ namespace Apex.Instagram.Login
                     await _account.Storage.AccountInfo.SaveAsync(_account.AccountInfo)
                                   .ConfigureAwait(false);
 
-                    await _account.People.GetBootstrapUsers()
+                    await _account.Tv.GetTvGuide()
                                   .ConfigureAwait(false);
 
-                    await _account.Story.GetReelsTrayFeed()
-                                  .ConfigureAwait(false);
+                    _account.HttpClient.StartEmulatingBatch();
 
-                    await _account.Direct.GetRankedRecipients("reshare", true)
-                                  .ConfigureAwait(false);
+                    try
+                    {
+                        await _account.Internal.GetLoomFetchConfig()
+                                      .ConfigureAwait(false);
 
-                    await _account.Direct.GetRankedRecipients("raven", true)
-                                  .ConfigureAwait(false);
+                        await _account.Direct.GetRankedRecipients("reshare", true)
+                                      .ConfigureAwait(false);
 
-                    await _account.Direct.GetInbox()
-                                  .ConfigureAwait(false);
+                        await _account.Direct.GetRankedRecipients("raven", true)
+                                      .ConfigureAwait(false);
 
-                    await _account.Direct.GetPresences()
-                                  .ConfigureAwait(false);
+                        await _account.People.GetSelfInfo()
+                                      .ConfigureAwait(false);
 
-                    await _account.People.GetRecentActivityInbox()
-                                  .ConfigureAwait(false);
+                        await _account.Direct.GetInbox()
+                                      .ConfigureAwait(false);
 
-                    await _account.Internal.GetProfileNotice()
-                                  .ConfigureAwait(false);
+                        await _account.People.GetRecentActivityInbox()
+                                      .ConfigureAwait(false);
 
-                    await _account.Discover.GetExploreFeed()
-                                  .ConfigureAwait(false);
+                        await _account.Discover.GetExploreFeed()
+                                      .ConfigureAwait(false);
+                    }
+                    finally
+                    {
+                        _account.HttpClient.StopEmulatingBatch();
+                    }
                 }
 
                 if ( LoginInfo.LastExperiments.Passed )
                 {
-                    await _account.Internal.SyncUserFeatures()
-                                  .ConfigureAwait(false);
+                    _account.HttpClient.StartEmulatingBatch();
 
-                    await _account.Internal.SyncDeviceFeatures()
-                                  .ConfigureAwait(false);
+                    try
+                    {
+                        await _account.Internal.SyncUserFeatures()
+                                      .ConfigureAwait(false);
+
+                        await _account.Internal.SyncDeviceFeatures()
+                                      .ConfigureAwait(false);
+                    }
+                    finally
+                    {
+                        _account.HttpClient.StopEmulatingBatch();
+                    }
                 }
 
                 var expired = Epoch.Current - LoginInfo.ZrExpires;

@@ -140,6 +140,10 @@ namespace Apex.Instagram
 
         internal Media Media { get; }
 
+        internal Tv Tv { get; }
+
+        internal Creative Creative { get; }
+
         #endregion
 
         #region Properties
@@ -176,6 +180,8 @@ namespace Apex.Instagram
             Direct   = new Direct(this);
             People   = new People(this);
             Media    = new Media(this);
+            Tv       = new Tv(this);
+            Creative = new Creative(this);
         }
 
         private async Task<Account> InitializeAsync()
