@@ -104,6 +104,7 @@ namespace Apex.Instagram.Tests
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(fileStorage)
                                                     .SetLogger(Logger)
+                                                    .SetProxy(Constants.FiddlerProxy)
                                                     .SetUsername("elytroposisLQw2")
                                                     .SetPassword("46tn2DE02")
                                                     .BuildAsync();
@@ -115,36 +116,37 @@ namespace Apex.Instagram.Tests
             await Assert.ThrowsExceptionAsync<ChallengeRequiredException>(async () => await account2.LoginClient.Login());
             Assert.IsTrue(account.LoginClient.LoginInfo.HasChallenge);
             var client   = await account.LoginClient.ChallengeLogin();
-            var stepInfo = await client.Reset();
-            Assert.IsNotNull(client.ChallengeInfo.Url);
+            var stepInfo = await client.Start();
+            Assert.IsNotNull(client.ChallengeInfo.ApiPath);
             Assert.IsNotNull(stepInfo);
             var client1 = client;
             await Assert.ThrowsExceptionAsync<ChallengeException>(async () => await client1.DoNextStep("133123"));
-            Assert.IsNotNull(client.ChallengeInfo.Url);
+            Assert.IsNotNull(client.ChallengeInfo.ApiPath);
 
             account.Dispose();
 
             account = await new AccountBuilder().SetId(0)
                                                 .SetStorage(fileStorage)
                                                 .SetLogger(Logger)
+                                                .SetProxy(Constants.FiddlerProxy)
                                                 .SetUsername("elytroposisLQw2")
                                                 .SetPassword("46tn2DE02")
                                                 .BuildAsync();
 
             Assert.IsTrue(account.LoginClient.LoginInfo.HasChallenge);
             client = await account.LoginClient.ChallengeLogin();
-            Assert.IsNotNull(client.ChallengeInfo.Url);
+            Assert.IsNotNull(client.ChallengeInfo.ApiPath);
             await Assert.ThrowsExceptionAsync<ChallengeException>(async () => await client.DoNextStep("133123"));
-            await client.Reset();
+            await client.Start();
             Assert.AreEqual("Select verification method option:\r\n0: Phone (+7 *** ***-**-17)\r\n", stepInfo.Description);
             await Assert.ThrowsExceptionAsync<ChallengeException>(async () => await client.Replay());
             await Assert.ThrowsExceptionAsync<ChallengeException>(async () => await client.DoNextStep("1"));
             await Task.Delay(3000);
             stepInfo = await client.DoNextStep("0");
-            Assert.AreEqual("Enter the 6 digit code that was sent to your mobile: +7 *** ***-26-17.\r\n", stepInfo.Description);
+            Assert.AreEqual("Enter the 6 digit code that was sent to your mobile: +79619362617.\r\n", stepInfo.Description);
             await Task.Delay(3000);
             await client.Replay();
-            Assert.AreEqual("Enter the 6 digit code that was sent to your mobile: +7 *** ***-26-17.\r\n", stepInfo.Description);
+            Assert.AreEqual("Enter the 6 digit code that was sent to your mobile: +79619362617.\r\n", stepInfo.Description);
         }
 
         [TestMethod]

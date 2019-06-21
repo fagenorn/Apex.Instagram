@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 using Apex.Instagram.Login.Exception;
 using Apex.Instagram.Request;
@@ -14,6 +15,7 @@ namespace Apex.Instagram.Login.Challenge
         ///     <see cref="StepInfo" />
         /// </returns>
         /// <exception cref="ChallengeException">No challenge response information available.</exception>
+        [Obsolete]
         public async Task<StepInfo> Reset()
         {
             ThrowIfUnavailable();
@@ -21,7 +23,17 @@ namespace Apex.Instagram.Login.Challenge
             await ResetChallenge()
                 .ConfigureAwait(false);
 
-            return Completed ? null : GetNextStep();
+            return GetNextStep();
+        }
+
+        public async Task<StepInfo> Start()
+        {
+            ThrowIfUnavailable();
+
+            await StartChallenge()
+                .ConfigureAwait(false);
+
+            return GetNextStep();
         }
 
         /// <summary>Resend the verification code for the current instance.</summary>
@@ -35,13 +47,16 @@ namespace Apex.Instagram.Login.Challenge
                 throw new ChallengeException("Replay challenge not allowed for the current challenge step.");
             }
 
-            var response = await _previousStepInfo.Replay()
-                                                  .ConfigureAwait(false);
+            var response = (CheckpointResponse) await _previousStepInfo.Replay()
+                                                                       .ConfigureAwait(false);
 
-            CheckIfCompleted(response);
+            _checkpointResponse = response;
         }
 
-        /// <summary>  Performs the next challenge step with the provided input and gets the information regarding the next challenge step.</summary>
+        /// <summary>
+        ///     Performs the next challenge step with the provided input and gets the information regarding the next
+        ///     challenge step.
+        /// </summary>
         /// <param name="input">The challenge input.</param>
         /// <returns>
         ///     <see cref="StepInfo" />
@@ -60,9 +75,16 @@ namespace Apex.Instagram.Login.Challenge
             var response = await _stepInfo.Submit(input)
                                           .ConfigureAwait(false);
 
-            CheckIfCompleted(response);
+            if ( _stepInfo is StepVerifyInfo && response is LoginResponse loginResponse )
+            {
+                await FinishCheckpoint(loginResponse);
 
-            return Completed ? null : GetNextStep();
+                return null;
+            }
+
+            _checkpointResponse = (CheckpointResponse) response;
+
+            return GetNextStep();
         }
 
         #region Private methods
@@ -71,30 +93,30 @@ namespace Apex.Instagram.Login.Challenge
         {
             ThrowIfUnavailable();
 
-            if (_challengeResponse == null)
+            if ( _checkpointResponse == null )
             {
                 throw new ChallengeException("No challenge response information available.");
             }
 
             _previousStepInfo = _stepInfo;
 
-            switch (_challengeResponse.StepName)
+            switch ( _checkpointResponse.StepName )
             {
                 case @"submit_phone":
-                    _stepInfo = new StepPhoneInfo(_account, _challengeResponse.StepData, ChallengeInfo);
+                    _stepInfo = new StepPhoneInfo(_account, _checkpointResponse.StepData, ChallengeInfo);
 
                     break;
                 case @"verify_code":
-                    _stepInfo = new StepVerifySmsInfo(_account, _challengeResponse.StepData, ChallengeInfo);
+                    _stepInfo = new StepVerifySmsInfo(_account, _checkpointResponse.StepData, ChallengeInfo);
 
                     break;
                 case @"select_verify_method":
-                    _stepInfo = new StepSelectVerifyMethodInfo(_account, _challengeResponse.StepData, ChallengeInfo);
+                    _stepInfo = new StepSelectVerifyMethodInfo(_account, _checkpointResponse.StepData, ChallengeInfo);
 
                     break;
                 default:
 
-                    throw new ChallengeException("Step name {0} is unknown.", _challengeResponse.StepName);
+                    throw new ChallengeException("Step name {0} is unknown.", _checkpointResponse.StepName);
             }
 
             return _stepInfo;
@@ -106,10 +128,24 @@ namespace Apex.Instagram.Login.Challenge
                                                       .SetUrl(ChallengeInfo.ResetUrl)
                                                       .AddPost("_csrftoken", _account.LoginClient.CsrfToken);
 
-            var response = await _account.ApiRequest<ChallengeResponse>(request)
+            var response = await _account.ApiRequest<CheckpointResponse>(request)
                                          .ConfigureAwait(false);
 
-            CheckIfCompleted(response);
+            _checkpointResponse = response;
+        }
+
+        private async Task StartChallenge()
+        {
+            var request = new RequestBuilder(_account).SetNeedsAuth(false)
+                                                      .SetSignedPost(false)
+                                                      .SetUrl(ChallengeInfo.ApiPath)
+                                                      .AddParam("guid", _account.AccountInfo.Uuid)
+                                                      .AddParam("device_id", _account.AccountInfo.DeviceId);
+
+            var response = await _account.ApiRequest<CheckpointResponse>(request)
+                                         .ConfigureAwait(false);
+
+            _checkpointResponse = response;
         }
 
         private void ThrowIfUnavailable()
@@ -119,16 +155,19 @@ namespace Apex.Instagram.Login.Challenge
                 throw new ChallengeException("No challenge available.");
             }
 
-            if ( Completed )
-            {
-                throw new ChallengeException("Challenge has been completed.");
-            }
+//            if ( Completed )
+//            {
+//                throw new ChallengeException("Challenge has been completed.");
+//            }
         }
 
-        private void CheckIfCompleted(ChallengeResponse response)
+        private async Task FinishCheckpoint(LoginResponse response)
         {
-            _challengeResponse = response;
-            Completed          = response.Action != null && response.Action == "close";
+            await _account.LoginClient.UpdateLoginState(response)
+                          .ConfigureAwait(false);
+
+            await _account.LoginClient.LoginFlow(true)
+                          .ConfigureAwait(false);
         }
 
         #endregion
@@ -137,7 +176,7 @@ namespace Apex.Instagram.Login.Challenge
 
         private readonly Account _account;
 
-        private ChallengeResponse _challengeResponse;
+        private CheckpointResponse _checkpointResponse;
 
         private StepInfo _previousStepInfo;
 
@@ -146,12 +185,6 @@ namespace Apex.Instagram.Login.Challenge
         #endregion
 
         #region Properties
-
-        /// <summary>Gets a value indicating whether this <see cref="ChallengeClient" /> is completed.</summary>
-        /// <value>
-        ///     <c>true</c> if completed; otherwise, <c>false</c>.
-        /// </value>
-        public bool Completed { get; private set; }
 
         internal ChallengeInfo ChallengeInfo { get; private set; }
 

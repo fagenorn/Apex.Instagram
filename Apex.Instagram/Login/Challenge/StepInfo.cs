@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 
 using Apex.Instagram.Login.Exception;
 using Apex.Instagram.Request.Exception.EndpointException;
-using Apex.Instagram.Response.JsonMap;
 using Apex.Instagram.Response.JsonMap.Model;
 
 namespace Apex.Instagram.Login.Challenge
@@ -36,7 +35,7 @@ namespace Apex.Instagram.Login.Challenge
         /// <value>The description.</value>
         public abstract string Description { get; }
 
-        internal async Task<ChallengeResponse> Submit(string input)
+        internal async Task<Response.JsonMap.Response> Submit(string input)
         {
             if ( _done )
             {
@@ -45,7 +44,7 @@ namespace Apex.Instagram.Login.Challenge
 
             try
             {
-                var result = await SubmitInternalAsync(_challengeInfo.Url, input)
+                var result = await SubmitInternalAsync(_challengeInfo.ApiPath, input)
                                  .ConfigureAwait(false);
 
                 _done        = true;
@@ -61,7 +60,7 @@ namespace Apex.Instagram.Login.Challenge
             }
         }
 
-        internal async Task<ChallengeResponse> Replay()
+        internal async Task<Response.JsonMap.Response> Replay()
         {
             if ( !_done )
             {
@@ -83,6 +82,6 @@ namespace Apex.Instagram.Login.Challenge
             }
         }
 
-        private protected abstract Task<ChallengeResponse> SubmitInternalAsync(Uri url, string input);
+        private protected abstract Task<Response.JsonMap.Response> SubmitInternalAsync(Uri url, string input);
     }
 }

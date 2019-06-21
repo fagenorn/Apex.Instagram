@@ -23,6 +23,13 @@ namespace Apex.Instagram.Utils
             return this;
         }
 
+        public UrlBuilder SetRelativeUri(bool flag = true)
+        {
+            _isAbsoluteUri = !flag;
+
+            return this;
+        }
+
         public UrlBuilder SetHost(Uri uri) { return SetHost(uri.Host); }
 
         public UrlBuilder AddSegmentAfter(string path, string toAddAfter)
@@ -81,22 +88,32 @@ namespace Apex.Instagram.Utils
 
         public Uri Build()
         {
-            if ( string.IsNullOrWhiteSpace(_scheme) )
+            if ( _isAbsoluteUri && string.IsNullOrWhiteSpace(_scheme) )
             {
                 throw new ArgumentException("Scheme can't be empty");
             }
 
-            if ( string.IsNullOrWhiteSpace(_host) )
+            if ( _isAbsoluteUri && string.IsNullOrWhiteSpace(_host) )
             {
                 throw new ArgumentException("Host can't be empty");
             }
 
-            var finalUri = new StringBuilder(_scheme);
-            finalUri.Append(Uri.SchemeDelimiter);
-            finalUri.Append(_host);
+            var finalUri = new StringBuilder();
+
+            if ( _isAbsoluteUri )
+            {
+                finalUri.Append(_scheme);
+                finalUri.Append(Uri.SchemeDelimiter);
+                finalUri.Append(_host);
+            }
 
             if ( _pathSegments != null && _pathSegments.Count > 0 )
             {
+                if ( !_isAbsoluteUri )
+                {
+                    _pathSegments.RemoveAt(0);
+                }
+
                 finalUri.Append(string.Join("", _pathSegments));
             }
 
@@ -106,7 +123,7 @@ namespace Apex.Instagram.Utils
                 finalUri.Append(string.Join("&", _queryParameters.Select(x => $"{x.Key}={x.Value}")));
             }
 
-            return new Uri(finalUri.ToString(), UriKind.Absolute);
+            return new Uri(finalUri.ToString(), UriKind.RelativeOrAbsolute);
         }
 
         #region Constructor
@@ -115,8 +132,19 @@ namespace Apex.Instagram.Utils
 
         public UrlBuilder(Uri uri)
         {
-            SetScheme(uri);
-            SetHost(uri);
+            if ( !uri.IsAbsoluteUri )
+            {
+                _isAbsoluteUri = false;
+
+                var temp = new Uri("http://foo.com");
+                uri = new Uri(temp, uri);
+            }
+            else
+            {
+                SetScheme(uri);
+                SetHost(uri);
+            }
+
             AddSegments(uri);
             AddQueryParams(uri);
         }
@@ -163,6 +191,8 @@ namespace Apex.Instagram.Utils
         private Dictionary<string, string> _queryParameters;
 
         private string _scheme;
+
+        private bool _isAbsoluteUri = true;
 
         #endregion
     }

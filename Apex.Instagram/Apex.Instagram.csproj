@@ -189,7 +189,7 @@
     <Compile Include="Response\JsonMap\BlockedMediaResponse.cs" />
     <Compile Include="Response\JsonMap\BootstrapUsersResponse.cs" />
     <Compile Include="Response\JsonMap\CapabilitiesDecisionsResponse.cs" />
-    <Compile Include="Response\JsonMap\ChallengeResponse.cs" />
+    <Compile Include="Response\JsonMap\CheckpointResponse.cs" />
     <Compile Include="Response\JsonMap\DirectInboxResponse.cs" />
     <Compile Include="Response\JsonMap\DirectRankedRecipientsResponse.cs" />
     <Compile Include="Response\JsonMap\ExploreResponse.cs" />

@@ -12,15 +12,15 @@ namespace Apex.Instagram.Response.JsonMap.Model
         public string ApiPath { get; set; }
 
         [DataMember(Name = "hide_webview_header")]
-        public dynamic HideWebviewHeader { get; set; }
+        public bool? HideWebviewHeader { get; set; }
 
         [DataMember(Name = "lock")]
-        public dynamic Lock { get; set; }
+        public bool? Lock { get; set; }
 
         [DataMember(Name = "logout")]
         public bool? Logout { get; set; }
 
         [DataMember(Name = "native_flow")]
-        public dynamic NativeFlow { get; set; }
+        public bool? NativeFlow { get; set; }
     }
 }

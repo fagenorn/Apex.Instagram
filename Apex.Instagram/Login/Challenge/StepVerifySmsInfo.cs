@@ -8,6 +8,6 @@ namespace Apex.Instagram.Login.Challenge
 
         public override string Title => "Enter the code.";
 
-        public override string Description => $"Enter the 6 digit code that was sent to your mobile: {StepData.PhoneNumberFormatted}.\r\n";
+        public override string Description => $"Enter the 6 digit code that was sent to your mobile: {StepData.PhoneNumber}.\r\n";
     }
 }

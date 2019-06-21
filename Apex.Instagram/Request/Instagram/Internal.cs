@@ -104,7 +104,7 @@ namespace Apex.Instagram.Request.Instagram
             try
             {
                 var request = new RequestBuilder(Account).SetUrl("launcher/sync/")
-                                                         .AddPost("configs", Constants.Version.Instance.LauncherConfigs);
+                                                         .AddPost("configs", Version.Instance.LauncherConfigs);
 
                 if ( preLogin )
                 {

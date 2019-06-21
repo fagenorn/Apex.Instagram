@@ -19,14 +19,16 @@ namespace Apex.Instagram.Login.Challenge
         /// <inheritdoc />
         public override string Description => $"Enter a valid phone number.\r\nCurrent phone number: {StepData.PhoneNumber}.\r\n";
 
-        private protected override async Task<ChallengeResponse> SubmitInternalAsync(Uri url, string input)
+        private protected override async Task<Response.JsonMap.Response> SubmitInternalAsync(Uri url, string input)
         {
             var request = new RequestBuilder(Account).SetNeedsAuth(false)
                                                      .SetUrl(url)
+                                                     .AddPost("guid", Account.AccountInfo.Uuid)
+                                                     .AddPost("device_id", Account.AccountInfo.DeviceId)
                                                      .AddPost("_csrftoken", Account.LoginClient.CsrfToken)
                                                      .AddPost("phone_number", input);
 
-            return await Account.ApiRequest<ChallengeResponse>(request)
+            return await Account.ApiRequest<CheckpointResponse>(request)
                                 .ConfigureAwait(false);
         }
     }

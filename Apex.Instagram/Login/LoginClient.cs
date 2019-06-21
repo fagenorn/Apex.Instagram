@@ -124,7 +124,7 @@ namespace Apex.Instagram.Login
             return response;
         }
 
-        private async Task UpdateLoginState(LoginResponse response)
+        internal async Task UpdateLoginState(LoginResponse response)
         {
             if ( !response.IsOk() )
             {
@@ -180,7 +180,7 @@ namespace Apex.Instagram.Login
                           .ConfigureAwait(false);
         }
 
-        private async Task<LoginResponse> LoginFlow(bool justLoggedIn)
+        internal async Task<LoginResponse> LoginFlow(bool justLoggedIn)
         {
             if ( justLoggedIn )
             {
