@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using Apex.Instagram.Login.Exception;
 using Apex.Instagram.Request;
@@ -10,22 +9,11 @@ namespace Apex.Instagram.Login.Challenge
     /// <summary>Client to view and solve Instagram challenges.</summary>
     public class ChallengeClient
     {
-        /// <summary>Resets the challenge and gets the information regarding the next challenge step.</summary>
+        /// <summary>Starts a nerw challenge and gets the information regarding the next challenge step.</summary>
         /// <returns>
         ///     <see cref="StepInfo" />
         /// </returns>
         /// <exception cref="ChallengeException">No challenge response information available.</exception>
-        [Obsolete]
-        public async Task<StepInfo> Reset()
-        {
-            ThrowIfUnavailable();
-
-            await ResetChallenge()
-                .ConfigureAwait(false);
-
-            return GetNextStep();
-        }
-
         public async Task<StepInfo> Start()
         {
             ThrowIfUnavailable();
@@ -120,18 +108,6 @@ namespace Apex.Instagram.Login.Challenge
             }
 
             return _stepInfo;
-        }
-
-        private async Task ResetChallenge()
-        {
-            var request = new RequestBuilder(_account).SetNeedsAuth(false)
-                                                      .SetUrl(ChallengeInfo.ResetUrl)
-                                                      .AddPost("_csrftoken", _account.LoginClient.CsrfToken);
-
-            var response = await _account.ApiRequest<CheckpointResponse>(request)
-                                         .ConfigureAwait(false);
-
-            _checkpointResponse = response;
         }
 
         private async Task StartChallenge()
