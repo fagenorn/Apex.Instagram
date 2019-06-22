@@ -11,11 +11,11 @@ namespace Apex.Instagram.Request.Instagram
         public async Task<TvGuideResponse> GetTvGuide()
         {
             var request = new RequestBuilder(Account).SetUrl("igtv/tv_guide/")
-                                                     .AddPost("prefetch", 1)
-                                                     .AddPost("phone_id", Account.AccountInfo.PhoneId)
-                                                     .AddPost("banner_token", "OgYA")
-                                                     .AddPost("is_charging", "1")
-                                                     .AddPost("will_sound_on", "1");
+                                                     .AddParam("prefetch", 1)
+                                                     .AddParam("phone_id", Account.AccountInfo.PhoneId)
+                                                     .AddParam("banner_token", "OgYA")
+                                                     .AddParam("is_charging", "1")
+                                                     .AddParam("will_sound_on", "1");
 
             return await Account.ApiRequest<TvGuideResponse>(request)
                                 .ConfigureAwait(false);
