@@ -151,7 +151,7 @@ namespace Apex.Instagram.Request
             return this;
         }
 
-        public RequestBuilder AddHeader(string name, bool value) { return AddHeader(name, value ? "true" : "false"); }
+        public RequestBuilder AddHeader(string name, bool value) { return AddHeader(name, value ? "1" : string.Empty); }
 
         public HttpRequestMessage Build()
         {

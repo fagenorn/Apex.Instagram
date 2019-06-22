@@ -38,8 +38,6 @@ namespace Apex.Instagram.Constants
 
         public bool HeaderXIgVp9Capable { get; } = false;
 
-        public string XFbHttpEngine { get; } = "Liger";
-
         public string UserAgentLocale { get; } = "en_US";
 
         #region Singleton     
@@ -99,7 +97,6 @@ namespace Apex.Instagram.Constants
 
             PermanentHeaders = ImmutableDictionary.CreateRange(new[]
                                                                {
-                                                                   new KeyValuePair<string, string>("X-FB-HTTP-Engine", XFbHttpEngine),
                                                                    new KeyValuePair<string, string>("Accept", "*/*"),
                                                                    new KeyValuePair<string, string>("Accept-Encoding", HeaderAcceptEncoding),
                                                                    new KeyValuePair<string, string>("Accept-Language", HeaderAcceptLanguage)
