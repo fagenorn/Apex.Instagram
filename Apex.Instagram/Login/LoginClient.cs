@@ -165,10 +165,10 @@ namespace Apex.Instagram.Login
                 await _account.Profile.GetPrefillCandidates()
                               .ConfigureAwait(false);
 
-                await _account.Internal.FetchZeroRatingToken()
+                await _account.Internal.LogAttribution()
                               .ConfigureAwait(false);
 
-                await _account.Internal.LogAttribution()
+                await _account.Internal.FetchZeroRatingToken()
                               .ConfigureAwait(false);
             }
             finally

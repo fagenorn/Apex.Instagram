@@ -6,8 +6,7 @@ namespace Apex.Instagram.Utils
     {
         public int GetTimezoneOffset()
         {
-            return (int) TimeZoneInfo.Local.GetUtcOffset(DateTime.Now)
-                                     .TotalSeconds;
+            return (int) DateTimeOffset.Now.Offset.TotalSeconds;
         }
 
         #region Singleton     

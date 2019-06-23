@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Apex.Instagram.Constants;
@@ -8,6 +9,8 @@ using Apex.Instagram.Response.JsonMap;
 using Apex.Instagram.Response.JsonMap.Model;
 
 using Utf8Json;
+
+using Version = Apex.Instagram.Constants.Version;
 
 namespace Apex.Instagram.Request.Instagram
 {
@@ -247,7 +250,7 @@ namespace Apex.Instagram.Request.Instagram
             var request = new RequestBuilder(Account).SetUrl("facebook_ota/")
                                                      .AddParam("fields", Facebook.Instance.FacebookOtaFields)
                                                      .AddParam("custom_user_id", Account.AccountInfo.AccountId)
-                                                     .AddParam("signed_body", $"{Signer.GenerateSignature("")}.")
+                                                     .AddParam("signed_body", $"{Signer.GenerateSignature(string.Empty)}.")
                                                      .AddParam("ig_sig_key_version", Version.Instance.SigningKeyVersion)
                                                      .AddParam("version_code", Version.Instance.VersionCode)
                                                      .AddParam("version_name", Version.Instance.InstagramVersion)

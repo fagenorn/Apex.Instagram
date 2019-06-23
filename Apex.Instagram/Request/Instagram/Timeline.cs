@@ -151,7 +151,8 @@ namespace Apex.Instagram.Request.Instagram
             {
                 if ( options != null && options.ContainsKey(name) )
                 {
-                    return options[name] is string value && value != "false" && value != "0" && value != string.Empty;
+                    var value = options[name]?.ToString();
+                    return !string.IsNullOrWhiteSpace(value) && value != "false" && value != "0";
                 }
 
                 return false;
