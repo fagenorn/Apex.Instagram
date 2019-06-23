@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Apex.Instagram.Constants;
@@ -9,8 +8,6 @@ using Apex.Instagram.Response.JsonMap;
 using Apex.Instagram.Response.JsonMap.Model;
 
 using Utf8Json;
-
-using Version = Apex.Instagram.Constants.Version;
 
 namespace Apex.Instagram.Request.Instagram
 {

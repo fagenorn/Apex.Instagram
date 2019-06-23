@@ -31,13 +31,20 @@ namespace Apex.Instagram.Request.Instagram
 
         public async Task<FacebookIdResponse> GetFacebookId()
         {
-            var request = new RequestBuilder(Account).SetUrl("notifications/badge/")
-                                                     .SetSignedPost(false)
-                                                     .AddPost("_uuid", Account.AccountInfo.Uuid)
-                                                     .AddPost("_csrftoken", Account.LoginClient.CsrfToken);
+            try
+            {
+                var request = new RequestBuilder(Account).SetUrl("fb/get_connected_fbid/")
+                                                         .SetSignedPost(false)
+                                                         .AddPost("_uuid", Account.AccountInfo.Uuid)
+                                                         .AddPost("_csrftoken", Account.LoginClient.CsrfToken);
 
-            return await Account.ApiRequest<FacebookIdResponse>(request)
-                                .ConfigureAwait(false);
+                return await Account.ApiRequest<FacebookIdResponse>(request)
+                                    .ConfigureAwait(false);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public async Task<LinkageStatusResponse> GetLinkageStatus()
