@@ -279,7 +279,7 @@ namespace Apex.Instagram.Request.Instagram
         public async Task<QpCooldownsResponse> GetQpCooldowns()
         {
             var request = new RequestBuilder(Account).SetUrl("qp/get_cooldowns/")
-                                                     .AddParam("signed_body", Signer.GenerateSignature("{}.{}"))
+                                                     .AddParam("signed_body", Signer.GenerateSignature("{}") + ".{}")
                                                      .AddParam("ig_sig_key_version", Version.Instance.SigningKeyVersion);
 
             return await Account.ApiRequest<QpCooldownsResponse>(request)
