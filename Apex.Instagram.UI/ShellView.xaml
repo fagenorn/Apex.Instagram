@@ -1,0 +1,12 @@
+<Window x:Class="Apex.Instagram.UI.ShellView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:teleric="http://schemas.telerik.com/2008/xaml/presentation">
+
+    <teleric:RadDockPanel Background="White">
+        <teleric:RadWatermarkTextBox x:Name="Name" />
+        <teleric:RadButton x:Name="SayHello"
+                Content="Click Me" />
+    </teleric:RadDockPanel>
+</Window>
+    
