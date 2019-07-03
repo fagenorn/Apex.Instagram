@@ -3,30 +3,52 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apex.Instagram", "Apex.Instagram\Apex.Instagram.csproj", "{F6028B03-854E-40B6-A8C1-CB4CA7018665}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apex.Instagram.API", "Apex.Instagram.API\Apex.Instagram.API.csproj", "{F6028B03-854E-40B6-A8C1-CB4CA7018665}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apex.Instagram.Tests", "Apex.Instagram.Tests\Apex.Instagram.Tests.csproj", "{BC5D5A25-1780-4E94-81C4-DC869FCA1554}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apex.Instagram.API.Tests", "Apex.Instagram.API.Tests\Apex.Instagram.API.Tests.csproj", "{BC5D5A25-1780-4E94-81C4-DC869FCA1554}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apex.Shared", "Apex.Shared\Apex.Shared.csproj", "{4B179053-4C96-44D9-A299-86E5BC24DF7B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apex.Instagram.UI", "Apex.Instagram.UI\Apex.Instagram.UI.csproj", "{A5505739-3C58-4D93-A5BC-0536CEA7D42B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{F6028B03-854E-40B6-A8C1-CB4CA7018665}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F6028B03-854E-40B6-A8C1-CB4CA7018665}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6028B03-854E-40B6-A8C1-CB4CA7018665}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F6028B03-854E-40B6-A8C1-CB4CA7018665}.Debug|x86.Build.0 = Debug|Any CPU
 		{F6028B03-854E-40B6-A8C1-CB4CA7018665}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6028B03-854E-40B6-A8C1-CB4CA7018665}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6028B03-854E-40B6-A8C1-CB4CA7018665}.Release|x86.ActiveCfg = Release|Any CPU
+		{F6028B03-854E-40B6-A8C1-CB4CA7018665}.Release|x86.Build.0 = Release|Any CPU
 		{BC5D5A25-1780-4E94-81C4-DC869FCA1554}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BC5D5A25-1780-4E94-81C4-DC869FCA1554}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC5D5A25-1780-4E94-81C4-DC869FCA1554}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BC5D5A25-1780-4E94-81C4-DC869FCA1554}.Debug|x86.Build.0 = Debug|Any CPU
 		{BC5D5A25-1780-4E94-81C4-DC869FCA1554}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC5D5A25-1780-4E94-81C4-DC869FCA1554}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC5D5A25-1780-4E94-81C4-DC869FCA1554}.Release|x86.ActiveCfg = Release|Any CPU
+		{BC5D5A25-1780-4E94-81C4-DC869FCA1554}.Release|x86.Build.0 = Release|Any CPU
 		{4B179053-4C96-44D9-A299-86E5BC24DF7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4B179053-4C96-44D9-A299-86E5BC24DF7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B179053-4C96-44D9-A299-86E5BC24DF7B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4B179053-4C96-44D9-A299-86E5BC24DF7B}.Debug|x86.Build.0 = Debug|Any CPU
 		{4B179053-4C96-44D9-A299-86E5BC24DF7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B179053-4C96-44D9-A299-86E5BC24DF7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B179053-4C96-44D9-A299-86E5BC24DF7B}.Release|x86.ActiveCfg = Release|Any CPU
+		{4B179053-4C96-44D9-A299-86E5BC24DF7B}.Release|x86.Build.0 = Release|Any CPU
+		{A5505739-3C58-4D93-A5BC-0536CEA7D42B}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{A5505739-3C58-4D93-A5BC-0536CEA7D42B}.Debug|x86.ActiveCfg = Debug|x86
+		{A5505739-3C58-4D93-A5BC-0536CEA7D42B}.Debug|x86.Build.0 = Debug|x86
+		{A5505739-3C58-4D93-A5BC-0536CEA7D42B}.Release|Any CPU.ActiveCfg = Release|x86
+		{A5505739-3C58-4D93-A5BC-0536CEA7D42B}.Release|x86.ActiveCfg = Release|x86
+		{A5505739-3C58-4D93-A5BC-0536CEA7D42B}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

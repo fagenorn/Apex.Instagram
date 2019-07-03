@@ -1,0 +1,403 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F6028B03-854E-40B6-A8C1-CB4CA7018665}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Apex.Instagram.API</RootNamespace>
+    <AssemblyName>Apex.Instagram.API</AssemblyName>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>7.2</LangVersion>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>7.2</LangVersion>
+    <DocumentationFile>bin\Release\Apex.Instagram.API.xml</DocumentationFile>
+    <NoWarn>1591</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="JetBrains.Annotations, Version=2018.3.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.2018.3.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="MessagePack, Version=1.7.3.4, Culture=neutral, PublicKeyToken=b4a0369545f0a1be, processorArchitecture=MSIL">
+      <HintPath>..\packages\MessagePack.1.7.3.4\lib\net47\MessagePack.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.5.0\lib\netstandard2.0\System.Collections.Immutable.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http, Version=4.1.1.3, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.4.3.4\lib\net46\System.Net.Http.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime, Version=4.1.1.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.4.3.1\lib\net462\System.Runtime.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net463\System.Security.Cryptography.Algorithms.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.2\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.2\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Utf8Json, Version=1.3.7.0, Culture=neutral, PublicKeyToken=8a73d3ba7e392e27, processorArchitecture=MSIL">
+      <HintPath>..\packages\Utf8Json.1.3.7\lib\net47\Utf8Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Utf8Json.ImmutableCollection, Version=1.3.7.0, Culture=neutral, PublicKeyToken=8a73d3ba7e392e27, processorArchitecture=MSIL">
+      <HintPath>..\packages\Utf8Json.ImmutableCollection.1.3.7\lib\net47\Utf8Json.ImmutableCollection.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Account.cs" />
+    <Compile Include="AccountBuilder.cs" />
+    <Compile Include="Constants\Delays.cs" />
+    <Compile Include="Constants\Device.cs" />
+    <Compile Include="Constants\Facebook.cs" />
+    <Compile Include="Constants\Request.cs" />
+    <Compile Include="Constants\Response.cs" />
+    <Compile Include="Constants\Version.cs" />
+    <Compile Include="Exception\ApexException.cs" />
+    <Compile Include="Exception\AccountBuilderException.cs" />
+    <Compile Include="Exception\EndOfPageException.cs" />
+    <Compile Include="Initialization.cs" />
+    <Compile Include="Logger\ApexLogger.cs" />
+    <Compile Include="Logger\ApexLogLevel.cs" />
+    <Compile Include="Logger\ApexLogMessage.cs" />
+    <Compile Include="Logger\ApexLogMessagePublishedEventArgs.cs" />
+    <Compile Include="Logger\IApexLogger.cs" />
+    <Compile Include="Logger\NullLogger.cs" />
+    <Compile Include="Login\Challenge\ChallengeClient.cs" />
+    <Compile Include="Login\Challenge\ChallengeInfo.cs" />
+    <Compile Include="Login\Challenge\StepInfo.cs" />
+    <Compile Include="Login\Challenge\StepPhoneInfo.cs" />
+    <Compile Include="Login\Challenge\StepSelectInfo.cs" />
+    <Compile Include="Login\Challenge\StepSelectVerifyMethodInfo.cs" />
+    <Compile Include="Login\Challenge\StepVerifyInfo.cs" />
+    <Compile Include="Login\Challenge\StepVerifySmsInfo.cs" />
+    <Compile Include="Login\Exception\ChallengeException.cs" />
+    <Compile Include="Login\Exception\LoginException.cs" />
+    <Compile Include="Login\LoginClient.cs" />
+    <Compile Include="Login\LoginInfo.cs" />
+    <Compile Include="Model\Account\AccountInfo.cs" />
+    <Compile Include="Model\Account\Device\DeviceGenerator.cs" />
+    <Compile Include="Model\Account\Device\DeviceInfo.cs" />
+    <Compile Include="Model\Account\Device\UserAgent.cs" />
+    <Compile Include="Model\Request\Proxy.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Request\Exception\AccountDisabledException.cs" />
+    <Compile Include="Request\Exception\ChallengeRequiredException.cs" />
+    <Compile Include="Request\Exception\CheckpointRequiredException.cs" />
+    <Compile Include="Request\Exception\ConsentRequiredException.cs" />
+    <Compile Include="Request\Exception\EndpointException\BadRequestException.cs" />
+    <Compile Include="Request\Exception\EndpointException\ConflictException.cs" />
+    <Compile Include="Request\Exception\EndpointException\EndpointException.cs" />
+    <Compile Include="Request\Exception\EndpointException\ForbiddenException.cs" />
+    <Compile Include="Request\Exception\EndpointException\MethodNotAllowedException.cs" />
+    <Compile Include="Request\Exception\EndpointException\NotAcceptableException.cs" />
+    <Compile Include="Request\Exception\EndpointException\NotFoundException.cs" />
+    <Compile Include="Request\Exception\EndpointException\ProxyAuthenticationRequiredException.cs" />
+    <Compile Include="Request\Exception\EndpointException\RequestTimeoutException.cs" />
+    <Compile Include="Request\Exception\EndpointException\UnauthorizedException.cs" />
+    <Compile Include="Request\Exception\EndpointException\UnknowEndpointException.cs" />
+    <Compile Include="Request\Exception\Model\ExceptionMap.cs" />
+    <Compile Include="Request\Exception\FeedbackRequiredException.cs" />
+    <Compile Include="Request\Exception\ForcedPasswordResetException.cs" />
+    <Compile Include="Request\Exception\Model\IExceptionMap.cs" />
+    <Compile Include="Request\Exception\IncorrectPasswordException.cs" />
+    <Compile Include="Request\Exception\InvalidSmsCodeException.cs" />
+    <Compile Include="Request\Exception\InvalidUserException.cs" />
+    <Compile Include="Request\Exception\LoginRequiredException.cs" />
+    <Compile Include="Request\Exception\Model\IMap.cs" />
+    <Compile Include="Request\Exception\Model\IStatusCodeMap.cs" />
+    <Compile Include="Request\Exception\Model\StatusMap.cs" />
+    <Compile Include="Request\Exception\RequestBuilderException.cs" />
+    <Compile Include="Request\Exception\RequestException.cs" />
+    <Compile Include="Request\Exception\RequestHeadersTooLargeException.cs" />
+    <Compile Include="Request\Exception\SentryBlockException.cs" />
+    <Compile Include="Request\Exception\ThrottledException.cs" />
+    <Compile Include="Request\HttpClient.cs" />
+    <Compile Include="Request\Instagram\Creative.cs" />
+    <Compile Include="Request\Instagram\Direct.cs" />
+    <Compile Include="Request\Instagram\Discover.cs" />
+    <Compile Include="Request\Instagram\Internal.cs" />
+    <Compile Include="Request\Instagram\Media.cs" />
+    <Compile Include="Request\Instagram\Paginate\AutoPaginate.cs" />
+    <Compile Include="Request\Instagram\Paginate\AutoPaginateWithRankToken.cs" />
+    <Compile Include="Request\Instagram\Paginate\IAutoPaginate.cs" />
+    <Compile Include="Request\Instagram\Paginate\IPaginate.cs" />
+    <Compile Include="Request\Instagram\People.cs" />
+    <Compile Include="Request\Instagram\Profile.cs" />
+    <Compile Include="Request\Instagram\RequestCollection.cs" />
+    <Compile Include="Request\Instagram\Story.cs" />
+    <Compile Include="Request\Instagram\Timeline.cs" />
+    <Compile Include="Request\Instagram\Tv.cs" />
+    <Compile Include="Request\Internal\BetterFormUrlEncodedContent.cs" />
+    <Compile Include="Request\Internal\CompressedContent.cs" />
+    <Compile Include="Request\Middleware\HttpClientMiddlewareHandler.cs" />
+    <Compile Include="Request\Middleware\IMiddleware.cs" />
+    <Compile Include="Request\Middleware\ModifyHeadersMiddleware.cs" />
+    <Compile Include="Request\Middleware\ZeroRatingMiddleware.cs" />
+    <Compile Include="Request\Model\Parameter.cs" />
+    <Compile Include="Request\RequestBuilder.cs" />
+    <Compile Include="Request\Signature\Signer.cs" />
+    <Compile Include="Response\JsonMap\ActivityNewsResponse.cs" />
+    <Compile Include="Response\JsonMap\ArlinkDownloadInfoResponse.cs" />
+    <Compile Include="Response\JsonMap\BlockedMediaResponse.cs" />
+    <Compile Include="Response\JsonMap\BootstrapUsersResponse.cs" />
+    <Compile Include="Response\JsonMap\CapabilitiesDecisionsResponse.cs" />
+    <Compile Include="Response\JsonMap\CheckpointResponse.cs" />
+    <Compile Include="Response\JsonMap\DirectInboxResponse.cs" />
+    <Compile Include="Response\JsonMap\DirectRankedRecipientsResponse.cs" />
+    <Compile Include="Response\JsonMap\ExploreResponse.cs" />
+    <Compile Include="Response\JsonMap\FacebookIdResponse.cs" />
+    <Compile Include="Response\JsonMap\FacebookOtaResponse.cs" />
+    <Compile Include="Response\JsonMap\FetchQpDataResponse.cs" />
+    <Compile Include="Response\JsonMap\FollowerAndFollowingResponse.cs" />
+    <Compile Include="Response\JsonMap\FriendshipResponse.cs" />
+    <Compile Include="Response\JsonMap\FriendshipsShowManyResponse.cs" />
+    <Compile Include="Response\JsonMap\FriendshipsShowResponse.cs" />
+    <Compile Include="Response\JsonMap\GenericResponse.cs" />
+    <Compile Include="Response\JsonMap\LauncherSyncResponse.cs" />
+    <Compile Include="Response\JsonMap\LinkageStatusResponse.cs" />
+    <Compile Include="Response\JsonMap\LoginResponse.cs" />
+    <Compile Include="Response\JsonMap\LoomFetchConfigResponse.cs" />
+    <Compile Include="Response\JsonMap\Model\Action.cs" />
+    <Compile Include="Response\JsonMap\Model\ActionBadge.cs" />
+    <Compile Include="Response\JsonMap\Model\ActionLog.cs" />
+    <Compile Include="Response\JsonMap\Model\Ad4ad.cs" />
+    <Compile Include="Response\JsonMap\Model\AdMetadata.cs" />
+    <Compile Include="Response\JsonMap\Model\AndroidLinks.cs" />
+    <Compile Include="Response\JsonMap\Model\AnimatedMedia.cs" />
+    <Compile Include="Response\JsonMap\Model\AnimatedMediaImage.cs" />
+    <Compile Include="Response\JsonMap\Model\AnimatedMediaImageFixedHeigth.cs" />
+    <Compile Include="Response\JsonMap\Model\Args.cs" />
+    <Compile Include="Response\JsonMap\Model\Attribution.cs" />
+    <Compile Include="Response\JsonMap\Model\Aymf.cs" />
+    <Compile Include="Response\JsonMap\Model\AymfItem.cs" />
+    <Compile Include="Response\JsonMap\Model\Badging.cs" />
+    <Compile Include="Response\JsonMap\Model\BiographyEntities.cs" />
+    <Compile Include="Response\JsonMap\Model\Bold.cs" />
+    <Compile Include="Response\JsonMap\Model\Broadcast.cs" />
+    <Compile Include="Response\JsonMap\Model\Button.cs" />
+    <Compile Include="Response\JsonMap\Model\Caption.cs" />
+    <Compile Include="Response\JsonMap\Model\CarouselMedia.cs" />
+    <Compile Include="Response\JsonMap\Model\ChainingInfo.cs" />
+    <Compile Include="Response\JsonMap\Model\ChainingSuggestion.cs" />
+    <Compile Include="Response\JsonMap\Model\Challenge.cs" />
+    <Compile Include="Response\JsonMap\Model\Channel.cs" />
+    <Compile Include="Response\JsonMap\Model\Comment.cs" />
+    <Compile Include="Response\JsonMap\Model\Composer.cs" />
+    <Compile Include="Response\JsonMap\Model\ContextualFilters.cs" />
+    <Compile Include="Response\JsonMap\Model\CountdownSticker.cs" />
+    <Compile Include="Response\JsonMap\Model\Counts.cs" />
+    <Compile Include="Response\JsonMap\Model\CoverMedia.cs" />
+    <Compile Include="Response\JsonMap\Model\Creative.cs" />
+    <Compile Include="Response\JsonMap\Model\DirectExpiringSummary.cs" />
+    <Compile Include="Response\JsonMap\Model\DirectInbox.cs" />
+    <Compile Include="Response\JsonMap\Model\DirectLink.cs" />
+    <Compile Include="Response\JsonMap\Model\DirectRankedRecipient.cs" />
+    <Compile Include="Response\JsonMap\Model\DirectReaction.cs" />
+    <Compile Include="Response\JsonMap\Model\DirectReactions.cs" />
+    <Compile Include="Response\JsonMap\Model\DirectThread.cs" />
+    <Compile Include="Response\JsonMap\Model\DirectThreadItem.cs" />
+    <Compile Include="Response\JsonMap\Model\DirectThreadItemMedia.cs" />
+    <Compile Include="Response\JsonMap\Model\DirectThreadLastSeenAt.cs" />
+    <Compile Include="Response\JsonMap\Model\DismissCard.cs" />
+    <Compile Include="Response\JsonMap\Model\Edges.cs" />
+    <Compile Include="Response\JsonMap\Model\EligiblePromotions.cs" />
+    <Compile Include="Response\JsonMap\Model\Experiment.cs" />
+    <Compile Include="Response\JsonMap\Model\Explore.cs" />
+    <Compile Include="Response\JsonMap\Model\ExploreItem.cs" />
+    <Compile Include="Response\JsonMap\Model\ExploreItemInfo.cs" />
+    <Compile Include="Response\JsonMap\Model\FeedAysf.cs" />
+    <Compile Include="Response\JsonMap\Model\FeedItem.cs" />
+    <Compile Include="Response\JsonMap\Model\FelixShare.cs" />
+    <Compile Include="Response\JsonMap\Model\FriendshipStatus.cs" />
+    <Compile Include="Response\JsonMap\Model\Gating.cs" />
+    <Compile Include="Response\JsonMap\Model\GenericMegaphone.cs" />
+    <Compile Include="Response\JsonMap\Model\Hashtag.cs" />
+    <Compile Include="Response\JsonMap\Model\Headline.cs" />
+    <Compile Include="Response\JsonMap\Model\HideReason.cs" />
+    <Compile Include="Response\JsonMap\Model\Image.cs" />
+    <Compile Include="Response\JsonMap\Model\ImageCandidate.cs" />
+    <Compile Include="Response\JsonMap\Model\ImageVersions2.cs" />
+    <Compile Include="Response\JsonMap\Model\In.cs" />
+    <Compile Include="Response\JsonMap\Model\Injected.cs" />
+    <Compile Include="Response\JsonMap\Model\InlineFollow.cs" />
+    <Compile Include="Response\JsonMap\Model\IOSLinks.cs" />
+    <Compile Include="Response\JsonMap\Model\Item.cs" />
+    <Compile Include="Response\JsonMap\Model\Link.cs" />
+    <Compile Include="Response\JsonMap\Model\LinkContext.cs" />
+    <Compile Include="Response\JsonMap\Model\LiveVideoShare.cs" />
+    <Compile Include="Response\JsonMap\Model\LiveViewerInvite.cs" />
+    <Compile Include="Response\JsonMap\Model\Location.cs" />
+    <Compile Include="Response\JsonMap\Model\LocationItem.cs" />
+    <Compile Include="Response\JsonMap\Model\Media.cs" />
+    <Compile Include="Response\JsonMap\Model\MediaData.cs" />
+    <Compile Include="Response\JsonMap\Model\MediaShare.cs" />
+    <Compile Include="Response\JsonMap\Model\Megaphone.cs" />
+    <Compile Include="Response\JsonMap\Model\Nametag.cs" />
+    <Compile Include="Response\JsonMap\Model\Owner.cs" />
+    <Compile Include="Response\JsonMap\Model\Param.cs" />
+    <Compile Include="Response\JsonMap\Model\PermanentItem.cs" />
+    <Compile Include="Response\JsonMap\Model\PhoneVerificationSettings.cs" />
+    <Compile Include="Response\JsonMap\Model\Placeholder.cs" />
+    <Compile Include="Response\JsonMap\Model\PostLive.cs" />
+    <Compile Include="Response\JsonMap\Model\PostLiveItem.cs" />
+    <Compile Include="Response\JsonMap\Model\Prefill.cs" />
+    <Compile Include="Response\JsonMap\Model\Product.cs" />
+    <Compile Include="Response\JsonMap\Model\ProductImage.cs" />
+    <Compile Include="Response\JsonMap\Model\ProductShare.cs" />
+    <Compile Include="Response\JsonMap\Model\ProductTags.cs" />
+    <Compile Include="Response\JsonMap\Model\QpData.cs" />
+    <Compile Include="Response\JsonMap\Model\QpExtraInfo.cs" />
+    <Compile Include="Response\JsonMap\Model\QpNode.cs" />
+    <Compile Include="Response\JsonMap\Model\QpSurface.cs" />
+    <Compile Include="Response\JsonMap\Model\QpViewerData.cs" />
+    <Compile Include="Response\JsonMap\Model\QuestionSticker.cs" />
+    <Compile Include="Response\JsonMap\Model\Ranking.cs" />
+    <Compile Include="Response\JsonMap\Model\ReelMention.cs" />
+    <Compile Include="Response\JsonMap\Model\ReelShare.cs" />
+    <Compile Include="Response\JsonMap\Model\Responder.cs" />
+    <Compile Include="Response\JsonMap\Model\RewriteRule.cs" />
+    <Compile Include="Response\JsonMap\Model\ServerDataInfo.cs" />
+    <Compile Include="Response\JsonMap\Model\Slot.cs" />
+    <Compile Include="Response\JsonMap\Model\StepData.cs" />
+    <Compile Include="Response\JsonMap\Model\Stories.cs" />
+    <Compile Include="Response\JsonMap\Model\StoriesNetego.cs" />
+    <Compile Include="Response\JsonMap\Model\Story.cs" />
+    <Compile Include="Response\JsonMap\Model\StoryCountdown.cs" />
+    <Compile Include="Response\JsonMap\Model\StoryCta.cs" />
+    <Compile Include="Response\JsonMap\Model\StoryHashtag.cs" />
+    <Compile Include="Response\JsonMap\Model\StoryLocation.cs" />
+    <Compile Include="Response\JsonMap\Model\StoryQuestion.cs" />
+    <Compile Include="Response\JsonMap\Model\StoryQuestionResponderInfo.cs" />
+    <Compile Include="Response\JsonMap\Model\StoryShare.cs" />
+    <Compile Include="Response\JsonMap\Model\StoryTray.cs" />
+    <Compile Include="Response\JsonMap\Model\Subscription.cs" />
+    <Compile Include="Response\JsonMap\Model\Suggested.cs" />
+    <Compile Include="Response\JsonMap\Model\SuggestedUsers.cs" />
+    <Compile Include="Response\JsonMap\Model\Suggestion.cs" />
+    <Compile Include="Response\JsonMap\Model\SuggestionCard.cs" />
+    <Compile Include="Response\JsonMap\Model\SupportedCapabilities.cs" />
+    <Compile Include="Response\JsonMap\Model\Surface.cs" />
+    <Compile Include="Response\JsonMap\Model\SystemControl.cs" />
+    <Compile Include="Response\JsonMap\Model\Template.cs" />
+    <Compile Include="Response\JsonMap\Model\Text.cs" />
+    <Compile Include="Response\JsonMap\Model\Thumbnail.cs" />
+    <Compile Include="Response\JsonMap\Model\TimeRange.cs" />
+    <Compile Include="Response\JsonMap\Model\Token.cs" />
+    <Compile Include="Response\JsonMap\Model\TopLive.cs" />
+    <Compile Include="Response\JsonMap\Model\TraceControl.cs" />
+    <Compile Include="Response\JsonMap\Model\TraySuggestions.cs" />
+    <Compile Include="Response\JsonMap\Model\TvChannel.cs" />
+    <Compile Include="Response\JsonMap\Model\TwoFactorInfo.cs" />
+    <Compile Include="Response\JsonMap\Model\User.cs" />
+    <Compile Include="Response\JsonMap\Model\UserCard.cs" />
+    <Compile Include="Response\JsonMap\Model\Usertag.cs" />
+    <Compile Include="Response\JsonMap\Model\VideoCallEvent.cs" />
+    <Compile Include="Response\JsonMap\Model\VideoVersions.cs" />
+    <Compile Include="Response\JsonMap\Model\Viewer.cs" />
+    <Compile Include="Response\JsonMap\MsisdnHeaderResponse.cs" />
+    <Compile Include="Response\JsonMap\MultipleAccountFamilyResponse.cs" />
+    <Compile Include="Response\JsonMap\PrefillCandidatesResponse.cs" />
+    <Compile Include="Response\JsonMap\PresencesResponse.cs" />
+    <Compile Include="Response\JsonMap\ProfileNoticeResponse.cs" />
+    <Compile Include="Response\JsonMap\QpCooldownsResponse.cs" />
+    <Compile Include="Response\JsonMap\RecentSearchesResponse.cs" />
+    <Compile Include="Response\JsonMap\ReelsTrayFeedResponse.cs" />
+    <Compile Include="Response\JsonMap\SharePrefillResponse.cs" />
+    <Compile Include="Response\JsonMap\SuggestedSearchesResponse.cs" />
+    <Compile Include="Response\JsonMap\SyncResponse.cs" />
+    <Compile Include="Response\JsonMap\TimelineFeedResponse.cs" />
+    <Compile Include="Response\JsonMap\TokenResultResponse.cs" />
+    <Compile Include="Response\JsonMap\TvGuideResponse.cs" />
+    <Compile Include="Response\JsonMap\UserInfoResponse.cs" />
+    <Compile Include="Response\JsonMap\WriteSuppotedCapabilitiesResponse.cs" />
+    <Compile Include="Response\Serializer\DurableUlongFormatter.cs" />
+    <Compile Include="Response\ResponseInfo.cs" />
+    <Compile Include="Response\JsonMap\Model\Message.cs" />
+    <Compile Include="Response\JsonMap\Response.cs" />
+    <Compile Include="Response\Serializer\CustomCompositeResolver.cs" />
+    <Compile Include="Response\Serializer\CustomTypesResolver.cs" />
+    <Compile Include="Response\Serializer\DurableStringFormatter.cs" />
+    <Compile Include="Storage\Serializer\MessagePackFormatter\CookieFormatter.cs" />
+    <Compile Include="Storage\Serializer\MessagePackFormatter\CustomCompositeResolver.cs" />
+    <Compile Include="Storage\Serializer\MessagePackFormatter\CustomTypesResolver.cs" />
+    <Compile Include="Storage\Object\CookieCollectionConverter.cs" />
+    <Compile Include="Storage\Serializer\IObjectSerializer.cs" />
+    <Compile Include="Storage\IStorage.cs" />
+    <Compile Include="Storage\Serializer\MessagePackFormatter\DurableDateTimeFormatter.cs" />
+    <Compile Include="Storage\Serializer\MessagePackObjectSerializer.cs" />
+    <Compile Include="Storage\Object\StorageObject.cs" />
+    <Compile Include="Storage\Serializer\MessagePackObjectSerializerJson.cs" />
+    <Compile Include="Storage\StorageKey.cs" />
+    <Compile Include="Storage\StorageManager.cs" />
+    <Compile Include="Utils\Hashing.cs" />
+    <Compile Include="Utils\Instagram.cs" />
+    <Compile Include="Utils\Randomizer.cs" />
+    <Compile Include="Utils\Time.cs" />
+    <Compile Include="Utils\UrlBuilder.cs" />
+    <Compile Include="Utils\WildcardMatch.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\MessagePackAnalyzer.1.6.0\analyzers\dotnet\cs\MessagePackAnalyzer.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Apex.Shared\Apex.Shared.csproj">
+      <Project>{4b179053-4c96-44d9-a299-86e5bc24df7b}</Project>
+      <Name>Apex.Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
