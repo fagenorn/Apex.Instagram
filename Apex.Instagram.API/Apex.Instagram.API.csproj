@@ -262,6 +262,7 @@
     <Compile Include="Response\JsonMap\Model\Hashtag.cs" />
     <Compile Include="Response\JsonMap\Model\Headline.cs" />
     <Compile Include="Response\JsonMap\Model\HideReason.cs" />
+    <Compile Include="Response\JsonMap\Model\IabAutofillOptoutInfo.cs" />
     <Compile Include="Response\JsonMap\Model\Image.cs" />
     <Compile Include="Response\JsonMap\Model\ImageCandidate.cs" />
     <Compile Include="Response\JsonMap\Model\ImageVersions2.cs" />

@@ -83,6 +83,9 @@ namespace Apex.Instagram.API.Response.JsonMap.Model
         [DataMember(Name = "caption")]
         public Caption Caption { get; set; }
 
+        [DataMember(Name = "headline")]
+        public Caption Headline { get; set; }
+
         [DataMember(Name = "title")]
         public string Title { get; set; }
 
@@ -109,6 +112,9 @@ namespace Apex.Instagram.API.Response.JsonMap.Model
 
         [DataMember(Name = "expiring_at")]
         public ulong? ExpiringAt { get; set; }
+
+        [DataMember(Name = "audience")]
+        public string Audience { get; set; }
 
         [DataMember(Name = "is_dash_eligible")]
         public int? IsDashEligible { get; set; }
@@ -187,6 +193,9 @@ namespace Apex.Instagram.API.Response.JsonMap.Model
 
         [DataMember(Name = "likers")]
         public User[] Likers { get; set; }
+
+        [DataMember(Name = "facepile_top_likers")]
+        public User[] FacepileTopLikers { get; set; }
 
         [DataMember(Name = "like_count")]
         public int? LikeCount { get; set; }
@@ -322,6 +331,9 @@ namespace Apex.Instagram.API.Response.JsonMap.Model
 
         [DataMember(Name = "ios_links")]
         public IosLinks[] IosLinks { get; set; }
+
+        [DataMember(Name = "iab_autofill_optout_info")]
+        public IabAutofillOptoutInfo IabAutofillOptoutInfo { get; set; }
 
         [DataMember(Name = "force_overlay")]
         public bool? ForceOverlay { get; set; }
@@ -487,6 +499,9 @@ namespace Apex.Instagram.API.Response.JsonMap.Model
 
         [DataMember(Name = "timezone_offset")]
         public int? TimezoneOffset { get; set; }
+
+        [DataMember(Name = "xpost_deny_reason")]
+        public string XpostDenyReason { get; set; }
 
         [DataMember(Name = "product_tags")]
         public ProductTags ProductTags { get; set; }

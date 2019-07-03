@@ -63,6 +63,9 @@ namespace Apex.Instagram.API.Response.JsonMap.Model
         [DataMember(Name = "did_report_as_spam")]
         public bool? DidReportAsSpam { get; set; }
 
+        [DataMember(Name = "share_enabled")]
+        public bool? ShareEnabled { get; set; }
+
         [DataMember(Name = "parent_comment_id")]
         public ulong? ParentCommentId { get; set; }
 

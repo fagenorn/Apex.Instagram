@@ -15,6 +15,12 @@ namespace Apex.Instagram.API.Response.JsonMap.Model
         [DataMember(Name = "items")]
         public Item[] Items { get; set; }
 
+        [DataMember(Name = "hide_from_feed_unit")]
+        public bool? HideFromFeedUnit { get; set; }
+
+        [DataMember(Name = "media_ids")]
+        public string[] MediaIds { get; set; }
+
         [DataMember(Name = "user")]
         public User User { get; set; }
 

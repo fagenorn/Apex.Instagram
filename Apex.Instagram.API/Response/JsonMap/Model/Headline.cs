@@ -5,7 +5,7 @@ namespace Apex.Instagram.API.Response.JsonMap.Model
     public class Headline
     {
         [DataMember(Name = "content_type")]
-        public dynamic ContentType { get; set; }
+        public string ContentType { get; set; }
 
         [DataMember(Name = "user")]
         public User User { get; set; }
@@ -20,7 +20,7 @@ namespace Apex.Instagram.API.Response.JsonMap.Model
         public string Text { get; set; }
 
         [DataMember(Name = "type")]
-        public dynamic Type { get; set; }
+        public int? Type { get; set; }
 
         [DataMember(Name = "created_at")]
         public ulong? CreatedAt { get; set; }

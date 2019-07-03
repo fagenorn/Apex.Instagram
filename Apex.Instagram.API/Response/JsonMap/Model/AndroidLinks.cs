@@ -18,7 +18,7 @@ namespace Apex.Instagram.API.Response.JsonMap.Model
         public string Package { get; set; }
 
         [DataMember(Name = "deeplinkUri")]
-        public string DeeplinkUri { get; set; }
+        public Uri DeeplinkUri { get; set; }
 
         [DataMember(Name = "callToActionTitle")]
         public string CallToActionTitle { get; set; }
@@ -28,6 +28,12 @@ namespace Apex.Instagram.API.Response.JsonMap.Model
 
         [DataMember(Name = "igUserId")]
         public ulong? IgUserId { get; set; }
+
+        [DataMember(Name = "appInstallObjectiveInvalidationBehavior")]
+        public dynamic AppInstallObjectiveInvalidationBehavior { get; set; }
+
+        [DataMember(Name = "tapAndHoldContext")]
+        public string TapAndHoldContext { get; set; }
 
         [DataMember(Name = "leadGenFormId")]
         public ulong? LeadGenFormId { get; set; }
