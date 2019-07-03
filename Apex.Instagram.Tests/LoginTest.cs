@@ -104,7 +104,6 @@ namespace Apex.Instagram.Tests
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(fileStorage)
                                                     .SetLogger(Logger)
-                                                    .SetProxy(Constants.FiddlerProxy)
                                                     .SetUsername("elytroposisLQw2")
                                                     .SetPassword("46tn2DE02")
                                                     .BuildAsync();
@@ -128,7 +127,6 @@ namespace Apex.Instagram.Tests
             account = await new AccountBuilder().SetId(0)
                                                 .SetStorage(fileStorage)
                                                 .SetLogger(Logger)
-                                                .SetProxy(Constants.FiddlerProxy)
                                                 .SetUsername("elytroposisLQw2")
                                                 .SetPassword("46tn2DE02")
                                                 .BuildAsync();
