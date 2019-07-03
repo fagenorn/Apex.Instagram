@@ -335,7 +335,7 @@ namespace Apex.Instagram.API.Response.JsonMap.Model
         public bool? IsDirectappInstalled { get; set; }
 
         [DataMember(Name = "is_using_unified_inbox_for_direct")]
-        public int? IsUsingUnifiedInboxForDirect { get; set; }
+        public bool? IsUsingUnifiedInboxForDirect { get; set; }
 
         [DataMember(Name = "besties_count")]
         public int? BestiesCount { get; set; }

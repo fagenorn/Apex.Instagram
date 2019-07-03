@@ -28,11 +28,8 @@ namespace Apex.Instagram.API.Login.Challenge
                 throw new ChallengeException("No info found.");
             }
 
-//            if ( response.Challenge.ApiPath[0] == '/' )
-//            {
             response.Challenge.ApiPath = response.Challenge.ApiPath.Remove(0, 1);
             ApiPath                    = new Uri(response.Challenge.ApiPath, UriKind.Relative);
-//            }
 
             LogOut = response.Challenge.Logout != null && (bool) response.Challenge.Logout;
         }

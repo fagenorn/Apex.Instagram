@@ -99,7 +99,9 @@ namespace Apex.Instagram.API.Login
                 "ig_android_fbupload_sidecar_video_universe",
                 "ig_android_skip_get_fbupload_photo_universe",
                 "ig_android_skip_get_fbupload_universe",
-                "ig_android_loom_universe"
+                "ig_android_loom_universe",
+                "ig_android_live_suggested_live_expansion",
+                "ig_android_live_qa_broadcaster_v1_universe"
             };
 
         public bool IsExperimentEnabled(string experiment, string param, bool @default = false)
