@@ -2,6 +2,27 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid />
+        Title="MainWindow" Height="557" Width="632.6">
+    <telerik:RadNavigationView>
+        <telerik:RadNavigationView.Items>
+            <telerik:RadNavigationViewItem Content="Bookmarks">
+                <telerik:RadNavigationViewItem.Icon>
+                    <telerik:RadGlyph Glyph="&#xe303;" FontSize="16" />
+                </telerik:RadNavigationViewItem.Icon>
+            </telerik:RadNavigationViewItem>
+            <telerik:RadNavigationViewItem Content="Favorites">
+                <telerik:RadNavigationViewItem.Icon>
+                    <telerik:RadGlyph Glyph="&#xe301;" FontSize="16" />
+                </telerik:RadNavigationViewItem.Icon>
+            </telerik:RadNavigationViewItem>
+            <telerik:RadNavigationViewItem Content="Files">
+                <telerik:RadNavigationViewItem.Icon>
+                    <telerik:RadGlyph Glyph="&#xe901;" FontSize="16" />
+                </telerik:RadNavigationViewItem.Icon>
+            </telerik:RadNavigationViewItem>
+        </telerik:RadNavigationView.Items>
+        <telerik:RadNavigationView.Content>
+            <telerik:RadGridView />
+        </telerik:RadNavigationView.Content>
+    </telerik:RadNavigationView>
 </Window>
