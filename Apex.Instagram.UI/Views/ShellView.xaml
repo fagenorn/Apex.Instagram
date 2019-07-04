@@ -1,0 +1,19 @@
+﻿<Window x:Class="Apex.Instagram.UI.Views.ShellView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:teleric="http://schemas.telerik.com/2008/xaml/presentation"
+        xmlns:cal="http://www.caliburnproject.org">
+
+    <teleric:RadNavigationView>
+        <teleric:RadNavigationView.Items>
+            <teleric:RadNavigationViewItem Content="Files" x:Name="ShowMainScreen">
+                <teleric:RadNavigationViewItem.Icon>
+                    <teleric:RadGlyph Glyph="&#xe901;" FontSize="16" />
+                </teleric:RadNavigationViewItem.Icon>
+            </teleric:RadNavigationViewItem>
+        </teleric:RadNavigationView.Items>
+        <teleric:RadNavigationView.Content>
+            <ContentControl cal:View.Model="{Binding ActiveItem, Mode=OneWay}" />
+        </teleric:RadNavigationView.Content>
+    </teleric:RadNavigationView>
+</Window>
