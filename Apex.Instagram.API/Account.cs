@@ -14,6 +14,8 @@ using Apex.Instagram.API.Request.Instagram;
 using Apex.Instagram.API.Response.JsonMap;
 using Apex.Instagram.API.Storage;
 
+using JetBrains.Annotations;
+
 namespace Apex.Instagram.API
 {
     /// <summary>
@@ -28,7 +30,7 @@ namespace Apex.Instagram.API
 
         #endregion
 
-        internal string GetCookie(string key) { return HttpClient.GetCookie(key); }
+        internal string GetCookie([NotNull] string key) { return HttpClient.GetCookie(key); }
 
         internal async Task<T> ApiRequest<T>(RequestBuilder builder) where T : Response.JsonMap.Response
         {

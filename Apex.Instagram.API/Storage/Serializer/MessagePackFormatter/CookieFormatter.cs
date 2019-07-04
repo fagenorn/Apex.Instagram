@@ -8,8 +8,8 @@ using MessagePack.Formatters;
 
 namespace Apex.Instagram.API.Storage.Serializer.MessagePackFormatter
 {
-    [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    [SuppressMessage("ReSharper", "PossibleNullReferenceException", Justification = "Custom serializer")]
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification             = "Custom serializer")]
     internal class CookieFormatter : IMessagePackFormatter<Cookie>
     {
         public int Serialize(ref byte[] bytes, int offset, Cookie value, IFormatterResolver formatterResolver)

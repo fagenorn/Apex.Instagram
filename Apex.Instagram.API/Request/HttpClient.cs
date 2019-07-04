@@ -116,10 +116,6 @@ namespace Apex.Instagram.API.Request
                         throw new RequestException("Critical request error occured.", e);
                 }
             }
-            catch (ObjectDisposedException e)
-            {
-                throw new RequestException("Request has been cancelled.", e);
-            }
             catch (OperationCanceledException e)
             {
                 throw new RequestException("Request has been cancelled.", e);

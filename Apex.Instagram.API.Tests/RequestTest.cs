@@ -327,7 +327,7 @@ namespace Apex.Instagram.API.Tests
         }
 
         [TestMethod]
-        public async Task Cancel_Request_Ongoing()
+        public async Task Cancel_Request_When_Account_Is_Disposed()
         {
             var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
@@ -341,6 +341,32 @@ namespace Apex.Instagram.API.Tests
             var taskResult = account.ApiRequest<GenericResponse>(request);
 
             account.Dispose();
+
+            var ex = await Assert.ThrowsExceptionAsync<RequestException>(async () => await taskResult);
+            Assert.IsInstanceOfType(ex.InnerException, typeof(OperationCanceledException));
+
+            request = new RequestBuilder(account).SetUrl("http://httpbin.org/delay/1")
+                                                 .SetNeedsAuth(false);
+
+            await Assert.ThrowsExceptionAsync<ObjectDisposedException>(async () => await account.ApiRequest<GenericResponse>(request));
+        }
+
+        [TestMethod]
+        public async Task Cancel_Request_When_Request_Client_Is_Disposed()
+        {
+            var fileStorage = new FileStorage();
+            var account = await new AccountBuilder().SetId(0)
+                                                    .SetStorage(fileStorage)
+                                                    .SetLogger(Logger)
+                                                    .BuildAsync();
+
+            var request = new RequestBuilder(account).SetUrl("http://httpbin.org/delay/1")
+                                                     .SetNeedsAuth(false);
+
+            var taskResult = account.ApiRequest<GenericResponse>(request);
+
+            account.HttpClient.Dispose();
+
             var ex = await Assert.ThrowsExceptionAsync<RequestException>(async () => await taskResult);
             Assert.IsInstanceOfType(ex.InnerException, typeof(OperationCanceledException));
 
