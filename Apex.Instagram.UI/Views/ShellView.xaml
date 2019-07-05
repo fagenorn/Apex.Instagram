@@ -4,7 +4,7 @@
         xmlns:teleric="http://schemas.telerik.com/2008/xaml/presentation"
         xmlns:cal="http://www.caliburnproject.org">
 
-    <teleric:RadNavigationView>
+    <teleric:RadNavigationView SelectedIndex="0">
         <teleric:RadNavigationView.Items>
             <teleric:RadNavigationViewItem Content="Files" x:Name="ShowAccountGridScreen">
                 <teleric:RadNavigationViewItem.Icon>

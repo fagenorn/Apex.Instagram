@@ -1,7 +1,9 @@
 ﻿<UserControl x:Class="Apex.Instagram.UI.Views.AccountGridView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation">
     <Grid>
         <TextBlock FontSize="26">Account Grid</TextBlock>
+        <telerik:RadGridView ItemsSource="{Binding Accounts, Mode=OneWay}" AutoGenerateColumns="True" />
     </Grid>
 </UserControl>
