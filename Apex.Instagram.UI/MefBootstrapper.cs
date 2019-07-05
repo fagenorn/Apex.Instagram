@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 
-using Apex.Instagram.UI.ViewModels;
+using Apex.Instagram.UI.Contracts;
 
 using Caliburn.Micro;
 
@@ -22,9 +24,17 @@ namespace Apex.Instagram.UI
 
         protected override void Configure()
         {
-            var catalog = new AggregateCatalog(AssemblySource.Instance.Select(x => new AssemblyCatalog(x)));
+            var pluginAssemblies = GetPluginAssemblies()
+                .ToList();
 
-            _container = new CompositionContainer(catalog);
+            var pluginExportProvider = CreateCatalogExportProvider(pluginAssemblies);
+            var appExportProvider    = CreateCatalogExportProvider(AssemblySource.Instance);
+
+            AssemblySource.Instance.AddRange(pluginAssemblies);
+
+            _container                          = new CompositionContainer(pluginExportProvider, appExportProvider);
+            pluginExportProvider.SourceProvider = _container;
+            appExportProvider.SourceProvider    = _container;
 
             var batch = new CompositionBatch();
 
@@ -57,6 +67,26 @@ namespace Apex.Instagram.UI
         {
             StyleManager.ApplicationTheme = new Office2016Theme();
             DisplayRootViewFor<IShell>();
+        }
+
+        private CatalogExportProvider CreateCatalogExportProvider(IEnumerable<Assembly> assemblies)
+        {
+            var pluginCatalog = new AggregateCatalog(assemblies.Select(x => new AssemblyCatalog(x)));
+
+            return new CatalogExportProvider(pluginCatalog);
+        }
+
+        private IEnumerable<Assembly> GetPluginAssemblies()
+        {
+            var pluginPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins");
+            if ( !Directory.Exists(pluginPath) )
+            {
+                Directory.CreateDirectory(pluginPath);
+            }
+
+            var fi = new DirectoryInfo(pluginPath).GetFiles("*.dll");
+
+            return fi.Select(fileInfo => Assembly.LoadFrom(fileInfo.FullName));
         }
     }
 }

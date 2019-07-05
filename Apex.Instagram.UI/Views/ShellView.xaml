@@ -6,7 +6,7 @@
 
     <teleric:RadNavigationView>
         <teleric:RadNavigationView.Items>
-            <teleric:RadNavigationViewItem Content="Files" x:Name="ShowMainScreen">
+            <teleric:RadNavigationViewItem Content="Files" x:Name="ShowAccountGridScreen">
                 <teleric:RadNavigationViewItem.Icon>
                     <teleric:RadGlyph Glyph="&#xe901;" FontSize="16" />
                 </teleric:RadNavigationViewItem.Icon>

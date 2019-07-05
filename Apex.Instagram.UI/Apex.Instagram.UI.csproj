@@ -154,13 +154,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="MefBootstrapper.cs" />
-    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\AccountGridViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
-    <Compile Include="ViewModels\IShell.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Page Include="Views\MainView.xaml">
+    <Page Include="Views\AccountGridView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -210,7 +209,12 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Apex.Instagram.UI.Contracts\Apex.Instagram.UI.Contracts.csproj">
+      <Project>{f7f59b71-0c93-455b-afd3-0a918b5be306}</Project>
+      <Name>Apex.Instagram.UI.Contracts</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

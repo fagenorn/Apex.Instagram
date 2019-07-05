@@ -1,7 +1,0 @@
-﻿<UserControl x:Class="Apex.Instagram.UI.Views.MainView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:teleric="http://schemas.telerik.com/2008/xaml/presentation">
-
-    <TextBlock FontSize="32">Page One</TextBlock>
-</UserControl>

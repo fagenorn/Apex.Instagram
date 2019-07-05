@@ -1,12 +1,18 @@
 ﻿using System.ComponentModel.Composition;
 
+using Apex.Instagram.UI.Contracts;
+
 using Caliburn.Micro;
 
 namespace Apex.Instagram.UI.ViewModels
 {
-    [Export(typeof(IShell))]
-    public class ShellViewModel : Conductor<Screen>, IShell
+    public class ShellViewModel : Conductor<object>, IShell
     {
-        public void ShowMainScreen() { ActivateItem(new MainViewModel()); }
+        private readonly IAccountGrid _accountGrid;
+
+        [ImportingConstructor]
+        public ShellViewModel(IAccountGrid accountGrid) { _accountGrid = accountGrid; }
+
+        public void ShowAccountGridScreen() { ActivateItem(_accountGrid); }
     }
 }

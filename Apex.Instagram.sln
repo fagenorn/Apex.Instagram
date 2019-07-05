@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apex.Shared", "Apex.Shared\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apex.Instagram.UI", "Apex.Instagram.UI\Apex.Instagram.UI.csproj", "{A5505739-3C58-4D93-A5BC-0536CEA7D42B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{9AD26E5B-04C7-4AA0-B8AF-AFACDE0BD358}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apex.Instagram.UI.Contracts", "Apex.Instagram.UI.Contracts\Apex.Instagram.UI.Contracts.csproj", "{F7F59B71-0C93-455B-AFD3-0A918B5BE306}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,9 +54,21 @@ Global
 		{A5505739-3C58-4D93-A5BC-0536CEA7D42B}.Release|Any CPU.ActiveCfg = Release|x86
 		{A5505739-3C58-4D93-A5BC-0536CEA7D42B}.Release|x86.ActiveCfg = Release|x86
 		{A5505739-3C58-4D93-A5BC-0536CEA7D42B}.Release|x86.Build.0 = Release|x86
+		{F7F59B71-0C93-455B-AFD3-0A918B5BE306}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7F59B71-0C93-455B-AFD3-0A918B5BE306}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7F59B71-0C93-455B-AFD3-0A918B5BE306}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F7F59B71-0C93-455B-AFD3-0A918B5BE306}.Debug|x86.Build.0 = Debug|Any CPU
+		{F7F59B71-0C93-455B-AFD3-0A918B5BE306}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7F59B71-0C93-455B-AFD3-0A918B5BE306}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7F59B71-0C93-455B-AFD3-0A918B5BE306}.Release|x86.ActiveCfg = Release|Any CPU
+		{F7F59B71-0C93-455B-AFD3-0A918B5BE306}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A5505739-3C58-4D93-A5BC-0536CEA7D42B} = {9AD26E5B-04C7-4AA0-B8AF-AFACDE0BD358}
+		{F7F59B71-0C93-455B-AFD3-0A918B5BE306} = {9AD26E5B-04C7-4AA0-B8AF-AFACDE0BD358}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6992D6E5-35E7-4F0D-8F6A-D8BC03D708E5}
