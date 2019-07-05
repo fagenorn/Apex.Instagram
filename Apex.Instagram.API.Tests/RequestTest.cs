@@ -180,7 +180,7 @@ namespace Apex.Instagram.API.Tests
                                                      .AddPost("test3", "best3", false)
                                                      .Build();
 
-            account.Logger.Debug<HttpClient>(request);
+            await account.Logger.Debug<HttpClient>(request);
             var response = await GetClient(account)
                                .SendAsync(request);
 
@@ -234,7 +234,7 @@ namespace Apex.Instagram.API.Tests
                                                      .SetSignedPost(false)
                                                      .Build();
 
-            account.Logger.Debug<HttpClient>(request);
+            await account.Logger.Debug<HttpClient>(request);
             var response = await GetClient(account)
                                .SendAsync(request);
 

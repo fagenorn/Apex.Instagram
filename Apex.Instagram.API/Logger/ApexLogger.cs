@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 
 using Apex.Instagram.API.Exception;
 
@@ -61,7 +62,7 @@ namespace Apex.Instagram.API.Logger
         }
 
         /// <inheritdoc />
-        public void Debug<TSource>(HttpRequestMessage message)
+        public async Task Debug<TSource>(HttpRequestMessage message)
         {
             if ( _logLevel < ApexLogLevel.Debug )
             {
@@ -73,12 +74,14 @@ namespace Apex.Instagram.API.Logger
             logMessage.AppendLine($"Request: {message.Method} {message.RequestUri}");
             WriteHeaders(logMessage, message.Headers);
             WriteProperties(logMessage, message.Properties);
-            WriteContent(logMessage, message.Content);
+            await WriteContent(logMessage, message.Content)
+                .ConfigureAwait(false);
+
             Publish<TSource>(ApexLogLevel.Debug, null, logMessage.ToString(), null);
         }
 
         /// <inheritdoc />
-        public void Debug<TSource>(HttpResponseMessage message)
+        public async Task Debug<TSource>(HttpResponseMessage message)
         {
             if ( _logLevel < ApexLogLevel.Debug )
             {
@@ -88,7 +91,9 @@ namespace Apex.Instagram.API.Logger
             var logMessage = new StringBuilder();
             WriteSeprator(logMessage);
             logMessage.AppendLine($"Response: {message.RequestMessage.Method} {(int) message.StatusCode} {message.RequestMessage.RequestUri}");
-            WriteContent(logMessage, message.Content);
+            await WriteContent(logMessage, message.Content)
+                .ConfigureAwait(false);
+
             Publish<TSource>(ApexLogLevel.Debug, null, logMessage.ToString(), null);
         }
 
@@ -208,7 +213,7 @@ namespace Apex.Instagram.API.Logger
             sb.AppendLine($"Properties:{Environment.NewLine}{JsonSerializer.ToJsonString(properties)}");
         }
 
-        private async void WriteContent(StringBuilder sb, HttpContent content)
+        private async Task WriteContent(StringBuilder sb, HttpContent content)
         {
             if ( content == null )
             {

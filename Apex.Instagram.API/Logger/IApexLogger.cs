@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 using Apex.Instagram.API.Exception;
 
@@ -26,12 +27,12 @@ namespace Apex.Instagram.API.Logger
         /// <summary>Logs the specified message as debug information.</summary>
         /// <typeparam name="TSource">The type of the source.</typeparam>
         /// <param name="message">The message.</param>
-        void Debug<TSource>(HttpRequestMessage message);
+        Task Debug<TSource>(HttpRequestMessage message);
 
         /// <summary>Logs the specified message as debug information.</summary>
         /// <typeparam name="TSource">The type of the source.</typeparam>
         /// <param name="message">The message.</param>
-        void Debug<TSource>(HttpResponseMessage message);
+        Task Debug<TSource>(HttpResponseMessage message);
 
         /// <summary>Logs the specified message as information.</summary>
         /// <typeparam name="TSource">The type of the source.</typeparam>

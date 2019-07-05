@@ -32,6 +32,11 @@ namespace Apex.Instagram.API.Login.Challenge
             ApiPath                    = new Uri(response.Challenge.ApiPath, UriKind.Relative);
 
             LogOut = response.Challenge.Logout != null && (bool) response.Challenge.Logout;
+
+            if ( ApiPath == null )
+            {
+                throw new ChallengeException("No url found.");
+            }
         }
 
         [Key(0)]
@@ -45,11 +50,6 @@ namespace Apex.Instagram.API.Login.Challenge
         {
             get
             {
-                if ( ApiPath == null )
-                {
-                    throw new ChallengeException("No url found.");
-                }
-
                 var builder = new UrlBuilder(ApiPath).SetRelativeUri()
                                                      .AddSegmentAfter(@"reset/", @"challenge/");
 
@@ -62,11 +62,6 @@ namespace Apex.Instagram.API.Login.Challenge
         {
             get
             {
-                if ( ApiPath == null )
-                {
-                    throw new ChallengeException("No url found.");
-                }
-
                 var builder = new UrlBuilder(ApiPath).SetRelativeUri()
                                                      .AddSegmentAfter(@"replay/", @"challenge/");
 

@@ -88,14 +88,16 @@ namespace Apex.Instagram.API.Request
         {
             HttpResponseMessage result;
             var                 request = builder.Build();
-            _account.Logger.Debug<HttpClient>(request);
+            await _account.Logger.Debug<HttpClient>(request)
+                          .ConfigureAwait(false);
 
             try
             {
                 result = await _request.SendAsync(request, HttpCompletionOption.ResponseContentRead, ct)
                                        .ConfigureAwait(false);
 
-                _account.Logger.Debug<HttpClient>(result);
+                await _account.Logger.Debug<HttpClient>(result)
+                              .ConfigureAwait(false);
             }
             catch (HttpRequestException e)
             {
