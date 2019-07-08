@@ -137,6 +137,9 @@ namespace Apex.Instagram.API.Response.JsonMap.Model
         [DataMember(Name = "can_reply")]
         public bool? CanReply { get; set; }
 
+        [DataMember(Name = "is_pride_media")]
+        public bool? IsPrideMedia { get; set; }
+
         [DataMember(Name = "can_viewer_reshare")]
         public bool? CanViewerReshare { get; set; }
 

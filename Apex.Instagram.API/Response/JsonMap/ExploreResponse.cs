@@ -10,13 +10,16 @@ namespace Apex.Instagram.API.Response.JsonMap
         public int? NumResults { get; set; }
 
         [DataMember(Name = "auto_load_more_enabled")]
-        public dynamic AutoLoadMoreEnabled { get; set; }
+        public bool AutoLoadMoreEnabled { get; set; }
 
         [DataMember(Name = "items")]
         public ExploreItem[] Items { get; set; }
 
+        [DataMember(Name = "sectional_items")]
+        public Section[] SectionalItems { get; set; }
+
         [DataMember(Name = "more_available")]
-        public dynamic MoreAvailable { get; set; }
+        public bool MoreAvailable { get; set; }
 
         [DataMember(Name = "next_max_id")]
         public string NextMaxId { get; set; }

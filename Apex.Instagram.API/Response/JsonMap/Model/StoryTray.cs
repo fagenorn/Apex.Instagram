@@ -21,6 +21,9 @@ namespace Apex.Instagram.API.Response.JsonMap.Model
         [DataMember(Name = "media_ids")]
         public ulong[] MediaIds { get; set; }
 
+        [DataMember(Name = "has_pride_media")]
+        public bool? HasPrideMedia { get; set; }
+
         [DataMember(Name = "user")]
         public User User { get; set; }
 

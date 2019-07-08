@@ -11,5 +11,8 @@ namespace Apex.Instagram.API.Response.JsonMap
 
         [DataMember(Name = "user")]
         public User User { get; set; }
+
+        [DataMember(Name = "effect_previews")]
+        public dynamic EffectPreviews { get; set; }
     }
 }

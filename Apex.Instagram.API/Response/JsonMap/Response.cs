@@ -5,6 +5,8 @@ using System.Runtime.Serialization;
 using Apex.Instagram.API.Request.Exception;
 using Apex.Instagram.API.Response.JsonMap.Model;
 
+using Utf8Json;
+
 namespace Apex.Instagram.API.Response.JsonMap
 {
     public abstract class Response
@@ -43,5 +45,7 @@ namespace Apex.Instagram.API.Response.JsonMap
         }
 
         public bool IsOk() { return Status == Constants.Response.Instance.StatusOk; }
+
+        public override string ToString() { return JsonSerializer.PrettyPrint(JsonSerializer.Serialize(this)); }
     }
 }

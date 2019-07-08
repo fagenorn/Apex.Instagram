@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-using Utf8Json;
-
 namespace Apex.Instagram.API.Response.JsonMap.Model
 {
     public class User
@@ -15,6 +13,12 @@ namespace Apex.Instagram.API.Response.JsonMap.Model
 
         [DataMember(Name = "has_highlight_reels")]
         public bool? HasHighlightReels { get; set; }
+
+        [DataMember(Name = "is_eligible_to_show_fb_cross_sharing_nux")]
+        public bool? IsEligibleToShowFbCrossSharingNux { get; set; }
+
+        [DataMember(Name = "eligible_shopping_signup_entrypoints")]
+        public string[] EligibleShoppingSignupEntrypoints { get; set; }
 
         [DataMember(Name = "is_favorite")]
         public bool? IsFavorite { get; set; }
@@ -96,6 +100,9 @@ namespace Apex.Instagram.API.Response.JsonMap.Model
 
         [DataMember(Name = "following_tag_count")]
         public int? FollowingTagCount { get; set; }
+
+        [DataMember(Name = "instagram_location_id")]
+        public dynamic InstagramLocationId { get; set; }
 
         [DataMember(Name = "is_business")]
         public bool? IsBusiness { get; set; }
@@ -209,16 +216,40 @@ namespace Apex.Instagram.API.Response.JsonMap.Model
         public string DirectMessaging { get; set; }
 
         [DataMember(Name = "page_name")]
-        public dynamic PageName { get; set; }
+        public string PageName { get; set; }
 
-        [DataMember(Name = "fb_page_call_to_action_id")]
-        public string FbPageCallToActionId { get; set; }
+        [DataMember(Name = "is_attribute_sync_enabled")]
+        public bool? IsAttributeSyncEnabled { get; set; }
+
+        [DataMember(Name = "has_business_presence_node")]
+        public bool? HasBusinessPresenceNode { get; set; }
+
+        [DataMember(Name = "profile_visits_count")]
+        public int? ProfileVisitsCount { get; set; }
+
+        [DataMember(Name = "profile_visits_num_days")]
+        public int? ProfileVisitsNumDays { get; set; }
 
         [DataMember(Name = "is_call_to_action_enabled")]
         public bool? IsCallToActionEnabled { get; set; }
 
         [DataMember(Name = "account_type")]
         public int? AccountType { get; set; }
+
+        [DataMember(Name = "should_show_category")]
+        public bool? ShouldShowCategory { get; set; }
+
+        [DataMember(Name = "should_show_public_contacts")]
+        public bool? ShouldShowPublicContacts { get; set; }
+
+        [DataMember(Name = "can_hide_category")]
+        public bool? CanHideCategory { get; set; }
+
+        [DataMember(Name = "can_hide_public_contacts")]
+        public bool? CanHidePublicContacts { get; set; }
+
+        [DataMember(Name = "can_tag_products_from_merchants")]
+        public bool? CanTagProductsFromMerchants { get; set; }
 
         [DataMember(Name = "public_phone_country_code")]
         public string PublicPhoneCountryCode { get; set; }
@@ -298,17 +329,29 @@ namespace Apex.Instagram.API.Response.JsonMap.Model
         [DataMember(Name = "can_claim_page")]
         public bool? CanClaimPage { get; set; }
 
+        [DataMember(Name = "fb_page_call_to_action_id")]
+        public string FbPageCallToActionId { get; set; }
+
         [DataMember(Name = "fb_page_call_to_action_ix_app_id")]
         public int? FbPageCallToActionIxAppId { get; set; }
+
+        [DataMember(Name = "fb_page_call_to_action_ix_label_bundle")]
+        public dynamic FbPageCallToActionIxLabelBundle { get; set; }
 
         [DataMember(Name = "fb_page_call_to_action_ix_url")]
         public Uri FbPageCallToActionIxUrl { get; set; }
 
+        [DataMember(Name = "fb_page_call_to_action_ix_partner")]
+        public string FbPageCallToActionIxPartner { get; set; }
+
+        [DataMember(Name = "is_call_to_action_enabled_by_surface")]
+        public bool? IsCallToActionEnabledBySurface { get; set; }
+
         [DataMember(Name = "can_crosspost_without_fb_token")]
         public bool? CanCrosspostWithoutFbToken { get; set; }
 
-        [DataMember(Name = "fb_page_call_to_action_ix_partner")]
-        public string FbPageCallToActionIxPartner { get; set; }
+        [DataMember(Name = "num_of_admined_pages")]
+        public int? NumOfAdminedPages { get; set; }
 
         [DataMember(Name = "shoppable_posts_count")]
         public int? ShoppablePostsCount { get; set; }
@@ -335,7 +378,10 @@ namespace Apex.Instagram.API.Response.JsonMap.Model
         public bool? IsDirectappInstalled { get; set; }
 
         [DataMember(Name = "is_using_unified_inbox_for_direct")]
-        public bool? IsUsingUnifiedInboxForDirect { get; set; }
+        public int? IsUsingUnifiedInboxForDirect { get; set; }
+
+        [DataMember(Name = "feed_post_reshare_disabled")]
+        public bool? FeedPostReshareDisabled { get; set; }
 
         [DataMember(Name = "besties_count")]
         public int? BestiesCount { get; set; }
@@ -346,6 +392,9 @@ namespace Apex.Instagram.API.Response.JsonMap.Model
         [DataMember(Name = "can_follow_hashtag")]
         public bool? CanFollowHashtag { get; set; }
 
+        [DataMember(Name = "is_potential_business")]
+        public bool? IsPotentialBusiness { get; set; }
+
         [DataMember(Name = "has_profile_video_feed")]
         public bool? HasProfileVideoFeed { get; set; }
 
@@ -354,6 +403,9 @@ namespace Apex.Instagram.API.Response.JsonMap.Model
 
         [DataMember(Name = "show_besties_badge")]
         public bool? ShowBestiesBadge { get; set; }
+
+        [DataMember(Name = "recently_bestied_by_count")]
+        public int? RecentlyBestiedByCount { get; set; }
 
         [DataMember(Name = "screenshotted")]
         public bool? Screenshotted { get; set; }
@@ -369,7 +421,5 @@ namespace Apex.Instagram.API.Response.JsonMap.Model
 
         [DataMember(Name = "live_subscription_status")]
         public string LiveSubscriptionStatus { get; set; }
-
-        public override string ToString() { return JsonSerializer.PrettyPrint(JsonSerializer.Serialize(this)); }
     }
 }

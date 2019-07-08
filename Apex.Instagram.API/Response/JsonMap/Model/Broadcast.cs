@@ -8,14 +8,29 @@ namespace Apex.Instagram.API.Response.JsonMap.Model
         [DataMember(Name = "broadcast_owner")]
         public User BroadcastOwner { get; set; }
 
+        [DataMember(Name = "cobroadcasters")]
+        public dynamic Cobroadcasters { get; set; }
+
         [DataMember(Name = "broadcast_status")]
         public string BroadcastStatus { get; set; }
+
+        [DataMember(Name = "is_gaming_content")]
+        public bool? IsGamingContent { get; set; }
+
+        [DataMember(Name = "is_player_live_trace_enabled")]
+        public bool? IsPlayerLiveTraceEnabled { get; set; }
+
+        [DataMember(Name = "dash_live_predictive_playback_url")]
+        public string DashLivePredictivePlaybackUrl { get; set; }
 
         [DataMember(Name = "cover_frame_url")]
         public Uri CoverFrameUrl { get; set; }
 
         [DataMember(Name = "published_time")]
         public ulong? PublishedTime { get; set; }
+
+        [DataMember(Name = "hide_from_feed_unit")]
+        public bool? HideFromFeedUnit { get; set; }
 
         [DataMember(Name = "broadcast_message")]
         public string BroadcastMessage { get; set; }

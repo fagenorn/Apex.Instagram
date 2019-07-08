@@ -23,6 +23,9 @@ namespace Apex.Instagram.API.Response.JsonMap.Model
         [DataMember(Name = "number_of_qualities")]
         public int? NumberOfQualities { get; set; }
 
+        [DataMember(Name = "video_codec")]
+        public string VideoCodec { get; set; }
+
         [DataMember(Name = "is_dash_eligible")]
         public int? IsDashEligible { get; set; }
 

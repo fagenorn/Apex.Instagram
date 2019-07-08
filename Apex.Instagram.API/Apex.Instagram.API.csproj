@@ -271,6 +271,7 @@
     <Compile Include="Response\JsonMap\Model\InlineFollow.cs" />
     <Compile Include="Response\JsonMap\Model\IOSLinks.cs" />
     <Compile Include="Response\JsonMap\Model\Item.cs" />
+    <Compile Include="Response\JsonMap\Model\LayoutContent.cs" />
     <Compile Include="Response\JsonMap\Model\Link.cs" />
     <Compile Include="Response\JsonMap\Model\LinkContext.cs" />
     <Compile Include="Response\JsonMap\Model\LiveVideoShare.cs" />
@@ -305,6 +306,8 @@
     <Compile Include="Response\JsonMap\Model\ReelShare.cs" />
     <Compile Include="Response\JsonMap\Model\Responder.cs" />
     <Compile Include="Response\JsonMap\Model\RewriteRule.cs" />
+    <Compile Include="Response\JsonMap\Model\Section.cs" />
+    <Compile Include="Response\JsonMap\Model\SectionMedia.cs" />
     <Compile Include="Response\JsonMap\Model\ServerDataInfo.cs" />
     <Compile Include="Response\JsonMap\Model\Slot.cs" />
     <Compile Include="Response\JsonMap\Model\StepData.cs" />
@@ -327,6 +330,9 @@
     <Compile Include="Response\JsonMap\Model\SupportedCapabilities.cs" />
     <Compile Include="Response\JsonMap\Model\Surface.cs" />
     <Compile Include="Response\JsonMap\Model\SystemControl.cs" />
+    <Compile Include="Response\JsonMap\Model\Tab.cs" />
+    <Compile Include="Response\JsonMap\Model\TabsInfo.cs" />
+    <Compile Include="Response\JsonMap\Model\Tag.cs" />
     <Compile Include="Response\JsonMap\Model\Template.cs" />
     <Compile Include="Response\JsonMap\Model\Text.cs" />
     <Compile Include="Response\JsonMap\Model\Thumbnail.cs" />
