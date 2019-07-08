@@ -18,7 +18,7 @@ namespace Apex.Instagram.API.Response.JsonMap
         [DataMember(Name = "user_id")]
         public ulong? UserId { get; set; }
 
-        [DataMember(Name = "nonce")]
+        [DataMember(Name = "nonce_code")]
         public string Nonce { get; set; }
     }
 }
