@@ -17,7 +17,6 @@ namespace Apex.Instagram.API.Constants
                     Device         = "OnePlus3T",
                     Cpu            = "qcom"
                 },
-
                 new DeviceInfo
                 {
                     AndroidVersion = "23",
@@ -30,7 +29,6 @@ namespace Apex.Instagram.API.Constants
                     Device         = "h1",
                     Cpu            = "h1"
                 },
-
                 new DeviceInfo
                 {
                     AndroidVersion = "24",
@@ -42,7 +40,6 @@ namespace Apex.Instagram.API.Constants
                     Device         = "HWLON",
                     Cpu            = "hi3660"
                 },
-
                 new DeviceInfo
                 {
                     AndroidVersion = "23",
@@ -54,7 +51,6 @@ namespace Apex.Instagram.API.Constants
                     Device         = "ailsa_ii",
                     Cpu            = "qcom"
                 },
-
                 new DeviceInfo
                 {
                     AndroidVersion = "23",
@@ -66,7 +62,6 @@ namespace Apex.Instagram.API.Constants
                     Device         = "hero2lte",
                     Cpu            = "samsungexynos8890"
                 },
-
                 new DeviceInfo
                 {
                     AndroidVersion = "23",
@@ -77,6 +72,28 @@ namespace Apex.Instagram.API.Constants
                     Model          = "SM-G930F",
                     Device         = "herolte",
                     Cpu            = "samsungexynos8890"
+                },
+                new DeviceInfo
+                {
+                    AndroidVersion = "24",
+                    AndroidRelease = "7.0",
+                    Dpi            = "480dpi",
+                    Resolution     = "1080x1920",
+                    Manufacturer   = "samsung",
+                    Model          = "SM-A520F",
+                    Device         = "a5y17lte",
+                    Cpu            = "samsungexynos7880"
+                },
+                new DeviceInfo
+                {
+                    AndroidVersion = "22",
+                    AndroidRelease = "5.1",
+                    Dpi            = "480dpi",
+                    Resolution     = "1080x1920",
+                    Manufacturer   = "Meizu",
+                    Model          = "m3 note",
+                    Device         = "m3note",
+                    Cpu            = "mt6755"
                 }
             };
 
