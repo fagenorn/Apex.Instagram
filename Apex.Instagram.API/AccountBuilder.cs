@@ -2,8 +2,8 @@
 
 using Apex.Instagram.API.Exception;
 using Apex.Instagram.API.Logger;
-using Apex.Instagram.API.Model.Request;
 using Apex.Instagram.API.Storage;
+using Apex.Shared.Model;
 
 namespace Apex.Instagram.API
 {

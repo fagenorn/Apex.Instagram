@@ -3,7 +3,7 @@
 namespace Apex.Instagram.API.Model.Account.Device
 {
     [MessagePackObject]
-    internal class DeviceInfo
+    public class DeviceInfo
     {
         public DeviceInfo() { _userAgentBuilder = new UserAgent(this); }
 

@@ -5,7 +5,7 @@ using MessagePack;
 namespace Apex.Instagram.API.Model.Account
 {
     [MessagePackObject]
-    internal class AccountInfo
+    public class AccountInfo
     {
         [Key(0)]
         public string Username { get; set; }

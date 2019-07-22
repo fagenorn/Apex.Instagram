@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apex.Instagram.UI.Contracts
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apex.Instagram.Service", "Apex.Instagram.Service\Apex.Instagram.Service.csproj", "{87804193-05B4-43BA-B95C-4D1A95BB0977}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Service", "Service", "{5B8A5B81-1ADD-417F-889D-72B77FA07B4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apex.Instagram.Service.Tests", "Apex.Instagram.Service.Tests\Apex.Instagram.Service.Tests.csproj", "{DE0A1BA6-AEE7-4091-9F0A-793C00553C3B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,6 +76,14 @@ Global
 		{87804193-05B4-43BA-B95C-4D1A95BB0977}.Release|Any CPU.Build.0 = Release|Any CPU
 		{87804193-05B4-43BA-B95C-4D1A95BB0977}.Release|x86.ActiveCfg = Release|Any CPU
 		{87804193-05B4-43BA-B95C-4D1A95BB0977}.Release|x86.Build.0 = Release|Any CPU
+		{DE0A1BA6-AEE7-4091-9F0A-793C00553C3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE0A1BA6-AEE7-4091-9F0A-793C00553C3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE0A1BA6-AEE7-4091-9F0A-793C00553C3B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DE0A1BA6-AEE7-4091-9F0A-793C00553C3B}.Debug|x86.Build.0 = Debug|Any CPU
+		{DE0A1BA6-AEE7-4091-9F0A-793C00553C3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE0A1BA6-AEE7-4091-9F0A-793C00553C3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE0A1BA6-AEE7-4091-9F0A-793C00553C3B}.Release|x86.ActiveCfg = Release|Any CPU
+		{DE0A1BA6-AEE7-4091-9F0A-793C00553C3B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,6 +91,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{A5505739-3C58-4D93-A5BC-0536CEA7D42B} = {9AD26E5B-04C7-4AA0-B8AF-AFACDE0BD358}
 		{F7F59B71-0C93-455B-AFD3-0A918B5BE306} = {9AD26E5B-04C7-4AA0-B8AF-AFACDE0BD358}
+		{87804193-05B4-43BA-B95C-4D1A95BB0977} = {5B8A5B81-1ADD-417F-889D-72B77FA07B4F}
+		{DE0A1BA6-AEE7-4091-9F0A-793C00553C3B} = {5B8A5B81-1ADD-417F-889D-72B77FA07B4F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6992D6E5-35E7-4F0D-8F6A-D8BC03D708E5}

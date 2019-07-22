@@ -7,12 +7,12 @@ using Apex.Instagram.API.Login;
 using Apex.Instagram.API.Login.Challenge;
 using Apex.Instagram.API.Model.Account;
 using Apex.Instagram.API.Model.Account.Device;
-using Apex.Instagram.API.Model.Request;
 using Apex.Instagram.API.Request;
 using Apex.Instagram.API.Request.Exception;
 using Apex.Instagram.API.Request.Instagram;
 using Apex.Instagram.API.Response.JsonMap;
 using Apex.Instagram.API.Storage;
+using Apex.Shared.Model;
 
 using JetBrains.Annotations;
 
@@ -150,17 +150,15 @@ namespace Apex.Instagram.API
 
         #region Properties
 
-        internal LoginClient LoginClient { get; private set; }
+        public AccountInfo AccountInfo { get; private set; }
 
-        internal AccountInfo AccountInfo { get; private set; }
+        internal LoginClient LoginClient { get; private set; }
 
         internal HttpClient HttpClient { get; private set; }
 
         internal StorageManager Storage { get; }
 
         internal IApexLogger Logger { get; }
-
-        internal int Id { get; }
 
         #endregion
 
@@ -170,7 +168,6 @@ namespace Apex.Instagram.API
         {
             Initialization.Initialize();
 
-            Id      = id;
             Storage = new StorageManager(storage, id, _cancellationTokenSource.Token);
             Logger  = logger ?? new NullLogger();
 

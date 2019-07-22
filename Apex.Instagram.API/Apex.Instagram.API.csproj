@@ -126,7 +126,6 @@
     <Compile Include="Model\Account\Device\DeviceGenerator.cs" />
     <Compile Include="Model\Account\Device\DeviceInfo.cs" />
     <Compile Include="Model\Account\Device\UserAgent.cs" />
-    <Compile Include="Model\Request\Proxy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Request\Exception\AccountDisabledException.cs" />
     <Compile Include="Request\Exception\ChallengeRequiredException.cs" />

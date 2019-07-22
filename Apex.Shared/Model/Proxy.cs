@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Net;
+using System.Runtime.Serialization;
 
-using MessagePack;
-
-namespace Apex.Instagram.API.Model.Request
+namespace Apex.Shared.Model
 {
     /// <summary>Account proxy.</summary>
-    [MessagePackObject]
+    [DataContract]
     public class Proxy
     {
         /// <summary>Initializes a new instance of the <see cref="Proxy" /> class.</summary>
@@ -24,34 +23,34 @@ namespace Apex.Instagram.API.Model.Request
 
         /// <summary>Gets the address.</summary>
         /// <value>The address.</value>
-        [Key(0)]
+        [DataMember(Order = 0)]
         public string Address { get; }
 
         /// <summary>Gets the username.</summary>
         /// <value>The username.</value>
-        [Key(1)]
+        [DataMember(Order = 1)]
         public string Username { get; }
 
         /// <summary>Gets the password.</summary>
         /// <value>The password.</value>
-        [Key(2)]
+        [DataMember(Order = 2)]
         public string Password { get; }
 
         /// <summary>Gets a value indicating whether this instance has credentials.</summary>
         /// <value>
         ///     <c>true</c> if this instance has credentials; otherwise, <c>false</c>.
         /// </value>
-        [IgnoreMember]
+        [IgnoreDataMember]
         public bool HasCredentials => !string.IsNullOrWhiteSpace(Username);
 
         /// <summary>Gets the credentials.</summary>
         /// <value>The credentials.</value>
-        [IgnoreMember]
+        [IgnoreDataMember]
         public ICredentials Credentials => new NetworkCredential(Username, Password);
 
         /// <summary>Gets the URI.</summary>
         /// <value>The URI.</value>
-        [IgnoreMember]
+        [IgnoreDataMember]
         public Uri Uri { get; }
     }
 }

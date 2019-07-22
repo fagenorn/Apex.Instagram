@@ -6,7 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Apex.Instagram.API.Constants;
-using Apex.Instagram.API.Model.Request;
 using Apex.Instagram.API.Request.Exception;
 using Apex.Instagram.API.Request.Middleware;
 using Apex.Instagram.API.Response;

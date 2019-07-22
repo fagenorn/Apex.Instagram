@@ -4,8 +4,8 @@ using System.Threading;
 using Apex.Instagram.API.Login;
 using Apex.Instagram.API.Login.Challenge;
 using Apex.Instagram.API.Model.Account;
-using Apex.Instagram.API.Model.Request;
 using Apex.Instagram.API.Storage.Object;
+using Apex.Shared.Model;
 
 namespace Apex.Instagram.API.Storage
 {

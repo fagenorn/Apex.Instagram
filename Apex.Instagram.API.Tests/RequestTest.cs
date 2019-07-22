@@ -7,13 +7,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Apex.Instagram.API.Logger;
-using Apex.Instagram.API.Model.Request;
 using Apex.Instagram.API.Request;
 using Apex.Instagram.API.Request.Exception;
 using Apex.Instagram.API.Request.Exception.EndpointException;
 using Apex.Instagram.API.Response.JsonMap;
 using Apex.Instagram.API.Tests.Maps;
 using Apex.Instagram.API.Utils;
+using Apex.Shared.Model;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

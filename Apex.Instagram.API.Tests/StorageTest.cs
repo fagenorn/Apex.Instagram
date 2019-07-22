@@ -4,7 +4,6 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 
-using Apex.Instagram.API.Model.Request;
 using Apex.Instagram.API.Storage.Object;
 using Apex.Shared.Model;
 

@@ -1,4 +1,4 @@
-﻿using Apex.Instagram.API.Model.Request;
+﻿using Apex.Shared.Model;
 
 namespace Apex.Instagram.API.Tests
 {
