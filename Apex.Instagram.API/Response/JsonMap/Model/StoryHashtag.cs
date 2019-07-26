@@ -17,6 +17,6 @@ namespace Apex.Instagram.API.Response.JsonMap.Model
         public int? IsHidden { get; set; }
 
         [DataMember(Name = "is_sticker")]
-        public bool? IsSticker { get; set; }
+        public int? IsSticker { get; set; }
     }
 }
