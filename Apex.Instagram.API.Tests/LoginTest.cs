@@ -141,10 +141,10 @@ namespace Apex.Instagram.API.Tests
             await Assert.ThrowsExceptionAsync<ChallengeException>(async () => await client.DoNextStep("1"));
             await Task.Delay(3000);
             stepInfo = await client.DoNextStep("0");
-            Assert.AreEqual("Enter the 6 digit code that was sent to your mobile: +79619362617.\r\n", stepInfo.Description);
+            Assert.AreEqual("Enter the 6 digit code that was sent to your mobile: +7 *** ***-26-17.\r\n", stepInfo.Description);
             await Task.Delay(3000);
             await client.Replay();
-            Assert.AreEqual("Enter the 6 digit code that was sent to your mobile: +79619362617.\r\n", stepInfo.Description);
+            Assert.AreEqual("Enter the 6 digit code that was sent to your mobile: +7 *** ***-26-17.\r\n", stepInfo.Description);
         }
 
         [TestMethod]
@@ -160,7 +160,8 @@ namespace Apex.Instagram.API.Tests
 
             Assert.AreEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);
             Assert.IsTrue(account.LoginClient.LoginInfo.LastLogin.Passed);
-            await account.LoginClient.Login();
+            var response = await account.LoginClient.Login();
+            Assert.IsTrue(response.IsOk());
 
             var info = await account.Storage.LoginInfo.LoadAsync();
 
@@ -181,7 +182,8 @@ namespace Apex.Instagram.API.Tests
             Assert.IsFalse(account.LoginClient.LoginInfo.LastLogin.Passed);
             Assert.AreNotEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);
 
-            await account.LoginClient.Login();
+            response = await account.LoginClient.Login();
+            Assert.IsTrue(response.IsOk());
 
             info = await account.Storage.LoginInfo.LoadAsync();
 
@@ -204,7 +206,9 @@ namespace Apex.Instagram.API.Tests
             Assert.AreEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);
             Assert.AreEqual(TimeSpan.FromMinutes(30), account.LoginClient.LoginInfo.LastLogin.Limit);
 
-            await account.LoginClient.Login();
+            response = await account.LoginClient.Login();
+            Assert.IsTrue(response.IsOk());
+
             Assert.AreNotEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);
             Assert.IsFalse(account.LoginClient.LoginInfo.LastLogin.Passed);
         }

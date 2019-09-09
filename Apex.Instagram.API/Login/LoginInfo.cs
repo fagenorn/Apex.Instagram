@@ -48,7 +48,7 @@ namespace Apex.Instagram.API.Login
             {
                 if ( value == null )
                 {
-                    _experiments = value;
+                    _experiments = null;
 
                     return;
                 }

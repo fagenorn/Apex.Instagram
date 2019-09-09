@@ -75,8 +75,18 @@ namespace Apex.Instagram.API.Login
         {
             if ( LoginInfo.IsLoggedIn && !forceLogin )
             {
-                return await LoginFlow(false)
-                           .ConfigureAwait(false);
+                try
+                {
+                    await LoginFlow(false)
+                        .ConfigureAwait(false);
+
+                    return new LoginResponse {Status = Constants.Response.Instance.StatusOk};
+                }
+                catch (LoginRequiredException)
+                {
+                    await InternalLogin(true)
+                        .ConfigureAwait(false);
+                }
             }
 
             await PreLoginFlow()
@@ -180,7 +190,7 @@ namespace Apex.Instagram.API.Login
                           .ConfigureAwait(false);
         }
 
-        internal async Task<LoginResponse> LoginFlow(bool justLoggedIn)
+        internal async Task LoginFlow(bool justLoggedIn)
         {
             if ( justLoggedIn )
             {
@@ -309,19 +319,11 @@ namespace Apex.Instagram.API.Login
 
                 try
                 {
-                    try
-                    {
-                        await _account.Timeline.GetTimelineFeed(null, new Dictionary<string, object>
-                                                                      {
-                                                                          {"is_pull_to_refresh", isPullToRefresh}
-                                                                      })
-                                      .ConfigureAwait(false);
-                    }
-                    catch (LoginRequiredException)
-                    {
-                        return await InternalLogin(true)
-                                   .ConfigureAwait(false);
-                    }
+                    await _account.Timeline.GetTimelineFeed(null, new Dictionary<string, object>
+                                                                  {
+                                                                      {"is_pull_to_refresh", isPullToRefresh}
+                                                                  })
+                                  .ConfigureAwait(false);
 
                     await _account.Story.GetReelsTrayFeed()
                                   .ConfigureAwait(false);
@@ -401,8 +403,6 @@ namespace Apex.Instagram.API.Login
                                   .ConfigureAwait(false);
                 }
             }
-
-            return null;
         }
 
         #region Properties
