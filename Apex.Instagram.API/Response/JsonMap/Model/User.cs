@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 
 namespace Apex.Instagram.API.Response.JsonMap.Model
 {
+    [DataContract]
     public class User
     {
         [DataMember(Name = "username")]

@@ -18,7 +18,7 @@ namespace Apex.Instagram.API.Response.JsonMap.Model
         public bool? IsGamingContent { get; set; }
 
         [DataMember(Name = "is_player_live_trace_enabled")]
-        public bool? IsPlayerLiveTraceEnabled { get; set; }
+        public int? IsPlayerLiveTraceEnabled { get; set; }
 
         [DataMember(Name = "dash_live_predictive_playback_url")]
         public string DashLivePredictivePlaybackUrl { get; set; }
