@@ -1,80 +1,94 @@
-﻿using Apex.Instagram.API.Tests.Maps;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Apex.Instagram.API.Response.JsonMap.Model;
+using Apex.Instagram.API.Tests.Maps;
 
 using Utf8Json;
 
+using Xunit;
+
 namespace Apex.Instagram.API.Tests
-{
-    [TestClass]
-    public class SerializerTest
+{ public class SerializerTest
     {
-        [TestMethod]
+        [Fact]
         public void NormalStringAndNumberJsonDeserialize()
         {
             Initialization.Initialize();
             var input  = "{\"number\": 123321123,\"text\": \"heeey\"}";
             var result = JsonSerializer.Deserialize<DurableMap>(input);
 
-            Assert.AreEqual(123321123u, result.Number);
-            Assert.AreEqual("heeey", result.Text);
-            Assert.IsNull(result.Dict);
+            Assert.Equal(123321123u, result.Number);
+            Assert.Equal("heeey", result.Text);
+            Assert.Null(result.Dict);
         }
 
-        [TestMethod]
+        [Fact]
         public void NumberAsStringJsonDeserialize()
         {
             Initialization.Initialize();
             var input  = "{\"number\": \"4445444\"}";
             var result = JsonSerializer.Deserialize<DurableMap>(input);
 
-            Assert.AreEqual(4445444u, result.Number);
-            Assert.IsNull(result.Dict);
-            Assert.IsNull(result.Text);
+            Assert.Equal(4445444u, result.Number);
+            Assert.Null(result.Dict);
+            Assert.Null(result.Text);
         }
 
-        [TestMethod]
+        [Fact]
         public void NumberAsInvalidStringJsonDeserialize()
         {
             Initialization.Initialize();
             var input = "{\"number\": \"blabla\"}";
-            Assert.ThrowsException<JsonParsingException>(() => JsonSerializer.Deserialize<DurableMap>(input));
+            Assert.Throws<JsonParsingException>(() => JsonSerializer.Deserialize<DurableMap>(input));
         }
 
-        [TestMethod]
+        [Fact]
         public void StringAsNumberJsonDeserialize()
         {
             Initialization.Initialize();
             var input  = "{\"text\": 4445444}";
             var result = JsonSerializer.Deserialize<DurableMap>(input);
 
-            Assert.AreEqual("4445444", result.Text);
-            Assert.IsNull(result.Dict);
-            Assert.IsNull(result.Number);
+            Assert.Equal("4445444", result.Text);
+            Assert.Null(result.Dict);
+            Assert.Null(result.Number);
         }
 
-        [TestMethod]
+        [Fact]
         public void StringAsBoolJsonDeserialize()
         {
             Initialization.Initialize();
             var input  = "{\"text\": true}";
             var result = JsonSerializer.Deserialize<DurableMap>(input);
 
-            Assert.AreEqual("True", result.Text);
-            Assert.IsNull(result.Dict);
-            Assert.IsNull(result.Number);
+            Assert.Equal("True", result.Text);
+            Assert.Null(result.Dict);
+            Assert.Null(result.Number);
         }
 
-        [TestMethod]
+        [Fact]
         public void DictJsonDeserialize()
         {
             Initialization.Initialize();
             var input  = "{\"dict\": {\"one\":\"hi\",\"two\":\"bye\"}}";
             var result = JsonSerializer.Deserialize<DurableMap>(input);
 
-            Assert.AreEqual(2, result.Dict.Count);
-            Assert.AreEqual("hi", result.Dict["one"]);
-            Assert.AreEqual("bye", result.Dict["two"]);
+            Assert.Equal(2, result.Dict.Count);
+            Assert.Equal("hi", result.Dict["one"]);
+            Assert.Equal("bye", result.Dict["two"]);
+        }
+
+        [Fact]
+        public void Durable_Ulong_Formatter()
+        {
+            Initialization.Initialize();
+            var toDeserialize = "{\"username\":\"bobby\",\"pk\":\"123321\"}";
+            var result        = JsonSerializer.Deserialize<User>(toDeserialize);
+            Assert.Equal("bobby", result.Username);
+            Assert.Equal(123321u, result.Pk);
+
+            toDeserialize = "{\"username\":\"bobby\",\"pk\":123321}";
+            result        = JsonSerializer.Deserialize<User>(toDeserialize);
+            Assert.Equal("bobby", result.Username);
+            Assert.Equal(123321u, result.Pk);
         }
     }
 }

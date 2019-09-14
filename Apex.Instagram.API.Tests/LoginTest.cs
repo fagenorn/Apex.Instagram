@@ -1,256 +1,218 @@
 ﻿using System;
-using System.Diagnostics;
-using System.IO;
 using System.Threading.Tasks;
 
 using Apex.Instagram.API.Logger;
 using Apex.Instagram.API.Login.Exception;
 using Apex.Instagram.API.Request.Exception;
+using Apex.Instagram.API.Tests.Extra;
 using Apex.Shared.Model;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace Apex.Instagram.API.Tests
 {
-    /// <summary>
-    ///     Summary description for LoginTest
-    /// </summary>
-    [TestClass]
-    public class LoginTest
+    public class LoginTest : IDisposable
     {
+        public LoginTest(ITestOutputHelper output)
+        {
+            _output                    =  output;
+            Logger.LogMessagePublished += LoggerOnLogMessagePublished;
+        }
+
+        public void Dispose()
+        {
+            Logger.LogMessagePublished -= LoggerOnLogMessagePublished;
+            _fileStorage.ClearSave();
+        }
+
+        private readonly ITestOutputHelper _output;
+
+        private readonly FileStorage _fileStorage = new FileStorage(nameof(LoginTest));
+
+        private void LoggerOnLogMessagePublished(object sender, ApexLogMessagePublishedEventArgs e) { _output.WriteLine(e.TraceMessage.ToString()); }
+
         private static readonly IApexLogger Logger = new ApexLogger(ApexLogLevel.Verbose);
 
-        /// <summary>
-        ///     Gets or sets the test context which provides
-        ///     information about and functionality for the current test run.
-        /// </summary>
-        public TestContext TestContext { get; set; }
-
-        [TestMethod]
-        public async Task Login_Wrong_Password()
-        {
-            var fileStorage = new FileStorage();
-            var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
-                                                    .SetLogger(Logger)
-                                                    .SetUsername("bob")
-                                                    .SetPassword("wrong")
-                                                    .BuildAsync();
-
-            var account1 = account;
-            await Assert.ThrowsExceptionAsync<IncorrectPasswordException>(async () => await account1.LoginClient.Login());
-
-            await account.UpdatePasswordAsync("new_password");
-
-            var account2 = account;
-            await Assert.ThrowsExceptionAsync<IncorrectPasswordException>(async () => await account2.LoginClient.Login());
-
-            account.Dispose();
-
-            account = await new AccountBuilder().SetId(0)
-                                                .SetStorage(fileStorage)
-                                                .SetLogger(Logger)
-                                                .SetUsername("bob")
-                                                .SetPassword("wrong")
-                                                .BuildAsync();
-
-            await Assert.ThrowsExceptionAsync<IncorrectPasswordException>(async () => await account.LoginClient.Login());
-        }
-
-        [TestMethod]
-        public async Task Login_Username_Doesnt_Exists()
-        {
-            var fileStorage = new FileStorage();
-            var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
-                                                    .SetLogger(Logger)
-                                                    .SetUsername("123TTT3281zzkii.0o")
-                                                    .SetPassword("wrong")
-                                                    .BuildAsync();
-
-            await Assert.ThrowsExceptionAsync<InvalidUserException>(async () => await account.LoginClient.Login());
-        }
-
-        [TestMethod]
-        public async Task Login_No_Password()
-        {
-            var fileStorage = new FileStorage();
-            var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
-                                                    .SetLogger(Logger)
-                                                    .SetUsername("bob")
-                                                    .BuildAsync();
-
-            await Assert.ThrowsExceptionAsync<LoginException>(async () => await account.LoginClient.Login());
-        }
-
-        [TestMethod]
-        public async Task Login_No_Username()
-        {
-            var fileStorage = new FileStorage();
-            var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
-                                                    .SetLogger(Logger)
-                                                    .SetPassword("bob")
-                                                    .BuildAsync();
-
-            await Assert.ThrowsExceptionAsync<LoginException>(async () => await account.LoginClient.Login());
-        }
-
-        [TestMethod]
+        [Fact]
         public async Task Login_Challenge_Required()
         {
-            var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
+                                                    .SetStorage(_fileStorage)
                                                     .SetLogger(Logger)
                                                     .SetUsername("elytroposisLQw2")
                                                     .SetPassword("46tn2DE02")
                                                     .BuildAsync();
 
-            Assert.IsFalse(account.LoginClient.LoginInfo.HasChallenge);
+            Assert.False(account.LoginClient.LoginInfo.HasChallenge);
             var account1 = account;
-            await Assert.ThrowsExceptionAsync<ChallengeException>(async () => await account1.LoginClient.ChallengeLogin());
+            await Assert.ThrowsAsync<ChallengeException>(async () => await account1.LoginClient.ChallengeLogin());
             var account2 = account;
-            await Assert.ThrowsExceptionAsync<ChallengeRequiredException>(async () => await account2.LoginClient.Login());
-            Assert.IsTrue(account.LoginClient.LoginInfo.HasChallenge);
+            await Assert.ThrowsAsync<ChallengeRequiredException>(async () => await account2.LoginClient.Login());
+            Assert.True(account.LoginClient.LoginInfo.HasChallenge);
             var client   = await account.LoginClient.ChallengeLogin();
             var stepInfo = await client.Start();
-            Assert.IsNotNull(client.ChallengeInfo.ApiPath);
-            Assert.IsNotNull(stepInfo);
+            Assert.NotNull(client.ChallengeInfo.ApiPath);
+            Assert.NotNull(stepInfo);
             var client1 = client;
-            await Assert.ThrowsExceptionAsync<ChallengeException>(async () => await client1.DoNextStep("133123"));
-            Assert.IsNotNull(client.ChallengeInfo.ApiPath);
+            await Assert.ThrowsAsync<ChallengeException>(async () => await client1.DoNextStep("133123"));
+            Assert.NotNull(client.ChallengeInfo.ApiPath);
 
             account.Dispose();
 
             account = await new AccountBuilder().SetId(0)
-                                                .SetStorage(fileStorage)
+                                                .SetStorage(_fileStorage)
                                                 .SetLogger(Logger)
                                                 .SetUsername("elytroposisLQw2")
                                                 .SetPassword("46tn2DE02")
                                                 .BuildAsync();
 
-            Assert.IsTrue(account.LoginClient.LoginInfo.HasChallenge);
+            Assert.True(account.LoginClient.LoginInfo.HasChallenge);
             client = await account.LoginClient.ChallengeLogin();
-            Assert.IsNotNull(client.ChallengeInfo.ApiPath);
-            await Assert.ThrowsExceptionAsync<ChallengeException>(async () => await client.DoNextStep("133123"));
+            Assert.NotNull(client.ChallengeInfo.ApiPath);
+            await Assert.ThrowsAsync<ChallengeException>(async () => await client.DoNextStep("133123"));
             await client.Start();
-            Assert.AreEqual("Select verification method option:\r\n0: Phone (+7 *** ***-**-17)\r\n", stepInfo.Description);
-            await Assert.ThrowsExceptionAsync<ChallengeException>(async () => await client.Replay());
-            await Assert.ThrowsExceptionAsync<ChallengeException>(async () => await client.DoNextStep("1"));
+            Assert.Equal("Select verification method option:\r\n0: Phone (+7 *** ***-**-17)\r\n", stepInfo.Description);
+            await Assert.ThrowsAsync<ChallengeException>(async () => await client.Replay());
+            await Assert.ThrowsAsync<ChallengeException>(async () => await client.DoNextStep("1"));
             await Task.Delay(3000);
             stepInfo = await client.DoNextStep("0");
-            Assert.AreEqual("Enter the 6 digit code that was sent to your mobile: +7 *** ***-26-17.\r\n", stepInfo.Description);
+            Assert.Equal("Enter the 6 digit code that was sent to your mobile: +7 *** ***-26-17.\r\n", stepInfo.Description);
             await Task.Delay(3000);
             await client.Replay();
-            Assert.AreEqual("Enter the 6 digit code that was sent to your mobile: +7 *** ***-26-17.\r\n", stepInfo.Description);
+            Assert.Equal("Enter the 6 digit code that was sent to your mobile: +7 *** ***-26-17.\r\n", stepInfo.Description);
         }
 
-        [TestMethod]
+        [Fact]
         public async Task Login_Correctly_Account_Is_Persistent()
         {
-            var fileStorage = new FileStorage();
             var account = await new AccountBuilder().SetId(0)
-                                                    .SetStorage(fileStorage)
+                                                    .SetStorage(_fileStorage)
                                                     .SetLogger(Logger)
                                                     .SetUsername("ladycomstock443")
                                                     .SetPassword("iMHh5GQ4")
                                                     .BuildAsync();
 
-            Assert.AreEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);
-            Assert.IsTrue(account.LoginClient.LoginInfo.LastLogin.Passed);
+            Assert.Equal(0, account.LoginClient.LoginInfo.LastLogin.Last);
+            Assert.True(account.LoginClient.LoginInfo.LastLogin.Passed);
             var response = await account.LoginClient.Login();
-            Assert.IsTrue(response.IsOk());
+            Assert.True(response.IsOk());
 
             var info = await account.Storage.LoginInfo.LoadAsync();
 
-            Assert.IsTrue(info.IsLoggedIn);
-            Assert.AreNotEqual(0, info.Experiments);
-            Assert.AreNotEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);
-            Assert.IsFalse(account.LoginClient.LoginInfo.LastLogin.Passed);
+            Assert.True(info.IsLoggedIn);
+            Assert.NotEmpty(info.Experiments);
+            Assert.NotEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);
+            Assert.False(account.LoginClient.LoginInfo.LastLogin.Passed);
 
             account.Dispose();
 
             account = await new AccountBuilder().SetId(0)
-                                                .SetStorage(fileStorage)
+                                                .SetStorage(_fileStorage)
                                                 .SetLogger(Logger)
                                                 .BuildAsync();
 
-            Assert.IsTrue(account.LoginClient.LoginInfo.IsLoggedIn);
+            Assert.True(account.LoginClient.LoginInfo.IsLoggedIn);
 
-            Assert.IsFalse(account.LoginClient.LoginInfo.LastLogin.Passed);
-            Assert.AreNotEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);
+            Assert.False(account.LoginClient.LoginInfo.LastLogin.Passed);
+            Assert.NotEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);
 
             response = await account.LoginClient.Login();
-            Assert.IsTrue(response.IsOk());
+            Assert.True(response.IsOk());
 
             info = await account.Storage.LoginInfo.LoadAsync();
 
-            Assert.IsTrue(info.IsLoggedIn);
-            Assert.AreNotEqual(0, info.Experiments);
-            Assert.AreNotEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);
-            Assert.IsFalse(account.LoginClient.LoginInfo.LastLogin.Passed);
+            Assert.True(info.IsLoggedIn);
+            Assert.NotEmpty(info.Experiments);
+            Assert.NotEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);
+            Assert.False(account.LoginClient.LoginInfo.LastLogin.Passed);
 
             account.Dispose();
 
             account = await new AccountBuilder().SetId(0)
-                                                .SetStorage(fileStorage)
+                                                .SetStorage(_fileStorage)
                                                 .SetLogger(Logger)
                                                 .BuildAsync();
 
-            Assert.AreNotEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);
-            Assert.IsFalse(account.LoginClient.LoginInfo.LastLogin.Passed);
+            Assert.NotEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);
+            Assert.False(account.LoginClient.LoginInfo.LastLogin.Passed);
             account.LoginClient.LoginInfo.LastLogin = new LastAction(TimeSpan.FromMinutes(45));
-            Assert.IsTrue(account.LoginClient.LoginInfo.LastLogin.Passed);
-            Assert.AreEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);
-            Assert.AreEqual(TimeSpan.FromMinutes(30), account.LoginClient.LoginInfo.LastLogin.Limit);
+            Assert.True(account.LoginClient.LoginInfo.LastLogin.Passed);
+            Assert.Equal(0, account.LoginClient.LoginInfo.LastLogin.Last);
+            Assert.Equal(TimeSpan.FromMinutes(30), account.LoginClient.LoginInfo.LastLogin.Limit);
 
             response = await account.LoginClient.Login();
-            Assert.IsTrue(response.IsOk());
+            Assert.True(response.IsOk());
 
-            Assert.AreNotEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);
-            Assert.IsFalse(account.LoginClient.LoginInfo.LastLogin.Passed);
+            Assert.NotEqual(0, account.LoginClient.LoginInfo.LastLogin.Last);
+            Assert.False(account.LoginClient.LoginInfo.LastLogin.Passed);
         }
 
-        #region Additional test attributes
-
-        //
-        // You can use the following additional attributes as you write your tests:
-        //
-        // Use ClassInitialize to run code before running the first test in the class
-        [ClassInitialize]
-        public static void MyClassInitialize(TestContext testContext) { Logger.LogMessagePublished += LoggerOnLogMessagePublished; }
-
-        private static void LoggerOnLogMessagePublished(object sender, ApexLogMessagePublishedEventArgs e) { Debug.WriteLine(e.TraceMessage); }
-
-        //
-        // Use ClassCleanup to run code after all tests in a class have run
-        //        [ClassCleanup]
-        //        public static void MyClassCleanup()
-        //        {
-        //
-        //        }
-
-        //
-        // Use TestInitialize to run code before running each test 
-        // [TestInitialize()]
-        // public void MyTestInitialize() { }
-        //
-        // Use TestCleanup to run code after each test has run
-        [TestCleanup]
-        public void MyTestCleanup()
+        [Fact]
+        public async Task Login_No_Password()
         {
-            if ( Directory.Exists("tests") )
-            {
-                var files = Directory.GetFiles("tests");
-                foreach ( var file in files )
-                {
-                    File.Delete(file);
-                }
-            }
+            var account = await new AccountBuilder().SetId(0)
+                                                    .SetStorage(_fileStorage)
+                                                    .SetLogger(Logger)
+                                                    .SetUsername("bob")
+                                                    .BuildAsync();
+
+            await Assert.ThrowsAsync<LoginException>(async () => await account.LoginClient.Login());
         }
 
-        #endregion
+        [Fact]
+        public async Task Login_No_Username()
+        {
+            var account = await new AccountBuilder().SetId(0)
+                                                    .SetStorage(_fileStorage)
+                                                    .SetLogger(Logger)
+                                                    .SetPassword("bob")
+                                                    .BuildAsync();
+
+            await Assert.ThrowsAsync<LoginException>(async () => await account.LoginClient.Login());
+        }
+
+        [Fact]
+        public async Task Login_Username_Doesnt_Exists()
+        {
+            var account = await new AccountBuilder().SetId(0)
+                                                    .SetStorage(_fileStorage)
+                                                    .SetLogger(Logger)
+                                                    .SetUsername("123TTT3281zzkii.0o")
+                                                    .SetPassword("wrong")
+                                                    .BuildAsync();
+
+            await Assert.ThrowsAsync<InvalidUserException>(async () => await account.LoginClient.Login());
+        }
+
+        [Fact]
+        public async Task Login_Wrong_Password()
+        {
+            var account = await new AccountBuilder().SetId(0)
+                                                    .SetStorage(_fileStorage)
+                                                    .SetLogger(Logger)
+                                                    .SetUsername("bob")
+                                                    .SetPassword("wrong")
+                                                    .BuildAsync();
+
+            var account1 = account;
+            await Assert.ThrowsAsync<IncorrectPasswordException>(async () => await account1.LoginClient.Login());
+
+            await account.UpdatePasswordAsync("new_password");
+
+            var account2 = account;
+            await Assert.ThrowsAsync<IncorrectPasswordException>(async () => await account2.LoginClient.Login());
+
+            account.Dispose();
+
+            account = await new AccountBuilder().SetId(0)
+                                                .SetStorage(_fileStorage)
+                                                .SetLogger(Logger)
+                                                .SetUsername("bob")
+                                                .SetPassword("wrong")
+                                                .BuildAsync();
+
+            await Assert.ThrowsAsync<IncorrectPasswordException>(async () => await account.LoginClient.Login());
+        }
     }
 }

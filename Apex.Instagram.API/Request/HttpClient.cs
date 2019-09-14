@@ -199,7 +199,8 @@ namespace Apex.Instagram.API.Request
             var middlewareHandler = new HttpClientMiddlewareHandler(_handler);
             _request = new System.Net.Http.HttpClient(middlewareHandler)
                        {
-                           Timeout = Constants.Request.Instance.Timeout
+                           Timeout = Constants.Request.Instance.Timeout,
+                           DefaultRequestVersion = HttpVersion.Version20
                        };
 
             InjectMiddleware(middlewareHandler);

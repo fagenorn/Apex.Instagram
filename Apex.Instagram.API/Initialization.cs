@@ -1,8 +1,16 @@
-﻿using Apex.Instagram.API.Response.Serializer;
+﻿using System.Runtime.CompilerServices;
+
+using Apex.Instagram.API.Response.Serializer;
 
 using MessagePack;
 
 using Utf8Json;
+
+[assembly: InternalsVisibleTo("Apex.Instagram.API.Tests")]
+
+[assembly: InternalsVisibleTo("MessagePack")]
+[assembly: InternalsVisibleTo("MessagePack.Resolvers.DynamicObjectResolver")]
+[assembly: InternalsVisibleTo("MessagePack.Resolvers.DynamicUnionResolver")]
 
 namespace Apex.Instagram.API
 {

@@ -47,7 +47,7 @@ namespace Apex.Instagram.API.Response
                     }
                 }
 
-                if ( _response.Content?.Headers.ContentLength != null && _response.Content.Headers.ContentLength.Value != 0 )
+                if ( _response.Content != null )
                 {
                     Response = await JsonSerializer.DeserializeAsync<T>(await _response.Content.ReadAsStreamAsync()
                                                                                        .ConfigureAwait(false))

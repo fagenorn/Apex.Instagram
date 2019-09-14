@@ -39,11 +39,10 @@ namespace Apex.Instagram.API
                 throw new ObjectDisposedException(nameof(Account));
             }
 
-            using (var result = await HttpClient.GetResponseAsync<T>(builder, _cancellationTokenSource.Token)
-                                                .ConfigureAwait(false))
-            {
-                return result.Response;
-            }
+            using var result = await HttpClient.GetResponseAsync<T>(builder, _cancellationTokenSource.Token)
+                                               .ConfigureAwait(false);
+
+            return result.Response;
         }
 
         #region Public Methods

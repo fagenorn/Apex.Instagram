@@ -1,6 +1,6 @@
 ﻿using Apex.Shared.Model;
 
-namespace Apex.Instagram.API.Tests
+namespace Apex.Instagram.API.Tests.Extra
 {
     internal static class Constants
     {

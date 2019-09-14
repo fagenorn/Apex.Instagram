@@ -5,10 +5,10 @@ namespace Apex.Instagram.API.Response.JsonMap.Model
     public class CountdownSticker
     {
         [DataMember(Name = "countdown_id")]
-        public string CountdownId { get; set; }
+        public ulong? CountdownId { get; set; }
 
         [DataMember(Name = "end_ts")]
-        public string EndTs { get; set; }
+        public ulong? EndTs { get; set; }
 
         [DataMember(Name = "text")]
         public string Text { get; set; }
