@@ -1,10 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Text.Json;
+using System.Threading.Tasks;
 
 using Apex.Instagram.API.Request.Exception;
 using Apex.Instagram.API.Request.Instagram.Paginate;
 using Apex.Instagram.API.Response.JsonMap;
-
-using Utf8Json;
+using Apex.Instagram.API.Response.Serializer;
 
 namespace Apex.Instagram.API.Request.Instagram
 {
@@ -35,7 +35,7 @@ namespace Apex.Instagram.API.Request.Instagram
             try
             {
                 var request = new RequestBuilder(Account).SetUrl("scores/bootstrap/users/")
-                                                         .AddParam("surfaces", JsonSerializer.ToJsonString(surfaces));
+                                                         .AddParam("surfaces", JsonSerializer.Serialize(surfaces, JsonSerializerDefaultOptions.Instance));
 
                 return await Account.ApiRequest<BootstrapUsersResponse>(request)
                                     .ConfigureAwait(false);
@@ -180,7 +180,7 @@ namespace Apex.Instagram.API.Request.Instagram
         /// </returns>
         public async Task<FriendshipsShowManyResponse> GetFriendshipsAsync(params ulong[] userIds)
         {
-            var request = new RequestBuilder(Account).SetUrl($"friendships/show_many/")
+            var request = new RequestBuilder(Account).SetUrl("friendships/show_many/")
                                                      .SetSignedPost(false)
                                                      .AddPost("_uuid", Account.AccountInfo.Uuid)
                                                      .AddPost("user_ids", string.Join(",", userIds))

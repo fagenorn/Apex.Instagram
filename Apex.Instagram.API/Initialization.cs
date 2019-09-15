@@ -1,10 +1,8 @@
 ﻿using System.Runtime.CompilerServices;
 
-using Apex.Instagram.API.Response.Serializer;
+using Apex.Instagram.API.Storage.Serializer.MessagePackFormatter;
 
 using MessagePack;
-
-using Utf8Json;
 
 [assembly: InternalsVisibleTo("Apex.Instagram.API.Tests")]
 
@@ -32,8 +30,7 @@ namespace Apex.Instagram.API
                 _done = true;
             }
 
-            JsonSerializer.SetDefaultResolver(CustomCompositeResolver.Instance);
-            MessagePackSerializer.SetDefaultResolver(Storage.Serializer.MessagePackFormatter.CustomCompositeResolver.Instance);
+            MessagePackSerializer.SetDefaultResolver(CustomCompositeResolver.Instance);
         }
     }
 }

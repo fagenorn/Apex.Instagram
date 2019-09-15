@@ -4,6 +4,7 @@ using System.IO;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 using Apex.Instagram.API.Logger;
@@ -11,12 +12,11 @@ using Apex.Instagram.API.Request;
 using Apex.Instagram.API.Request.Exception;
 using Apex.Instagram.API.Request.Exception.EndpointException;
 using Apex.Instagram.API.Response.JsonMap;
+using Apex.Instagram.API.Response.Serializer;
 using Apex.Instagram.API.Tests.Extra;
 using Apex.Instagram.API.Tests.Maps;
 using Apex.Instagram.API.Utils;
 using Apex.Shared.Model;
-
-using Utf8Json;
 
 using Xunit;
 using Xunit.Abstractions;
@@ -28,11 +28,9 @@ namespace Apex.Instagram.API.Tests
 {
     public class RequestTest : IDisposable
     {
-        private readonly ITestOutputHelper _output;
-
         public RequestTest(ITestOutputHelper output)
         {
-            _output = output;
+            _output                    =  output;
             Logger.LogMessagePublished += LoggerOnLogMessagePublished;
         }
 
@@ -41,6 +39,8 @@ namespace Apex.Instagram.API.Tests
             Logger.LogMessagePublished -= LoggerOnLogMessagePublished;
             _fileStorage.ClearSave();
         }
+
+        private readonly ITestOutputHelper _output;
 
         private readonly FileStorage _fileStorage = new FileStorage(nameof(RequestTest));
 
@@ -65,7 +65,6 @@ namespace Apex.Instagram.API.Tests
         [Fact]
         public async Task Bad_Request()
         {
-            
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(_fileStorage)
                                                     .SetLogger(Logger)
@@ -80,7 +79,6 @@ namespace Apex.Instagram.API.Tests
         [Fact]
         public async Task Cancel_Request_When_Account_Is_Disposed()
         {
-            
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(_fileStorage)
                                                     .SetLogger(Logger)
@@ -105,7 +103,6 @@ namespace Apex.Instagram.API.Tests
         [Fact]
         public async Task Cancel_Request_When_Request_Client_Is_Disposed()
         {
-            
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(_fileStorage)
                                                     .SetLogger(Logger)
@@ -130,7 +127,6 @@ namespace Apex.Instagram.API.Tests
         [Fact]
         public async Task Cookies_Are_Created_On_Requests_Consitent()
         {
-            
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(_fileStorage)
                                                     .SetLogger(Logger)
@@ -169,7 +165,6 @@ namespace Apex.Instagram.API.Tests
         [Fact]
         public async Task Cookies_Are_Stored_To_File_On_Request()
         {
-            
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(_fileStorage)
                                                     .SetLogger(Logger)
@@ -199,7 +194,6 @@ namespace Apex.Instagram.API.Tests
         [Fact]
         public async Task Dispose_While_Request_Ongoing()
         {
-            
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(_fileStorage)
                                                     .SetLogger(Logger)
@@ -218,7 +212,6 @@ namespace Apex.Instagram.API.Tests
         [Fact]
         public async Task Generic_Api_Request_Status_Fail_Critical_Exception()
         {
-            
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(_fileStorage)
                                                     .SetLogger(Logger)
@@ -233,7 +226,6 @@ namespace Apex.Instagram.API.Tests
         [Fact]
         public async Task Generic_Api_Request_Status_Fail_With_Multiple_Error_Messages()
         {
-            
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(_fileStorage)
                                                     .SetLogger(Logger)
@@ -249,7 +241,6 @@ namespace Apex.Instagram.API.Tests
         [Fact]
         public async Task Generic_Api_Request_Status_Fail_With_One_Error_Message()
         {
-            
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(_fileStorage)
                                                     .SetLogger(Logger)
@@ -265,7 +256,6 @@ namespace Apex.Instagram.API.Tests
         [Fact]
         public async Task Generic_Api_Request_Status_Ok()
         {
-            
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(_fileStorage)
                                                     .SetLogger(Logger)
@@ -281,7 +271,6 @@ namespace Apex.Instagram.API.Tests
         [Fact]
         public async Task Generic_Api_Request_Status_Ok_Critical_Status_Exception()
         {
-            
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(_fileStorage)
                                                     .SetLogger(Logger)
@@ -296,7 +285,6 @@ namespace Apex.Instagram.API.Tests
         [Fact]
         public async Task Generic_Api_Request_With_IPv4_Proxy_Using_Authentication_Status_Ok()
         {
-            
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(_fileStorage)
                                                     .SetLogger(Logger)
@@ -313,8 +301,8 @@ namespace Apex.Instagram.API.Tests
             request.Dispose();
 
             Assert.True(response.IsSuccessStatusCode);
-            var postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
-            Assert.Equal(@"104.236.122.201, 104.236.122.201", (string) postResponse["origin"]);
+            var postResponse = await JsonSerializer.DeserializeAsync<JsonElement>(await response.Content.ReadAsStreamAsync());
+            Assert.Equal(@"104.236.122.201, 104.236.122.201", postResponse.GetProperty("origin").GetString());
 
             await account.UpdateProxyAsync(null);
 
@@ -327,8 +315,8 @@ namespace Apex.Instagram.API.Tests
 
             request.Dispose();
             Assert.True(response.IsSuccessStatusCode);
-            postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
-            Assert.NotEqual(@"104.236.122.201, 104.236.122.201", (string) postResponse["origin"]);
+            postResponse = await JsonSerializer.DeserializeAsync<JsonElement>(await response.Content.ReadAsStreamAsync());
+            Assert.NotEqual(@"104.236.122.201, 104.236.122.201", postResponse.GetProperty("origin").GetString());
 
             await account.UpdateProxyAsync(new Proxy("http://104.236.122.201:3128", "kash", "gevel22jj3"));
 
@@ -341,14 +329,13 @@ namespace Apex.Instagram.API.Tests
 
             request.Dispose();
             Assert.True(response.IsSuccessStatusCode);
-            postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
-            Assert.Equal(@"104.236.122.201, 104.236.122.201", (string) postResponse["origin"]);
+            postResponse = await JsonSerializer.DeserializeAsync<JsonElement>(await response.Content.ReadAsStreamAsync());
+            Assert.Equal(@"104.236.122.201, 104.236.122.201", postResponse.GetProperty("origin").GetString());
         }
 
         [Fact(Skip = "IPV6 not supported on network")]
         public async Task Generic_Api_Request_With_IPv6_Proxy_Using_Authentication_Status_Ok()
         {
-            
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(_fileStorage)
                                                     .SetLogger(Logger)
@@ -400,7 +387,6 @@ namespace Apex.Instagram.API.Tests
         [Fact]
         public async Task Generic_Api_Request_With_Proxy_Needs_Authentication_Error()
         {
-            
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(_fileStorage)
                                                     .SetLogger(Logger)
@@ -416,7 +402,6 @@ namespace Apex.Instagram.API.Tests
         [Fact]
         public async Task Generic_Api_Request_With_Proxy_Wrong_Authentication_Error()
         {
-            
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(_fileStorage)
                                                     .SetLogger(Logger)
@@ -432,7 +417,6 @@ namespace Apex.Instagram.API.Tests
         [Fact]
         public async Task Get_Requests_Signed_Non_Singed_Parameters()
         {
-            
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(_fileStorage)
                                                     .SetLogger(Logger)
@@ -452,18 +436,18 @@ namespace Apex.Instagram.API.Tests
             request.Dispose();
 
             Assert.True(response.IsSuccessStatusCode);
-            var postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
+            var postResponse = await JsonSerializer.DeserializeAsync<JsonElement>(await response.Content.ReadAsStreamAsync());
             var hash         = Hashing.Instance.ByteToString(Hashing.Instance.Sha256(@"{""test"":""best"",""test2"":""best2""}", Encoding.UTF8.GetBytes(Version.Instance.SigningKey)));
+            var args = postResponse.GetProperty("args");
 
-            Assert.Equal(@"4", (string) postResponse["args"]["ig_sig_key_version"]);
-            Assert.Equal($"{hash}.{{\"test\":\"best\",\"test2\":\"best2\"}}", (string) postResponse["args"]["signed_body"]);
-            Assert.Equal(@"best3", (string) postResponse["args"]["test3"]);
+            Assert.Equal(@"4", args.GetProperty("ig_sig_key_version").GetString());
+            Assert.Equal($"{hash}.{{\"test\":\"best\",\"test2\":\"best2\"}}", args.GetProperty("signed_body").GetString());
+            Assert.Equal(@"best3", args.GetProperty("test3").GetString());
         }
 
         [Fact]
         public async Task Gzip_Request_content()
         {
-            
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(_fileStorage)
                                                     .SetLogger(Logger)
@@ -477,11 +461,10 @@ namespace Apex.Instagram.API.Tests
             var response = await GetClient(account)
                                .SendAsync(request);
 
-            var postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
-            Assert.False(postResponse["headers"]
-                             .ContainsKey("Content-Encoding"));
+            var postResponse = await JsonSerializer.DeserializeAsync<JsonElement>(await response.Content.ReadAsStreamAsync());
+            Assert.False(postResponse.GetProperty("headers").TryGetProperty("Content-Encoding", out _));
 
-            Assert.Equal(@"hello", (string) postResponse["data"]);
+            Assert.Equal(@"hello", postResponse.GetProperty("data").GetString());
 
             request.Dispose();
 
@@ -494,13 +477,12 @@ namespace Apex.Instagram.API.Tests
             response = await GetClient(account)
                            .SendAsync(request);
 
-            postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
+            postResponse = await JsonSerializer.DeserializeAsync<JsonElement>(await response.Content.ReadAsStreamAsync());
 
-            Assert.True(postResponse["headers"]
-                            .ContainsKey("Content-Encoding"));
+            Assert.True(postResponse.GetProperty("headers").TryGetProperty("Content-Encoding", out _));
 
-            Assert.Equal(@"gzip", (string) postResponse["headers"]["Content-Encoding"]);
-            Assert.Equal(@"data:application/octet-stream;base64,H4sIAAAAAAAACstIzcnJBwCGphA2BQAAAA==", (string) postResponse["data"]);
+            Assert.Equal(@"gzip", postResponse.GetProperty("headers").GetProperty("Content-Encoding").GetString());
+            Assert.Equal(@"data:application/octet-stream;base64,H4sIAAAAAAAACstIzcnJBwCGphA2BQAAAA==", postResponse.GetProperty("data").GetString());
 
             request.Dispose();
 
@@ -514,12 +496,11 @@ namespace Apex.Instagram.API.Tests
             response = await GetClient(account)
                            .SendAsync(request);
 
-            postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
+            postResponse = await JsonSerializer.DeserializeAsync<JsonElement>(await response.Content.ReadAsStreamAsync());
 
-            Assert.True(postResponse["headers"]
-                            .ContainsKey("Content-Encoding"));
+            Assert.True(postResponse.GetProperty("headers").TryGetProperty("Content-Encoding", out _));
 
-            Assert.Equal(@"gzip", (string) postResponse["headers"]["Content-Encoding"]);
+            Assert.Equal(@"gzip", postResponse.GetProperty("headers").GetProperty("Content-Encoding").GetString());
             Assert.Equal(@"H4sIAAAAAAAACstIzcnJt83IBACN++pKCAAAAA==", Convert.ToBase64String(await request.Content.ReadAsByteArrayAsync()));
 
             request.Dispose();
@@ -537,12 +518,11 @@ namespace Apex.Instagram.API.Tests
             response = await GetClient(account)
                            .SendAsync(build.Build());
 
-            postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
+            postResponse = await JsonSerializer.DeserializeAsync<JsonElement>(await response.Content.ReadAsStreamAsync());
 
-            Assert.True(postResponse["headers"]
-                            .ContainsKey("Content-Encoding"));
+            Assert.True(postResponse.GetProperty("headers").TryGetProperty("Content-Encoding", out _));
 
-            Assert.Equal(@"gzip", (string) postResponse["headers"]["Content-Encoding"]);
+            Assert.Equal(@"gzip", postResponse.GetProperty("headers").GetProperty("Content-Encoding").GetString());
 
             request.Dispose();
             build.Dispose();
@@ -552,7 +532,6 @@ namespace Apex.Instagram.API.Tests
         [Fact]
         public async Task Only_One_Request_At_A_Time()
         {
-            
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(_fileStorage)
                                                     .SetLogger(Logger)
@@ -582,7 +561,6 @@ namespace Apex.Instagram.API.Tests
         [Fact]
         public async Task Post_Requests_File_Upload()
         {
-            
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(_fileStorage)
                                                     .SetLogger(Logger)
@@ -611,15 +589,14 @@ namespace Apex.Instagram.API.Tests
             request.Dispose();
 
             Assert.True(response.IsSuccessStatusCode);
-            var postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
-            Assert.Equal(@"hello", (string) postResponse["files"]["file_name"]);
-            Assert.Equal(@"best", (string) postResponse["form"]["test"]);
+            var postResponse = await JsonSerializer.DeserializeAsync<JsonElement>(await response.Content.ReadAsStreamAsync());
+            Assert.Equal(@"hello", postResponse.GetProperty("files").GetProperty("file_name").GetString());
+            Assert.Equal(@"best", postResponse.GetProperty("form").GetProperty("test").GetString());
         }
 
         [Fact]
         public async Task Post_Requests_Signed_Non_Singed_Parameters()
         {
-            
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(_fileStorage)
                                                     .SetLogger(Logger)
@@ -639,19 +616,18 @@ namespace Apex.Instagram.API.Tests
             request.Dispose();
 
             Assert.True(response.IsSuccessStatusCode);
-            var postResponse = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
+            var postResponse = await JsonSerializer.DeserializeAsync<JsonElement>(await response.Content.ReadAsStreamAsync());
             var hash         = Hashing.Instance.ByteToString(Hashing.Instance.Sha256(@"{""test"":""best"",""test2"":""best2""}", Encoding.UTF8.GetBytes(Version.Instance.SigningKey)));
+            var args = postResponse.GetProperty("form");
 
-            Assert.Equal(@"4", (string) postResponse["form"]["ig_sig_key_version"]);
-            Assert.Equal($"{hash}.{{\"test\":\"best\",\"test2\":\"best2\"}}", (string) postResponse["form"]["signed_body"]);
-            Assert.Equal(@"best3", (string) postResponse["form"]["test3"]);
+            Assert.Equal(@"4", args.GetProperty("ig_sig_key_version").GetString());
+            Assert.Equal($"{hash}.{{\"test\":\"best\",\"test2\":\"best2\"}}", args.GetProperty("signed_body").GetString());
+            Assert.Equal(@"best3", args.GetProperty("test3").GetString());
         }
 
         [Fact]
-        public async Task 
-            Proxy_Authentication_Required()
+        public async Task Proxy_Authentication_Required()
         {
-            
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(_fileStorage)
                                                     .SetLogger(Logger)
@@ -666,7 +642,6 @@ namespace Apex.Instagram.API.Tests
         [Fact]
         public async Task Request_DNS_Error()
         {
-            
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(_fileStorage)
                                                     .SetLogger(Logger)
@@ -681,7 +656,6 @@ namespace Apex.Instagram.API.Tests
         [Fact]
         public async Task RequestHeadersTooLarge_Request()
         {
-            
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(_fileStorage)
                                                     .SetLogger(Logger)
@@ -699,7 +673,6 @@ namespace Apex.Instagram.API.Tests
             const string defaultHeaderKey   = "X-Ig-Bandwidth-Totalbytes-B";
             const string defaultHeaderValue = "0";
 
-            
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(_fileStorage)
                                                     .BuildAsync();
@@ -716,7 +689,7 @@ namespace Apex.Instagram.API.Tests
             request.Dispose();
 
             Assert.True(response.IsSuccessStatusCode);
-            var headersResponse = JsonSerializer.Deserialize<HeadersJsonMap>(await response.Content.ReadAsStringAsync());
+            var headersResponse = await JsonSerializer.DeserializeAsync<HeadersJsonMap>(await response.Content.ReadAsStreamAsync(), JsonSerializerDefaultOptions.Instance);
             Assert.Equal("best", headersResponse.Headers["Test"]);
             Assert.False(headersResponse.Headers.ContainsKey(defaultHeaderKey));
 
@@ -731,7 +704,7 @@ namespace Apex.Instagram.API.Tests
             request.Dispose();
 
             Assert.True(response.IsSuccessStatusCode);
-            headersResponse = JsonSerializer.Deserialize<HeadersJsonMap>(await response.Content.ReadAsStringAsync());
+            headersResponse = await JsonSerializer.DeserializeAsync<HeadersJsonMap>(await response.Content.ReadAsStreamAsync(), JsonSerializerDefaultOptions.Instance);
             Assert.False(headersResponse.Headers.ContainsKey("Test"));
             Assert.False(headersResponse.Headers.ContainsKey(defaultHeaderKey));
 
@@ -745,7 +718,7 @@ namespace Apex.Instagram.API.Tests
             request.Dispose();
 
             Assert.True(response.IsSuccessStatusCode);
-            headersResponse = JsonSerializer.Deserialize<HeadersJsonMap>(await response.Content.ReadAsStringAsync());
+            headersResponse = await JsonSerializer.DeserializeAsync<HeadersJsonMap>(await response.Content.ReadAsStreamAsync(), JsonSerializerDefaultOptions.Instance);
             Assert.False(headersResponse.Headers.ContainsKey("Test"));
             Assert.Equal(defaultHeaderValue, headersResponse.Headers[defaultHeaderKey]);
         }
@@ -753,7 +726,6 @@ namespace Apex.Instagram.API.Tests
         [Fact]
         public async Task Throttled_Request()
         {
-            
             var account = await new AccountBuilder().SetId(0)
                                                     .SetStorage(_fileStorage)
                                                     .SetLogger(Logger)

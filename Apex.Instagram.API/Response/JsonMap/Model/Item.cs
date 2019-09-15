@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Apex.Instagram.API.Response.JsonMap.Model
 {
@@ -81,6 +82,7 @@ namespace Apex.Instagram.API.Response.JsonMap.Model
         public bool? CanSeeInsightsAsBrand { get; set; }
 
         [DataMember(Name = "caption")]
+        [JsonIgnore]
         public Caption Caption { get; set; }
 
         [DataMember(Name = "headline")]

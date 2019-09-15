@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 using Apex.Instagram.API.Response.JsonMap;
+using Apex.Instagram.API.Response.Serializer;
 using Apex.Instagram.API.Utils;
-
-using Utf8Json;
 
 namespace Apex.Instagram.API.Request.Instagram
 {
@@ -15,11 +15,11 @@ namespace Apex.Instagram.API.Request.Instagram
 
         public async Task<TimelineFeedResponse> GetTimelineFeed(string maxId = null, Dictionary<string, object> options = null)
         {
-            var asyncAds = Account.LoginClient.LoginInfo.IsExperimentEnabled("ig_android_ad_async_ads_universe", "is_enabled");
+            var asyncAds                  = Account.LoginClient.LoginInfo.IsExperimentEnabled("ig_android_ad_async_ads_universe", "is_enabled");
             var asyncAdsInHeadloadEnabled = Account.LoginClient.LoginInfo.IsExperimentEnabled("ig_android_ad_async_ads_universe", "is_async_ads_in_headload_enabled");
-            var asyncAdsDoubleRequest = Account.LoginClient.LoginInfo.IsExperimentEnabled("ig_android_ad_async_ads_universe", "is_double_request_enabled");
-            var asyncAdsRti           = Account.LoginClient.LoginInfo.IsExperimentEnabled("ig_android_ad_async_ads_universe", "is_rti_enabled");
-            var rtiDeliveryBackend    = Account.LoginClient.LoginInfo.IsExperimentEnabled("ig_android_ad_async_ads_universe", "rti_delivery_backend");
+            var asyncAdsDoubleRequest     = Account.LoginClient.LoginInfo.IsExperimentEnabled("ig_android_ad_async_ads_universe", "is_double_request_enabled");
+            var asyncAdsRti               = Account.LoginClient.LoginInfo.IsExperimentEnabled("ig_android_ad_async_ads_universe", "is_rti_enabled");
+            var rtiDeliveryBackend        = Account.LoginClient.LoginInfo.IsExperimentEnabled("ig_android_ad_async_ads_universe", "rti_delivery_backend");
 
             var request = new RequestBuilder(Account).SetUrl("feed/timeline/")
                                                      .SetSignedPost(false)
@@ -71,20 +71,20 @@ namespace Apex.Instagram.API.Request.Instagram
                        .AddPost("is_pull_to_refresh", "0");
             }
 
-            if (ExistsOption("seen_posts"))
+            if ( ExistsOption("seen_posts") )
             {
                 Debug.Assert(options != null, nameof(options) + " != null");
                 var value = options["seen_posts"];
-                if (value is string[] array)
+                if ( value is string[] array )
                 {
                     request.AddPost("seen_posts", string.Join(",", array));
                 }
                 else
                 {
-                    request.AddPost("seen_posts", (string)value);
+                    request.AddPost("seen_posts", (string) value);
                 }
             }
-            else if (maxId == null)
+            else if ( maxId == null )
             {
                 request.AddPost("seen_posts", string.Empty);
             }
@@ -113,7 +113,7 @@ namespace Apex.Instagram.API.Request.Instagram
                 var value = options["feed_view_info"];
                 if ( value is string[] )
                 {
-                    request.AddPost("feed_view_info", JsonSerializer.ToJsonString(value));
+                    request.AddPost("feed_view_info", JsonSerializer.Serialize(value, JsonSerializerDefaultOptions.Instance));
                 }
                 else
                 {
@@ -122,7 +122,7 @@ namespace Apex.Instagram.API.Request.Instagram
                                    (string) value
                                };
 
-                    request.AddPost("feed_view_info", JsonSerializer.ToJsonString(temp));
+                    request.AddPost("feed_view_info", JsonSerializer.Serialize(temp, JsonSerializerDefaultOptions.Instance));
                 }
             }
             else if ( maxId == null )
@@ -151,7 +151,9 @@ namespace Apex.Instagram.API.Request.Instagram
             {
                 if ( options != null && options.ContainsKey(name) )
                 {
-                    var value = options[name]?.ToString();
+                    var value = options[name]
+                        ?.ToString();
+
                     return !string.IsNullOrWhiteSpace(value) && value != "false" && value != "0";
                 }
 

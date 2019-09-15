@@ -10,10 +10,10 @@ namespace Apex.Instagram.API.Constants
 
         public ImmutableDictionary<string, string> PermanentHeaders { get; }
 
-        public int[] SurfaceParams { get; } =
+        public string[] SurfaceParams { get; } =
             {
-                4715,
-                5734
+                "4715",
+                "5734"
             };
 
         public Uri BaseUrl { get; } = new Uri("https://i.instagram.com/");

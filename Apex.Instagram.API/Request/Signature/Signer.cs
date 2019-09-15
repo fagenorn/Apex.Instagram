@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using System.Text.Json;
 
 using Apex.Instagram.API.Constants;
 using Apex.Instagram.API.Request.Model;
+using Apex.Instagram.API.Response.Serializer;
 using Apex.Instagram.API.Utils;
-
-using Utf8Json;
 
 namespace Apex.Instagram.API.Request.Signature
 {
@@ -35,7 +35,7 @@ namespace Apex.Instagram.API.Request.Signature
                 }
             }
 
-            var jsonString   = JsonSerializer.ToJsonString(toSign);
+            var jsonString   = JsonSerializer.Serialize(toSign, JsonSerializerDefaultOptions.Instance);
             var signedString = $"{GenerateSignature(jsonString)}.{jsonString}";
             result["ig_sig_key_version"] = new Parameter(Version.Instance.SigningKeyVersion, false);
             result["signed_body"]        = new Parameter(signedString, false);

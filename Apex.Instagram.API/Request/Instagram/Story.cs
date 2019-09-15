@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Text.Json;
+using System.Threading.Tasks;
 
 using Apex.Instagram.API.Response.JsonMap;
-
-using Utf8Json;
+using Apex.Instagram.API.Response.Serializer;
 
 namespace Apex.Instagram.API.Request.Instagram
 {
@@ -14,7 +14,7 @@ namespace Apex.Instagram.API.Request.Instagram
         {
             var request = new RequestBuilder(Account).SetUrl("feed/reels_tray/")
                                                      .SetSignedPost(false)
-                                                     .AddPost("supported_capabilities_new", JsonSerializer.ToJsonString(Constants.Request.Instance.SupportedCapabilities))
+                                                     .AddPost("supported_capabilities_new", JsonSerializer.Serialize(Constants.Request.Instance.SupportedCapabilities, JsonSerializerDefaultOptions.Instance))
                                                      .AddPost("reason", "pull_to_refresh")
                                                      .AddPost("_csrftoken", Account.LoginClient.CsrfToken)
                                                      .AddPost("_uuid", Account.AccountInfo.Uuid);

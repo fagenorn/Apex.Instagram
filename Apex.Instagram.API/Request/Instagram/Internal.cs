@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 using Apex.Instagram.API.Constants;
@@ -6,8 +7,7 @@ using Apex.Instagram.API.Request.Exception;
 using Apex.Instagram.API.Request.Signature;
 using Apex.Instagram.API.Response.JsonMap;
 using Apex.Instagram.API.Response.JsonMap.Model;
-
-using Utf8Json;
+using Apex.Instagram.API.Response.Serializer;
 
 namespace Apex.Instagram.API.Request.Instagram
 {
@@ -199,13 +199,12 @@ namespace Apex.Instagram.API.Request.Instagram
 
                 foreach ( var param in @params )
                 {
-                    var paramName = param.Name;
-                    if ( paramName == null )
+                    if (param.Name.ValueKind != JsonValueKind.String && param.Value.ValueKind != JsonValueKind.String)
                     {
                         continue;
                     }
 
-                    experiments[group][paramName] = param.Value;
+                    experiments[group][param.Name.GetString()] = param.Value.GetString();
                 }
             }
 
@@ -219,15 +218,15 @@ namespace Apex.Instagram.API.Request.Instagram
         public async Task<FetchQpDataResponse> GetQpFetch()
         {
             const string query = "viewer() {eligible_promotions.surface_nux_id(<surface>).external_gating_permitted_qps(<external_gating_permitted_qps>).supports_client_filters(true) {edges {priority,time_range {start,end},node {id,promotion_id,max_impressions,triggers,contextual_filters {clause_type,filters {filter_type,unknown_action,value {name,required,bool_value,int_value, string_value},extra_datas {name,required,bool_value,int_value, string_value}},clauses {clause_type,filters {filter_type,unknown_action,value {name,required,bool_value,int_value, string_value},extra_datas {name,required,bool_value,int_value, string_value}},clauses {clause_type,filters {filter_type,unknown_action,value {name,required,bool_value,int_value, string_value},extra_datas {name,required,bool_value,int_value, string_value}},clauses {clause_type,filters {filter_type,unknown_action,value {name,required,bool_value,int_value, string_value},extra_datas {name,required,bool_value,int_value, string_value}}}}}},template {name,parameters {name,required,bool_value,string_value,color_value,}},creatives {title {text},content {text},footer {text},social_context {text},primary_action{title {text},url,limit,dismiss_promotion},secondary_action{title {text},url,limit,dismiss_promotion},dismiss_action{title {text},url,limit,dismiss_promotion},image.scale(<scale>) {uri,width,height}}}}}}";
-            var surfacesToQueries = JsonSerializer.ToJsonString(new Dictionary<int, string>
-                                                                {
-                                                                    {
-                                                                        Constants.Request.Instance.SurfaceParams[0], query
-                                                                    },
-                                                                    {
-                                                                        Constants.Request.Instance.SurfaceParams[1], query
-                                                                    }
-                                                                });
+            var surfacesToQueries = JsonSerializer.Serialize(new Dictionary<string, string>
+                                                             {
+                                                                 {
+                                                                     Constants.Request.Instance.SurfaceParams[0], query
+                                                                 },
+                                                                 {
+                                                                     Constants.Request.Instance.SurfaceParams[1], query
+                                                                 }
+                                                             }, JsonSerializerDefaultOptions.Instance);
 
             var request = new RequestBuilder(Account).SetUrl("qp/batch_fetch/")
                                                      .AddPost("vc_policy", "default")

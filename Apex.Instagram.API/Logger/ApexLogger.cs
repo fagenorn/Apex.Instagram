@@ -5,11 +5,11 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 using Apex.Instagram.API.Exception;
-
-using Utf8Json;
+using Apex.Instagram.API.Response.Serializer;
 
 namespace Apex.Instagram.API.Logger
 {
@@ -194,7 +194,7 @@ namespace Apex.Instagram.API.Logger
             sb.AppendLine("Headers:");
             foreach ( var item in headers )
             {
-                sb.AppendLine($"{item.Key}:{JsonSerializer.ToJsonString(item.Value)}");
+                sb.AppendLine($"{item.Key}:{JsonSerializer.Serialize(item.Value, JsonSerializerDefaultOptions.Instance)}");
             }
         }
 
@@ -210,7 +210,7 @@ namespace Apex.Instagram.API.Logger
                 return;
             }
 
-            sb.AppendLine($"Properties:{Environment.NewLine}{JsonSerializer.ToJsonString(properties)}");
+            sb.AppendLine($"Properties:{Environment.NewLine}{JsonSerializer.Serialize(properties, JsonSerializerDefaultOptions.Instance)}");
         }
 
         private async Task WriteContent(StringBuilder sb, HttpContent content)
@@ -229,7 +229,8 @@ namespace Apex.Instagram.API.Logger
 
             try
             {
-                var pretty = JsonSerializer.PrettyPrint(raw);
+                // var pretty = JsonSerializer.PrettyPrint(raw);
+                var pretty = raw;
                 if ( string.IsNullOrWhiteSpace(pretty) )
                 {
                     if ( raw.StartsWith("ig_sig_key_version") )
@@ -239,7 +240,8 @@ namespace Apex.Instagram.API.Logger
                                                                       '.'
                                                                   }, 2)[1]);
 
-                        sb.AppendLine(JsonSerializer.PrettyPrint(temp));
+                        // sb.AppendLine(JsonSerializer.PrettyPrint(temp));
+                        sb.AppendLine(temp);
                     }
                     else
                     {

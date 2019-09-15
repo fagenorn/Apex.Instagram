@@ -1,15 +1,10 @@
 ﻿using System.Runtime.Serialization;
 
-using Apex.Instagram.API.Response.Serializer;
-
-using Utf8Json;
-
 namespace Apex.Instagram.API.Response.JsonMap.Model
 {
     public class StoryTray
     {
         [DataMember(Name = "id")]
-        [JsonFormatter(typeof(DurableStringFormatter))]
         public string Id { get; set; }
 
         [DataMember(Name = "items")]

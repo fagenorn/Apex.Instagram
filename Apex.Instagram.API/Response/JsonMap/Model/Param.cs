@@ -1,13 +1,14 @@
 ﻿using System.Runtime.Serialization;
+using System.Text.Json;
 
 namespace Apex.Instagram.API.Response.JsonMap.Model
 {
     public class Param
     {
         [DataMember(Name = "name")]
-        public dynamic Name { get; set; }
+        public JsonElement Name { get; set; }
 
         [DataMember(Name = "value")]
-        public dynamic Value { get; set; }
+        public JsonElement Value { get; set; }
     }
 }

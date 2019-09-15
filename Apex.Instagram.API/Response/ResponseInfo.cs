@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 using Apex.Instagram.API.Request.Exception;
 using Apex.Instagram.API.Request.Exception.EndpointException;
-
-using Utf8Json;
+using Apex.Instagram.API.Response.Serializer;
 
 namespace Apex.Instagram.API.Response
 {
@@ -50,13 +50,13 @@ namespace Apex.Instagram.API.Response
                 if ( _response.Content != null )
                 {
                     Response = await JsonSerializer.DeserializeAsync<T>(await _response.Content.ReadAsStreamAsync()
-                                                                                       .ConfigureAwait(false))
+                                                                                       .ConfigureAwait(false), JsonSerializerDefaultOptions.Instance)
                                                    .ConfigureAwait(false);
                 }
 
                 if ( Response?.Status == null )
                 {
-                    throw new JsonParsingException("Response isn't valid.", null, 0, 0, string.Empty);
+                    throw new JsonException("Response isn't valid.");
                 }
 
                 if ( IsOk )
@@ -87,7 +87,7 @@ namespace Apex.Instagram.API.Response
             {
                 throw;
             }
-            catch (JsonParsingException e)
+            catch (JsonException e)
             {
                 switch ( _response.StatusCode )
                 {
@@ -154,7 +154,7 @@ namespace Apex.Instagram.API.Response
                     case HttpStatusCode.TemporaryRedirect:
                     case HttpStatusCode.PaymentRequired:
 
-                        throw new EndpointException("Failed to map/parse response: {0}", e, e.GetUnderlyingStringUnsafe());
+                        throw new EndpointException("Failed to map/parse response: {0}", e, e.Path);
                     default:
 
                         throw new UnknowEndpointException("Unknow status code: {0}", e, (int) _response.StatusCode);
