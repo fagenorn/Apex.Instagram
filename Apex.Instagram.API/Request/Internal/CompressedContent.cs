@@ -48,7 +48,7 @@ namespace Apex.Instagram.API.Request.Internal
             switch ( _compressionType )
             {
                 case CompressionType.Gzip:
-                    compressedStream = new GZipStream(stream, CompressionMode.Compress, true);
+                    compressedStream = new HackGZipStream(stream, CompressionMode.Compress, true);
 
                     break;
                 case CompressionType.Deflate:

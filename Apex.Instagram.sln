@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29230.47
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Apex.Instagram.API", "Apex.Instagram.API\Apex.Instagram.API.csproj", "{F6028B03-854E-40B6-A8C1-CB4CA7018665}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apex.Shared", "Apex.Shared\Apex.Shared.csproj", "{4B179053-4C96-44D9-A299-86E5BC24DF7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Apex.Shared", "Apex.Shared\Apex.Shared.csproj", "{4B179053-4C96-44D9-A299-86E5BC24DF7B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apex.Instagram.UI", "Apex.Instagram.UI\Apex.Instagram.UI.csproj", "{A5505739-3C58-4D93-A5BC-0536CEA7D42B}"
 EndProject
@@ -20,8 +20,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apex.Instagram.Service.Tests", "Apex.Instagram.Service.Tests\Apex.Instagram.Service.Tests.csproj", "{DE0A1BA6-AEE7-4091-9F0A-793C00553C3B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Apex.Instagram.API.Tests", "Apex.Instagram.API.Tests\Apex.Instagram.API.Tests.csproj", "{88EA460F-8582-4308-B73D-33192200BF8E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apex.Shared.Core", "Apex.Shared.Core\Apex.Shared.Core.csproj", "{B842974F-05C8-4A3D-B640-AA9A3B1E0905}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -86,14 +84,6 @@ Global
 		{88EA460F-8582-4308-B73D-33192200BF8E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{88EA460F-8582-4308-B73D-33192200BF8E}.Release|x86.ActiveCfg = Release|Any CPU
 		{88EA460F-8582-4308-B73D-33192200BF8E}.Release|x86.Build.0 = Release|Any CPU
-		{B842974F-05C8-4A3D-B640-AA9A3B1E0905}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B842974F-05C8-4A3D-B640-AA9A3B1E0905}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B842974F-05C8-4A3D-B640-AA9A3B1E0905}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{B842974F-05C8-4A3D-B640-AA9A3B1E0905}.Debug|x86.Build.0 = Debug|Any CPU
-		{B842974F-05C8-4A3D-B640-AA9A3B1E0905}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B842974F-05C8-4A3D-B640-AA9A3B1E0905}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B842974F-05C8-4A3D-B640-AA9A3B1E0905}.Release|x86.ActiveCfg = Release|Any CPU
-		{B842974F-05C8-4A3D-B640-AA9A3B1E0905}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

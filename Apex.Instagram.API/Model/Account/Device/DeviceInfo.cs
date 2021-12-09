@@ -45,7 +45,7 @@ namespace Apex.Instagram.API.Model.Account.Device
         public string Dpi { get; set; }
 
         [IgnoreMember]
-        public string UserAgent => _userAgent ?? (_userAgent = _userAgentBuilder.BuildUserAgent());
+        public string UserAgent => _userAgent ??= _userAgentBuilder.BuildUserAgent();
 
         #endregion
     }

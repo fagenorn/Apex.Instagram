@@ -567,7 +567,7 @@ namespace Apex.Instagram.API.Tests
                                                     .BuildAsync()
                                                     .ConfigureAwait(false);
 
-            const string file        = @"tests/test_file.txt";
+            string file        = $@"{nameof(RequestTest)}/test_file.txt";
             var          fileContent = Encoding.UTF8.GetBytes(@"hello");
             await using (var fileStream = File.Create(file))
             {
